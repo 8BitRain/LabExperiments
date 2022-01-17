@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "AbilityComponents", menuName = "ScriptableObjects/AbilityComponents", order = 1)]
+[CreateAssetMenu(fileName = "AbilityComponents", menuName = "ScriptableObjects/AbilityComponents", order = 2)]
 public class AbilityComponents : ScriptableObject
 {
 

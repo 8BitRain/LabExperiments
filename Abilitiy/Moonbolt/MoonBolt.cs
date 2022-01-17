@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using DG.Tweening;
 using UnityEngine;
 
-public class MoonBolt : Skill, IStats
+public class MoonBolt : Skill
 {
     public enum AnimationState
     {
@@ -43,11 +43,7 @@ public class MoonBolt : Skill, IStats
 
     public LayerMask[] layers;
 
-    public AbilityComponents abilityComponents;
-    private Dictionary<string, int> moonBoltComponents;
     private GameObject spellInstance;
-    [SerializeField]
-    private GameStatAmount[] _statsYouFillnInspector;
 
     
 
@@ -64,31 +60,9 @@ public class MoonBolt : Skill, IStats
     // Start is called before the first frame update
     void Start()
     {
-        moonBoltComponents = new Dictionary<string, int>();
-        foreach (var abilityComponent in abilityComponents.abilityComponents)
-        {
-            print(abilityComponent.name);
-            print(abilityComponent.index);
-            moonBoltComponents.Add(abilityComponent.name, abilityComponent.index);
-        }
     }
 
     public void OnSkillInput(InputAction.CallbackContext ctx) => skillInput = ctx.ReadValueAsButton();
-
-    public bool TryGetStat(GameStat stat, out float amount)
-    {
-        amount = 0;
-        for (int statIndex = 0; statIndex < _statsYouFillnInspector.Length; statIndex++)
-        {
-            var checkedStat = _statsYouFillnInspector[statIndex];
-            if (checkedStat.TheStat != stat)
-                continue;
-                
-            amount = checkedStat.Amount;
-            return true;
-        }
-        return false;
-    }
 
     public override void UseSkill()
     {
@@ -138,32 +112,24 @@ public class MoonBolt : Skill, IStats
 
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void PlayModularComponent(GameObject spellInstance, AbilityComponent abilityComponent)
     {
-        print("Collided with " + other.gameObject.name);
-        foreach (var layer in layers)
-        {
-            //Collision w/ defined layer(s)
-            if(layer == (layer | (1 << other.gameObject.layer)))
-            {
-                spellInstance.transform.GetChild(moonBoltComponents["Collision"]).gameObject.SetActive(true);
-            }
-        }
-    }
-
-    /*public void RefreshSkill(GameObject instance, Cooldown cooldown)
-    {
-        if (this.gameObject != instance)
-            return;
+        if(abilityComponent.stickToPlayer)
+            spellInstance.transform.SetParent(GetPlayerReference().transform);
         
-        //This line may be unnescesary
-        if(cooldown.skillName == Skill.Name.MoonBolt)
+        if(abilityComponent.stickToPlayerTime != 0)
+            StartCoroutine(AbilityComponentStickToPlayerCoroutine(abilityComponent.stickToPlayerTime,spellInstance.transform));
+        
+        if(abilityComponent.isMobile)
+            spellInstance.transform.DOMove(spellInstance.transform.position + Camera.main.transform.forward * abilityComponent.travelSpeed, abilityComponent.timeToTravel);
+        
+        if(abilityComponent.canScale)
         {
-            print("Refreshing skill: " + cooldown.name + ": " + cooldown.activeSkill.name);
-            skillUsed = false;
-            fireSkill = false;
+            spellInstance.transform.localScale = abilityComponent.minScaleVector;
+            spellInstance.transform.DOScale(abilityComponent.maxScaleVector * abilityComponent.scaleStrength, abilityComponent.timeToScale);
         }
-    }*/
+
+    }
 
     public IEnumerator SpellDelay(float duration, GameObject Spell)
     {
@@ -176,19 +142,13 @@ public class MoonBolt : Skill, IStats
         spellInstance = Instantiate(Spell, GetSkillSpawnPosition().position, GetSkillSpawnPosition().rotation);
         spellInstance.transform.LookAt(spellInstance.transform.position + Camera.main.transform.forward);
 
-        //Grab chargeLineComponent of Beam
-        Transform beam = spellInstance.transform.GetChild(moonBoltComponents["Beam"]);
-        Transform chargeLine = spellInstance.transform.GetChild(moonBoltComponents["ChargeLine"]);
-        Transform particleBeam = spellInstance.transform.GetChild(moonBoltComponents["ParticleBeam"]);
+        PlayModularComponent(spellInstance, spellInstance.GetComponent<IAbilityComponent>().GetAbilityComponent());
+        //Iterate through ability container * components
+        foreach (Transform modularComponent in spellInstance.GetComponentsInChildren<Transform>())
+        {
+            PlayModularComponent(modularComponent.gameObject, modularComponent.GetComponent<IAbilityComponent>().GetAbilityComponent());
+        }
 
-        //beam.DOMove(spellInstance.transform.position + Camera.main.transform.forward  * 15, 2.0f);
-        beam.DOScaleY(28.0f, 2f);
-        //chargeLine.DOMove(spellInstance.transform.position + Camera.main.transform.forward  * 15, 2.0f);
-        chargeLine.DOScaleY(4.0f, 2f);
-        //particleBeam.DOMove(spellInstance.transform.position + Camera.main.transform.forward  * 15, 2.0f);
-        particleBeam.DOScaleZ(4.0f, 2f);
-        //spellInstance.transform.DOMove(transform.position + transform.forward  * 15, 2.0f);
-        //spellInstance.transform.DOScaleZ(4.0f, 2f);
         EngageCooldown();
     }
 
@@ -205,6 +165,13 @@ public class MoonBolt : Skill, IStats
             player.EnableMovement();
             //player.DisableSteering();
         } 
+    }
+
+    //This function unparents a spell component
+    public IEnumerator AbilityComponentStickToPlayerCoroutine(float duration, Transform abilityComponent)
+    {
+        yield return new WaitForSeconds(duration);
+        abilityComponent.SetParent(null);
     }
 
 }

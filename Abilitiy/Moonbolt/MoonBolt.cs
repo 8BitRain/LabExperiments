@@ -84,7 +84,7 @@ public class MoonBolt : Skill
 
         //Update Player Animation for Moonbolt
         GetAnimationController().ChangeAnimationState(GetPlayerReference().GetComponent<Animator>(),cast.ToString());
-        GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.up*3.0f, 3.0f);
+        //GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.up*1.5f, 3.0f);
 
         //Beam shoots out from hand after short delay
         StartCoroutine(SpellDelay(moonBoltBeamSpawnDelay, moonBoltBeam));
@@ -114,6 +114,8 @@ public class MoonBolt : Skill
 
     public void PlayModularComponent(GameObject spellInstance, AbilityComponent abilityComponent)
     {
+        TriggerHitBox(spellInstance, true);
+
         if(abilityComponent.stickToPlayer)
             spellInstance.transform.SetParent(GetPlayerReference().transform);
         
@@ -121,7 +123,9 @@ public class MoonBolt : Skill
             StartCoroutine(AbilityComponentStickToPlayerCoroutine(abilityComponent.stickToPlayerTime,spellInstance.transform));
         
         if(abilityComponent.isMobile)
-            spellInstance.transform.DOMove(spellInstance.transform.position + Camera.main.transform.forward * abilityComponent.travelSpeed, abilityComponent.timeToTravel);
+            spellInstance.transform
+            .DOMove(spellInstance.transform.position + Camera.main.transform.forward * abilityComponent.travelSpeed, abilityComponent.timeToTravel)
+            .OnComplete(() => TriggerHitBox(spellInstance, false));
         
         if(abilityComponent.canScale)
         {
@@ -131,12 +135,28 @@ public class MoonBolt : Skill
 
     }
 
+    public void TriggerHitBox(GameObject spellInstance, bool isActive)
+    {
+        if(spellInstance.TryGetComponent<ModularAbilityComponent>(out ModularAbilityComponent modularAbilityComponent))
+        {
+            HitBox hitBox = modularAbilityComponent.hitBox;
+            if(hitBox != null)
+            {
+                if(isActive)
+                    hitBox.ActivateHitBox();
+                else
+                    hitBox.DeactivateHitBox();
+            }
+        }
+
+    }
+
     public IEnumerator SpellDelay(float duration, GameObject Spell)
     {
         yield return new WaitForSeconds(duration);
         //BlowBack Move player backwards
         GetPlayerReference().transform.LookAt(GetPlayerReference().transform.position + Camera.main.transform.forward);
-        GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position -GetPlayerReference().transform.forward * 30.0f, 1.5f);
+        GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position - GetPlayerReference().transform.forward * 30.0f, 1.5f);
         
         print("Moonbolt casting");
         spellInstance = Instantiate(Spell, GetSkillSpawnPosition().position, GetSkillSpawnPosition().rotation);
@@ -146,7 +166,10 @@ public class MoonBolt : Skill
         //Iterate through ability container * components
         foreach (Transform modularComponent in spellInstance.GetComponentsInChildren<Transform>())
         {
-            PlayModularComponent(modularComponent.gameObject, modularComponent.GetComponent<IAbilityComponent>().GetAbilityComponent());
+            if(modularComponent.TryGetComponent<IAbilityComponent>(out IAbilityComponent modularAbilityComponent))
+            {
+                PlayModularComponent(modularComponent.gameObject, modularAbilityComponent.GetAbilityComponent());
+            }
         }
 
         EngageCooldown();

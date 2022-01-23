@@ -20,6 +20,7 @@ public class EventsManager : MonoBehaviour
 
     public event Action<GameObject> AbilityWindowActiveLockInput;
     public event Action<GameObject> AbilityWindowInactiveUnlockInput;
+    public event Action<GameObject, bool, float> TriggerHitbox;
 
     public void OnAbilityWindowActiveLockInput(GameObject instance)
     {
@@ -29,5 +30,10 @@ public class EventsManager : MonoBehaviour
     public void OnAbilityWindowInactiveUnlockInput(GameObject instance)
     {
         AbilityWindowInactiveUnlockInput?.Invoke(instance);
+    }
+
+    public void OnTriggerHitBox(GameObject instance, bool isActive, float delayTime)
+    {
+        TriggerHitbox?.Invoke(instance, isActive, delayTime);
     }
 }

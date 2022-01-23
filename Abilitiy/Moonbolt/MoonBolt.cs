@@ -114,8 +114,6 @@ public class MoonBolt : Skill
 
     public void PlayModularComponent(GameObject spellInstance, AbilityComponent abilityComponent)
     {
-        TriggerHitBox(spellInstance, true);
-
         if(abilityComponent.stickToPlayer)
             spellInstance.transform.SetParent(GetPlayerReference().transform);
         
@@ -123,9 +121,8 @@ public class MoonBolt : Skill
             StartCoroutine(AbilityComponentStickToPlayerCoroutine(abilityComponent.stickToPlayerTime,spellInstance.transform));
         
         if(abilityComponent.isMobile)
-            spellInstance.transform
-            .DOMove(spellInstance.transform.position + Camera.main.transform.forward * abilityComponent.travelSpeed, abilityComponent.timeToTravel)
-            .OnComplete(() => TriggerHitBox(spellInstance, false));
+            spellInstance.transform.DOMove(spellInstance.transform.position + Camera.main.transform.forward * abilityComponent.travelSpeed, abilityComponent.timeToTravel);
+
         
         if(abilityComponent.canScale)
         {
@@ -133,6 +130,8 @@ public class MoonBolt : Skill
             spellInstance.transform.DOScale(abilityComponent.maxScaleVector * abilityComponent.scaleStrength, abilityComponent.timeToScale);
         }
 
+        TriggerHitBox(spellInstance, false);
+        
     }
 
     public void TriggerHitBox(GameObject spellInstance, bool isActive)
@@ -142,10 +141,14 @@ public class MoonBolt : Skill
             HitBox hitBox = modularAbilityComponent.hitBox;
             if(hitBox != null)
             {
-                if(isActive)
-                    hitBox.ActivateHitBox();
-                else
-                    hitBox.DeactivateHitBox();
+                print("Hitbox Triggered");
+                if(!isActive)
+                {
+                    Debug.Log("Spell Instance Name: " + spellInstance.name);
+                    EventsManager.instance.OnTriggerHitBox(spellInstance, false, modularAbilityComponent.GetAbilityComponent().hitBoxTime);
+                    //hitBox.DeactivateHitBox();
+                }
+                    
             }
         }
 
@@ -171,7 +174,6 @@ public class MoonBolt : Skill
                 PlayModularComponent(modularComponent.gameObject, modularAbilityComponent.GetAbilityComponent());
             }
         }
-
         EngageCooldown();
     }
 

@@ -29,4 +29,6 @@ public class AbilityComponent : ScriptableObject
     public bool stickToPlayer;
      [Range(0f, 5.0f)]
     public float stickToPlayerTime;
+    [Header("HitBox Settings")]
+    public float hitBoxTime;
 }

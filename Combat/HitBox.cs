@@ -25,6 +25,20 @@ public class HitBox : MonoBehaviour
     //Events
     public static event Action<GameObject, GameObject, float, float> collidedWithTarget;
 
+    private void OnEnable()
+    {
+        EventsManager.instance.TriggerHitbox += TriggerHitbox;
+    }
+
+    private void OnDisable()
+    {
+        EventsManager.instance.TriggerHitbox -= TriggerHitbox;
+    }
+
+    private void OnDestroy()
+    {
+        EventsManager.instance.TriggerHitbox -= TriggerHitbox;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -66,6 +80,32 @@ public class HitBox : MonoBehaviour
                 float knockbackAmount = attackReference.GetComponent<Attack>().knockback;
                 collidedWithTarget.Invoke(other.gameObject.GetComponent<HurtBox>().Agent, other.gameObject, attackDamage, knockbackAmount);
                 
+            }
+        }
+    }
+
+    public void TriggerHitbox(GameObject instance, bool isActivated, float delay)
+    {
+        if(instance != this.gameObject)
+            Debug.Log("Hitbox cannot be triggered");
+            Debug.Log("HitBox.cs, Spell Instance Name: " + this.gameObject.name);
+            return;
+        
+        Debug.Log("Trigger that Hitbox");
+        if(isActivated)
+        {
+            ActivateHitBox();
+        }
+        else
+        {
+            if(delay == 0)
+            {
+                DeactivateHitBox();
+            }
+            else
+            {
+                print("Remove Hitbox");
+                StartCoroutine(HitBoxDeactivationDelay(delay));
             }
         }
     }
@@ -137,5 +177,12 @@ public class HitBox : MonoBehaviour
         }
         Gamepad.current.SetMotorSpeeds(0,0);
         rumble = true;
+    }
+
+    IEnumerator HitBoxDeactivationDelay(float time)
+    {
+        
+        yield return new WaitForSeconds (time);
+        DeactivateHitBox();
     }
 }

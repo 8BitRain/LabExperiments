@@ -87,11 +87,9 @@ public class HitBox : MonoBehaviour
     public void TriggerHitbox(GameObject instance, bool isActivated, float delay)
     {
         if(instance != this.gameObject)
-            Debug.Log("Hitbox cannot be triggered");
-            Debug.Log("HitBox.cs, Spell Instance Name: " + this.gameObject.name);
             return;
+
         
-        Debug.Log("Trigger that Hitbox");
         if(isActivated)
         {
             ActivateHitBox();

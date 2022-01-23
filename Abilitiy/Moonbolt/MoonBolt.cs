@@ -145,8 +145,8 @@ public class MoonBolt : Skill
                 if(!isActive)
                 {
                     Debug.Log("Spell Instance Name: " + spellInstance.name);
-                    EventsManager.instance.OnTriggerHitBox(spellInstance, false, modularAbilityComponent.GetAbilityComponent().hitBoxTime);
-                    //hitBox.DeactivateHitBox();
+                    Debug.Log("Hitbox instance name: " + hitBox.gameObject.name);
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, false, modularAbilityComponent.GetAbilityComponent().hitBoxTime);
                 }
                     
             }

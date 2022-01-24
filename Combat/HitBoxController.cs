@@ -15,7 +15,7 @@ public class HitBoxController : MonoBehaviour
         
         for(int i = 0; i < hitBoxes.Length; i++)
         {
-            hitBoxDictionary.Add(hitBoxes[i].GetComponent<HitBox>().attackName, hitBoxes[i]);
+            //hitBoxDictionary.Add(hitBoxes[i].GetComponent<HitBox>().attackName, hitBoxes[i]);
         }
     }
 

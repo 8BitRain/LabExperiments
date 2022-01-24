@@ -114,6 +114,7 @@ public class MoonBolt : Skill
 
     public void PlayModularComponent(GameObject spellInstance, AbilityComponent abilityComponent)
     {
+        TriggerHitBox(spellInstance, true);
         if(abilityComponent.stickToPlayer)
             spellInstance.transform.SetParent(GetPlayerReference().transform);
         
@@ -147,6 +148,10 @@ public class MoonBolt : Skill
                     Debug.Log("Spell Instance Name: " + spellInstance.name);
                     Debug.Log("Hitbox instance name: " + hitBox.gameObject.name);
                     EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, false, modularAbilityComponent.GetAbilityComponent().hitBoxTime);
+                }
+                else
+                {
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, true, 0);
                 }
                     
             }

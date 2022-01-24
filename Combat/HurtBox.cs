@@ -10,16 +10,19 @@ public class HurtBox : MonoBehaviour
     public GameObject Agent;
     //Events
     public static event Action<GameObject, GameObject, float, float> recievedCollision;
+    public static event Action<GameObject, GameObject, AbilityComponent> gotCollision;
     [SerializeField] private UnityEvent onRecievedCollision;
 
     private void OnEnable()
     {
         HitBox.collidedWithTarget += ApplyDamagedLogic;
+        HitBox.collision += ApplyCollision;
     }
 
     private void OnDisable()
     {
         HitBox.collidedWithTarget -= ApplyDamagedLogic;
+        HitBox.collision -= ApplyCollision;
     }
 
     // Start is called before the first frame update
@@ -48,5 +51,13 @@ public class HurtBox : MonoBehaviour
         
         recievedCollision.Invoke(hurtBoxAgentInstance, transform.parent.gameObject, damage, knockback);
         
+    }
+
+    void ApplyCollision(GameObject hurtBoxAgentInstance, GameObject hurtBoxInstance, AbilityComponent abilityComponent)
+    {
+        if(this.gameObject != hurtBoxInstance)
+            return;
+    
+        gotCollision.Invoke(hurtBoxAgentInstance, hurtBoxInstance, abilityComponent);
     }
 }

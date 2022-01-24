@@ -31,4 +31,6 @@ public class AbilityComponent : ScriptableObject
     public float stickToPlayerTime;
     [Header("HitBox Settings")]
     public float hitBoxTime;
+    [Header("Collision Component")]
+    public CollisionComponent collisionComponent;
 }

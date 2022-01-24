@@ -11,10 +11,8 @@ public class VFXEvent : UnityEvent <Transform> {}
 
 public class HitBox : MonoBehaviour
 {
-    public Transform Agent;
-    public AttackEnums.Attacks attackName;
-    public GameObject attackReference;
     public LayerMask[] layers;
+    public AbilityComponent abilityComponent;
 
     public CinemachineImpulseSource screenShakeImpulse;
 
@@ -24,6 +22,7 @@ public class HitBox : MonoBehaviour
 
     //Events
     public static event Action<GameObject, GameObject, float, float> collidedWithTarget;
+    public static event Action<GameObject, GameObject, AbilityComponent> collision;
 
     private void OnEnable()
     {
@@ -54,16 +53,13 @@ public class HitBox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        print("HitBox OnTrigger Enter");
         foreach (var layer in layers)
         {
             //Collision w/ defined layer(s)
             //Layer check is unnesceary. Could just directly call TryGetComponent<HurtBox>()
             if(layer == (layer | (1 << other.gameObject.layer)))
             {
-                Debug.Log("Combat: " + Agent.gameObject.name + "'s Hitbox collided with " + 
-                    other.gameObject.GetComponent<HurtBox>().Agent.name + "'s " + other.transform.parent.gameObject + " at: " + Time.time);
-            
-            
                 if(HasHitBoxCollidedWithTarget(other.gameObject))
                 {
                     print("HitBox: we already collided with target return");
@@ -75,10 +71,9 @@ public class HitBox : MonoBehaviour
                 rumble = false;
                 
                 //screenShakeImpulse.GenerateImpulse();
-                //Todo add logic that only allows this collision to happen once per target
-                float attackDamage = attackReference.GetComponent<Attack>().damage;
-                float knockbackAmount = attackReference.GetComponent<Attack>().knockback;
-                collidedWithTarget.Invoke(other.gameObject.GetComponent<HurtBox>().Agent, other.gameObject, attackDamage, knockbackAmount);
+
+                //Scriptable Object collison
+                collision.Invoke(other.gameObject.GetComponent<HurtBox>().Agent, other.gameObject, abilityComponent);
                 
             }
         }

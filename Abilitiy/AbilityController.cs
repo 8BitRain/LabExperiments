@@ -96,7 +96,7 @@ public class AbilityController : MonoBehaviour
             {
                 selectedButton = SelectedButton.East;
                 Debug.Log("UI: East Button pressed");
-                //UseAbility();
+                UseAbility();
                 //UI Hook to communicate w/ HUD selector update
             }
 
@@ -136,8 +136,9 @@ public class AbilityController : MonoBehaviour
                     print("Skill in Cooldown");
                     return;
                 }
-                Skill abilitySouth = Instantiate(specialAbilitySouth);
-                abilitySouth.UseSkill();
+                abilitySouthInstance = Instantiate(specialAbilitySouth);
+                InitializeAbility(abilitySouthInstance);
+                abilitySouthInstance.UseSkill();
                 abilityB = 1;
                 return;
             case SelectedButton.East:
@@ -146,8 +147,9 @@ public class AbilityController : MonoBehaviour
                     print("Skill in Cooldown");
                     return;
                 }
-                Skill abilityEast = Instantiate(specialAbilityEast);
-                abilityEast.UseSkill();
+                abilityEastInstance = Instantiate(specialAbilityEast);
+                InitializeAbility(abilityEastInstance);
+                abilityEastInstance.UseSkill();
                 abilityC = 1;
                 return;
             case SelectedButton.West:
@@ -156,8 +158,9 @@ public class AbilityController : MonoBehaviour
                     print("Skill in Cooldown");
                     return;
                 }
-                Skill abilityWest = Instantiate(specialAbilityWest);
-                abilityWest.UseSkill();
+                abilityWestInstance = Instantiate(specialAbilityWest);
+                InitializeAbility(abilityWestInstance);
+                abilityWestInstance.UseSkill();
                 abilityD = 1;
                 return;
             default:

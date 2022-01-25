@@ -8,8 +8,21 @@ public class AbilityComponent : ScriptableObject
 {
     public string componentName;
     public bool isMobile;
+    public enum MovementDirection
+    {
+        Forward,
+        Backward,
+        ForwardDiagonalLeft,
+        ForwardDiagonalRight,
+        BackwardDiagonalRight,
+        BackwardDiagonalLeft,
+        Right,
+        Left
+    }
     [Header("Travel Settings")]
+    public MovementDirection travelDirection;
     public Vector3 maxTravelDistance;
+    public float travelAmount;
     //How long until the ability should start traveling
     public float travelTimeDelay;
     public float travelSpeed;
@@ -27,10 +40,17 @@ public class AbilityComponent : ScriptableObject
     public float timeToScale;
     [Header("Player Settings")]
     public bool stickToPlayer;
-     [Range(0f, 5.0f)]
+    [Range(0f, 5.0f)]
     public float stickToPlayerTime;
+    public MovementDirection playerMovementDirection;
+    public Vector3 playerMovementVector;
+    public float playerMovementAmount;
+    public float playerMovementTime;
+    public float playerMovementDelay;
+    [Header("Animation Settings")]
+    public AnimationComponent animationComponent;
     [Header("HitBox Settings")]
-    public float hitBoxTime;
+    public float hitBoxDuration;
     [Header("Collision Component")]
     public CollisionComponent collisionComponent;
 }

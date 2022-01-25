@@ -24,6 +24,7 @@ public class WoodenDummy : MonoBehaviour
 
         CollisionComponent collisionComponent = abilityComponent.collisionComponent;
         transform.DOPunchScale(UnityEngine.Random.insideUnitSphere * collisionComponent.squashAndStretchAmount, collisionComponent.squashAndStretchTime);
+        transform.DORotate(transform.rotation.eulerAngles + transform.rotation.eulerAngles*720, 1.5f);
 
         switch (collisionComponent.knockbackDirection)
         {

@@ -147,7 +147,7 @@ public class MoonBolt : Skill
                 {
                     Debug.Log("Spell Instance Name: " + spellInstance.name);
                     Debug.Log("Hitbox instance name: " + hitBox.gameObject.name);
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, false, modularAbilityComponent.GetAbilityComponent().hitBoxTime);
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, false, modularAbilityComponent.GetAbilityComponent().hitBoxDuration);
                 }
                 else
                 {

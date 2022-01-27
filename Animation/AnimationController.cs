@@ -37,4 +37,23 @@ public class AnimationController : MonoBehaviour
     {
         return currentState;
     }
+
+    public void PlayerAnimationLock(float duration, PlayerMovementController player, bool isMobileSkill)
+    {
+        StartCoroutine(PlayerAnimationLockCoroutine(duration, player, isMobileSkill));
+    }
+
+    public IEnumerator PlayerAnimationLockCoroutine(float duration, PlayerMovementController player, bool isMobileSkill)
+    {
+        yield return new WaitForSeconds(duration);
+        if(isMobileSkill)
+        {
+            player.UnlockInputRightSideControllerFaceButtons(this.gameObject);
+        }
+        else
+        {
+            player.EnableMovement();
+            //player.DisableSteering();
+        } 
+    }
 }

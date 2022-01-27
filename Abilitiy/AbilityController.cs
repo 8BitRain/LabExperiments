@@ -150,6 +150,7 @@ public class AbilityController : MonoBehaviour
                 abilityEastInstance = Instantiate(specialAbilityEast);
                 InitializeAbility(abilityEastInstance);
                 abilityEastInstance.UseSkill();
+                Destroy(abilityEastInstance.gameObject, 1.5f);
                 abilityC = 1;
                 return;
             case SelectedButton.West:

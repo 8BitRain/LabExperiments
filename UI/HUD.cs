@@ -68,21 +68,21 @@ public class HUD : MonoBehaviour
                     cooldownBarA.SetMaxCooldown(time, 0);
                 if(cooldownBarPosition == Skill.CooldownBar.B)
                     cooldownBarB.SetMaxCooldown(time, 0);
-                /*if(cooldownBarPosition == Skill.CooldownBar.C)
+                if(cooldownBarPosition == Skill.CooldownBar.C)
                     cooldownBarC.SetMaxCooldown(time, 0);
                 if(cooldownBarPosition == Skill.CooldownBar.D)
-                    cooldownBarD.SetMaxCooldown(time, 0);*/
+                    cooldownBarD.SetMaxCooldown(time, 0);
                 
                 break;
             case CooldownController.State.Decrement:
                 if(cooldownBarPosition == Skill.CooldownBar.A)
-                    cooldownBarA.SetMaxCooldown(time, 3);
+                    cooldownBarA.SetMaxCooldown(time, time);
                 if(cooldownBarPosition == Skill.CooldownBar.B)
-                    cooldownBarB.SetMaxCooldown(time, 3);
-                /*if(cooldownBarPosition == Skill.CooldownBar.C)
-                    cooldownBarC.SetMaxCooldown(time, 0);
+                    cooldownBarB.SetMaxCooldown(time, time);
+                if(cooldownBarPosition == Skill.CooldownBar.C)
+                    cooldownBarC.SetMaxCooldown(time, time);
                 if(cooldownBarPosition == Skill.CooldownBar.D)
-                    cooldownBarD.SetMaxCooldown(time, 0);*/
+                    cooldownBarD.SetMaxCooldown(time, time);
                 break;
             default:
                 break;
@@ -104,7 +104,7 @@ public class HUD : MonoBehaviour
                     time = cooldownBarB.GetMaxCooldown() - time;
                     cooldownBarB.SetCooldownBar(time);
                 }
-                /*if(cooldownBarPosition == Skill.CooldownBar.C)
+                if(cooldownBarPosition == Skill.CooldownBar.C)
                 {
                     time = cooldownBarC.GetMaxCooldown() - time;
                     cooldownBarC.SetCooldownBar(time);
@@ -113,7 +113,7 @@ public class HUD : MonoBehaviour
                 {
                     time = cooldownBarD.GetMaxCooldown() - time;
                     cooldownBarD.SetCooldownBar(time);
-                }*/
+                }
 
                 break;
             case CooldownController.State.Decrement:
@@ -121,10 +121,10 @@ public class HUD : MonoBehaviour
                     cooldownBarA.SetCooldownBar(time);
                 if(cooldownBarPosition == Skill.CooldownBar.B)
                     cooldownBarB.SetCooldownBar(time);
-                /*if(cooldownBarPosition == Skill.CooldownBar.C)
+                if(cooldownBarPosition == Skill.CooldownBar.C)
                     cooldownBarC.SetCooldownBar(time);
                 if(cooldownBarPosition == Skill.CooldownBar.D)
-                    cooldownBarD.SetCooldownBar(time);*/
+                    cooldownBarD.SetCooldownBar(time);
                 break;
             default:
                 break;

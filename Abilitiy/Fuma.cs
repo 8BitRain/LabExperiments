@@ -10,6 +10,7 @@ public class Fuma : Skill
     public float cooldownTime;
     public Cooldown cooldownObjRef;
     public Skill.CooldownBar cooldownBarPosition;
+    private bool cooldownTriggered = false;
     public bool isMobileSkill = false;
     public bool isHeldSkill = false;
     private bool skillInput;
@@ -27,10 +28,19 @@ public class Fuma : Skill
     public LayerMask[] layers;
 
     private GameObject abilityInstance;
-
+    
     // Start is called before the first frame update
     void Start()
     {
+    }
+
+    void OnDestroy()
+    {
+        if(!cooldownTriggered)
+        {
+            EngageCooldown();
+        }
+        Destroy(abilityInstance.gameObject);
     }
 
     public void OnSkillInput(InputAction.CallbackContext ctx) => skillInput = ctx.ReadValueAsButton();
@@ -194,23 +204,10 @@ public class Fuma : Skill
         //GetAnimationController().ChangeAnimationState(GetPlayerReference().GetComponent<Animator>(),recoil.ToString());
 
         //Unlock player movement
-        StartCoroutine(PlayerAnimationLock(recoilAnimationLockTime, GetPlayerReference().GetComponent<PlayerMovementController>()));
-
-    }
-
-    //This function acts as an animation lock. Spells can have recoil animations that are either cancellable or not cancellable. 
-    public IEnumerator PlayerAnimationLock(float duration, PlayerMovementController player)
-    {
-        yield return new WaitForSeconds(duration);
-        if(isMobileSkill)
-        {
-            player.UnlockInputRightSideControllerFaceButtons(this.gameObject);
-        }
-        else
-        {
-            player.EnableMovement();
-            //player.DisableSteering();
-        } 
+        //Animation Controller Coroutine
+        GetAnimationController().PlayerAnimationLock(recoilAnimationLockTime, GetPlayerReference().GetComponent<PlayerMovementController>(), isMobileSkill);
+        
+        cooldownTriggered = true;
     }
 
     //This function unparents a spell component

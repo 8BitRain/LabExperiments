@@ -32,7 +32,7 @@ public class CooldownController : MonoBehaviour
             {
                 //Lower time of each cooldown
                 cooldown.time -= Time.deltaTime;
-                Debug.Log("Decreasing cooldown time of " + cooldown.name + ": " + cooldown.activeSkill.name + " " + cooldown.time);
+                //Debug.Log("Decreasing cooldown time of " + cooldown.name + ": " + cooldown.activeSkill.name + " " + cooldown.time);
                 onUpdateCooldownIcon.Invoke(this.gameObject, cooldown.time, CooldownController.State.Increment, cooldown);
                 if(cooldown.time <= 0)
                 {
@@ -54,10 +54,10 @@ public class CooldownController : MonoBehaviour
 
     public void StartCooldown(Cooldown cooldown)
     {
-        print("Adding cooldown " + cooldown.name + ": " + cooldown.activeSkill.name + " to list of active cooldowns.");
+        //print("Adding cooldown " + cooldown.name + ": " + cooldown.activeSkill.name + " to list of active cooldowns.");
         activeCooldowns.Add(cooldown);
         onUpdateCooldownIcon.Invoke(this.gameObject, cooldown.time, CooldownController.State.Initialize, cooldown);
-        print("Destroying Cooldown: " + cooldown.name + ": " + cooldown.activeSkill.name);
+        //print("Destroying Cooldown: " + cooldown.name + ": " + cooldown.activeSkill.name);
     }
 
     public void QueueCooldownForRemoval(Cooldown cooldown)

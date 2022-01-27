@@ -17,7 +17,7 @@ public class CooldownController : MonoBehaviour
     }
 
     public static event Action<GameObject, float, CooldownController.State, Cooldown> onUpdateCooldownIcon;
-    public static event Action<GameObject, Cooldown> onRefreshCooldown;
+    public static event Action<GameObject, Cooldown,int> onUpdateCooldown;
 
     void Start()
     {
@@ -57,6 +57,7 @@ public class CooldownController : MonoBehaviour
         //print("Adding cooldown " + cooldown.name + ": " + cooldown.activeSkill.name + " to list of active cooldowns.");
         activeCooldowns.Add(cooldown);
         onUpdateCooldownIcon.Invoke(this.gameObject, cooldown.time, CooldownController.State.Initialize, cooldown);
+        onUpdateCooldown.Invoke(this.gameObject, cooldown, 1);
         //print("Destroying Cooldown: " + cooldown.name + ": " + cooldown.activeSkill.name);
     }
 
@@ -64,7 +65,7 @@ public class CooldownController : MonoBehaviour
     {
         expiredCooldowns.Add(cooldown);
         //Send message back to the owner to remove the skill usage limit
-        onRefreshCooldown.Invoke(this.gameObject, cooldown);
+        onUpdateCooldown.Invoke(this.gameObject, cooldown, 0);
         //Concern. Is there a case, where the activeSkill object is destroyed, before the cooldown completes?
     }
 

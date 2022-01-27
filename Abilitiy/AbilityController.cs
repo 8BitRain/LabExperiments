@@ -24,6 +24,7 @@ public class AbilityController : MonoBehaviour
     private Skill abilityEastInstance;
     private Skill abilityWestInstance;
 
+    //2 means skill is actively being used
     //1 means ability is in cooldown status
     //0 means ability has cooleddown
     private int abilityA = 0;
@@ -55,12 +56,12 @@ public class AbilityController : MonoBehaviour
 
     private void OnEnable()
     {
-        CooldownController.onRefreshCooldown += RefreshSkill;
+        CooldownController.onUpdateCooldown += UpdateCooldown;
     }
 
     private void OnDisable()
     {
-        CooldownController.onRefreshCooldown -= RefreshSkill;
+        CooldownController.onUpdateCooldown -= UpdateCooldown;
     }
     // Start is called before the first frame update
     void Start()
@@ -117,6 +118,11 @@ public class AbilityController : MonoBehaviour
 
     public void UseAbility()
     {
+        //Prevents skill from being fired while a skill is in cooldown. Value stays at 1 until cooldonw is complete
+        //We want to adjust this by changing the value of abilityA,B,C,D
+        if(abilityA == 2 || abilityB == 2 || abilityC == 2 || abilityD == 2)
+            return;
+
         switch (selectedButton)
         {
             case SelectedButton.North:
@@ -128,7 +134,7 @@ public class AbilityController : MonoBehaviour
                 abilityNorthInstance = Instantiate(specialAbilityNorth);
                 InitializeAbility(abilityNorthInstance);
                 abilityNorthInstance.UseSkill();
-                abilityA = 1;
+                abilityA = 2;
                 return;
             case SelectedButton.South:
                 if(abilityB == 1)
@@ -139,7 +145,7 @@ public class AbilityController : MonoBehaviour
                 abilitySouthInstance = Instantiate(specialAbilitySouth);
                 InitializeAbility(abilitySouthInstance);
                 abilitySouthInstance.UseSkill();
-                abilityB = 1;
+                abilityB = 2;
                 return;
             case SelectedButton.East:
                 if(abilityC == 1)
@@ -151,7 +157,7 @@ public class AbilityController : MonoBehaviour
                 InitializeAbility(abilityEastInstance);
                 abilityEastInstance.UseSkill();
                 Destroy(abilityEastInstance.gameObject, 1.5f);
-                abilityC = 1;
+                abilityC = 2;
                 return;
             case SelectedButton.West:
                 if(abilityD == 1)
@@ -162,7 +168,7 @@ public class AbilityController : MonoBehaviour
                 abilityWestInstance = Instantiate(specialAbilityWest);
                 InitializeAbility(abilityWestInstance);
                 abilityWestInstance.UseSkill();
-                abilityD = 1;
+                abilityD = 2;
                 return;
             default:
                 return;
@@ -177,7 +183,7 @@ public class AbilityController : MonoBehaviour
         ability.SetSkillSpawnPoint(this.abilitySpawn);
     }
 
-    public void RefreshSkill(GameObject instance, Cooldown cooldown)
+    public void UpdateCooldown(GameObject instance, Cooldown cooldown, int cooldownStateID)
     {
         if (this.gameObject != instance)
             return;
@@ -185,26 +191,23 @@ public class AbilityController : MonoBehaviour
         switch(cooldown.cooldownBarPosition)
         {
             case Skill.CooldownBar.A:
-                print("Refreshing ABility A");
-                abilityA = 0;
+                Debug.Log("Updating Ability A to state: " + cooldownStateID);
+                abilityA = cooldownStateID;
                 break;
             case Skill.CooldownBar.B:
-                abilityB = 0;
+                Debug.Log("Updating Ability B to state: " + cooldownStateID);
+                abilityB = cooldownStateID;
                 break;
             case Skill.CooldownBar.C:
-                abilityC = 0;
+                Debug.Log("Updating Ability C to state: " + cooldownStateID);
+                abilityC = cooldownStateID;
                 break;
             case Skill.CooldownBar.D:
-                abilityD = 0;
+                Debug.Log("Updating Ability D to state: " + cooldownStateID);
+                abilityD = cooldownStateID;
                 break;
             default: 
                 break;
         }
-        /*if(cooldown.skillName == Skill.Name.Darknet)
-        {
-            print("Refreshing skill: " + cooldown.name + ": " + cooldown.activeSkill.name);
-            skillUsed = false;
-            fireSkill = false;
-        }*/
     }
 }

@@ -135,6 +135,7 @@ public class MoonBolt : Skill
         
     }
 
+    //Refactor to use ModularSpellInstance
     public void TriggerHitBox(GameObject spellInstance, bool isActive)
     {
         if(spellInstance.TryGetComponent<ModularAbilityComponent>(out ModularAbilityComponent modularAbilityComponent))
@@ -147,11 +148,11 @@ public class MoonBolt : Skill
                 {
                     Debug.Log("Spell Instance Name: " + spellInstance.name);
                     Debug.Log("Hitbox instance name: " + hitBox.gameObject.name);
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, false, modularAbilityComponent.GetAbilityComponent().hitBoxDuration);
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.spellInstance, false, modularAbilityComponent.GetAbilityComponent().hitBoxDuration);
                 }
                 else
                 {
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, true, 0);
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.spellInstance, true, 0);
                 }
                     
             }

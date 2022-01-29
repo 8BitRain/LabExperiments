@@ -49,12 +49,12 @@ public class ShadowLine : MonoBehaviour
 
     private void OnEnable()
     {
-        CooldownController.onRefreshCooldown += RefreshSkill;
+        //CooldownController.onRefreshCooldown += RefreshSkill;
     }
 
     private void OnDisable()
     {
-        CooldownController.onRefreshCooldown -= RefreshSkill;
+        //CooldownController.onRefreshCooldown -= RefreshSkill;
     }
 
     // Start is called before the first frame update

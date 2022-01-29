@@ -62,13 +62,13 @@ public class Darknet : MonoBehaviour
 
     private void OnEnable()
     {
-        CooldownController.onRefreshCooldown += RefreshSkill;
+        //CooldownController.onRefreshCooldown += RefreshSkill;
         MobileAbilityTargetingSystem.onSkillCast += UseSkill;
     }
 
     private void OnDisable()
     {
-        CooldownController.onRefreshCooldown -= RefreshSkill;
+        //CooldownController.onRefreshCooldown -= RefreshSkill;
         MobileAbilityTargetingSystem.onSkillCast -= UseSkill;
     }
 

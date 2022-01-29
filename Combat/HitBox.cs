@@ -13,6 +13,7 @@ public class HitBox : MonoBehaviour
 {
     public LayerMask[] layers;
     public AbilityComponent abilityComponent;
+    private GameObject Summoner;
 
     public CinemachineImpulseSource screenShakeImpulse;
 
@@ -22,7 +23,7 @@ public class HitBox : MonoBehaviour
 
     //Events
     public static event Action<GameObject, GameObject, float, float> collidedWithTarget;
-    public static event Action<GameObject, GameObject, AbilityComponent> collision;
+    public static event Action<GameObject, GameObject, GameObject, AbilityComponent> collision;
 
     private void OnEnable()
     {
@@ -73,17 +74,18 @@ public class HitBox : MonoBehaviour
                 //screenShakeImpulse.GenerateImpulse();
 
                 //Scriptable Object collison
-                collision.Invoke(other.gameObject.GetComponent<HurtBox>().Agent, other.gameObject, abilityComponent);
+                collision.Invoke(other.gameObject.GetComponent<HurtBox>().Agent, other.gameObject, GetSummoner(), abilityComponent);
                 
             }
         }
     }
 
-    public void TriggerHitbox(GameObject instance, bool isActivated, float delay)
+    public void TriggerHitbox(GameObject instance, GameObject summoner, bool isActivated, float delay)
     {
         if(instance != this.gameObject)
             return;
-
+        
+        SetSummoner(summoner);
         
         if(isActivated)
         {
@@ -136,6 +138,15 @@ public class HitBox : MonoBehaviour
         targetsHit.Clear();
     }
 
+    public void SetSummoner(GameObject summoner)
+    {
+        this.Summoner = summoner;
+    }
+
+    public GameObject GetSummoner()
+    {
+        return this.Summoner;
+    }
     /*public string GetTargetPosition(GameObject target)
     {
         string x = target.transform.position.x.ToString();

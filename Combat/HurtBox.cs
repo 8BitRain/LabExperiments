@@ -53,7 +53,7 @@ public class HurtBox : MonoBehaviour
         
     }
 
-    void ApplyCollision(GameObject hurtBoxAgentInstance, GameObject hurtBoxInstance, AbilityComponent abilityComponent)
+    void ApplyCollision(GameObject hurtBoxAgentInstance, GameObject hurtBoxInstance, GameObject summoner, AbilityComponent abilityComponent)
     {
         if(this.gameObject != hurtBoxInstance)
             return;

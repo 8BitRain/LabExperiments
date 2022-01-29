@@ -8,4 +8,6 @@ public class WeaponComponent : ScriptableObject
 {
     public bool canFloat;
     public float floatIntensity;
+    public int vibrateIntensity;
+    public float floatDuration;
 }

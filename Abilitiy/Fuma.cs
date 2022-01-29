@@ -28,8 +28,19 @@ public class Fuma : Skill
     public LayerMask[] layers;
 
     private GameObject abilityInstance;
+    private bool abilityConnected = false;
     
     // Start is called before the first frame update
+    private void OnEnable()
+    {
+        HitBox.collision += CollisionLogic;
+    }
+
+    private void OnDisable()
+    {
+        HitBox.collision -= CollisionLogic;
+    }
+
     void Start()
     {
     }
@@ -65,6 +76,7 @@ public class Fuma : Skill
 
         //Instantiate ability
         abilityInstance = Instantiate(FumaAbilityComponent, GetSkillSpawnPosition().position, GetSkillSpawnPosition().rotation);
+        abilityInstance.transform.LookAt(Camera.main.transform.forward);
         
         //Iterate through ability instances modular components
         StartCoroutine(PlayModularComponents());
@@ -73,10 +85,13 @@ public class Fuma : Skill
     }
 
 
-
-    public void CollisionLogic()
+    //Called when the skill collides with a target 
+    public void CollisionLogic(GameObject targetInstance, GameObject hurtBoxInstance, GameObject summonerInstance, AbilityComponent abilityComponent)
     {
-
+        if(this.abilityInstance != summonerInstance)
+            return;
+        
+        SetAbilityConnected(true);
     }
 
     public IEnumerator PlayModularComponents()
@@ -95,6 +110,10 @@ public class Fuma : Skill
                     {
                         Debug.Log("Animation Delay: " + abilityComponent.animationComponent.animation + " for: " + abilityComponent.animationComponent.animationEndDelay);
                         yield return new WaitForSeconds(abilityComponent.animationComponent.animationEndDelay);
+                        if(!GetAbilityConnected())
+                        {
+                            Destroy(this.gameObject);
+                        }
                     }
                     else
                     {
@@ -106,19 +125,19 @@ public class Fuma : Skill
         EngageCooldown();
     }
 
-    public void PlayModularComponent(GameObject abilityInstance, AbilityComponent abilityComponent)
+    public void PlayModularComponent(GameObject modularAbilityInstance, AbilityComponent abilityComponent)
     {
 
-        TriggerHitBox(abilityInstance, true);
+        TriggerHitBox(modularAbilityInstance, true);
 
         //Controls how the component travels
         switch (abilityComponent.travelDirection)
         {
             case AbilityComponent.MovementDirection.Forward:
-                abilityInstance.transform.DOMove(GetPlayerReference().transform.position + abilityInstance.transform.forward*abilityComponent.travelAmount, abilityComponent.timeToTravel);
+                modularAbilityInstance.transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.forward*abilityComponent.travelAmount, abilityComponent.timeToTravel);
                 break;
             case AbilityComponent.MovementDirection.Backward:
-                abilityInstance.transform.DOMove(GetPlayerReference().transform.position - abilityInstance.transform.forward*abilityComponent.travelAmount, abilityComponent.timeToTravel);
+                modularAbilityInstance.transform.DOMove(GetPlayerReference().transform.position - GetPlayerReference().transform.forward*abilityComponent.travelAmount, abilityComponent.timeToTravel);
                 break;
             default:
                 break;
@@ -138,22 +157,22 @@ public class Fuma : Skill
         }
 
         if(abilityComponent.stickToPlayer)
-            abilityInstance.transform.SetParent(GetPlayerReference().transform);
+            modularAbilityInstance.transform.SetParent(GetPlayerReference().transform);
         
         if(abilityComponent.stickToPlayerTime != 0)
-            StartCoroutine(AbilityComponentStickToPlayerCoroutine(abilityComponent.stickToPlayerTime,abilityInstance.transform));
+            StartCoroutine(AbilityComponentStickToPlayerCoroutine(abilityComponent.stickToPlayerTime,modularAbilityInstance.transform));
         
         if(abilityComponent.isMobile)
-            abilityInstance.transform.DOMove(abilityInstance.transform.position + Camera.main.transform.forward * abilityComponent.travelSpeed, abilityComponent.timeToTravel);
+            modularAbilityInstance.transform.DOMove(modularAbilityInstance.transform.position + Camera.main.transform.forward * abilityComponent.travelAmount, abilityComponent.timeToTravel);
 
         
         if(abilityComponent.canScale)
         {
-            abilityInstance.transform.localScale = abilityComponent.minScaleVector;
-            abilityInstance.transform.DOScale(abilityComponent.maxScaleVector * abilityComponent.scaleStrength, abilityComponent.timeToScale);
+            modularAbilityInstance.transform.localScale = abilityComponent.minScaleVector;
+            modularAbilityInstance.transform.DOScale(abilityComponent.maxScaleVector * abilityComponent.scaleStrength, abilityComponent.timeToScale);
         }
 
-        TriggerHitBox(abilityInstance, false);
+        TriggerHitBox(modularAbilityInstance, false);
         
         //Does player have an animation component?
         if(abilityComponent.animationComponent != null)
@@ -165,9 +184,9 @@ public class Fuma : Skill
     
     }
 
-    public void TriggerHitBox(GameObject abilityInstance, bool isActive)
+    public void TriggerHitBox(GameObject modularAbilityInstance, bool isActive)
     {
-        if(abilityInstance.TryGetComponent<ModularAbilityComponent>(out ModularAbilityComponent modularAbilityComponent))
+        if(modularAbilityInstance.TryGetComponent<ModularAbilityComponent>(out ModularAbilityComponent modularAbilityComponent))
         {
             HitBox hitBox = modularAbilityComponent.hitBox;
             if(hitBox != null)
@@ -175,13 +194,13 @@ public class Fuma : Skill
                 print("Hitbox Triggered");
                 if(!isActive)
                 {
-                    Debug.Log("Spell Instance Name: " + abilityInstance.name);
+                    Debug.Log("Spell Instance Name: " + modularAbilityInstance.name);
                     Debug.Log("Hitbox instance name: " + hitBox.gameObject.name);
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, false, modularAbilityComponent.GetAbilityComponent().hitBoxDuration);
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.abilityInstance, false, modularAbilityComponent.GetAbilityComponent().hitBoxDuration);
                 }
                 else
                 {
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, true, 0);
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.abilityInstance, true, 0);
                 }
                     
             }
@@ -215,6 +234,17 @@ public class Fuma : Skill
     {
         yield return new WaitForSeconds(duration);
         abilityComponent.SetParent(null);
+    }
+    
+
+    public void SetAbilityConnected(bool hasConnected)
+    {
+        this.abilityConnected = hasConnected;
+    }
+
+    public bool GetAbilityConnected()
+    {
+        return this.abilityConnected;
     }
 
 }

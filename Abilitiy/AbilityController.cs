@@ -118,7 +118,7 @@ public class AbilityController : MonoBehaviour
 
     public void UseAbility()
     {
-        //Prevents skill from being fired while a skill is in cooldown. Value stays at 1 until cooldonw is complete
+        //Prevents skill from being fired while a skill is in cooldown. Value stays at 1 until cooldown is complete
         //We want to adjust this by changing the value of abilityA,B,C,D
         if(abilityA == 2 || abilityB == 2 || abilityC == 2 || abilityD == 2)
             return;
@@ -156,7 +156,7 @@ public class AbilityController : MonoBehaviour
                 abilityEastInstance = Instantiate(specialAbilityEast);
                 InitializeAbility(abilityEastInstance);
                 abilityEastInstance.UseSkill();
-                Destroy(abilityEastInstance.gameObject, 1.5f);
+                //Destroy(abilityEastInstance.gameObject, 1.5f);
                 abilityC = 2;
                 return;
             case SelectedButton.West:

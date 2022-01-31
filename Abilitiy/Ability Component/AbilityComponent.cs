@@ -17,7 +17,10 @@ public class AbilityComponent : ScriptableObject
         BackwardDiagonalRight,
         BackwardDiagonalLeft,
         Right,
-        Left
+        Left,
+        Up,
+        Down,
+        None
     }
     [Header("Travel Settings")]
     public MovementDirection travelDirection;

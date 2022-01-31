@@ -30,6 +30,8 @@ public class Fuma : Skill
     private GameObject abilityInstance;
     private bool abilityConnected = false;
     private Coroutine abilityCoroutine;
+    private Coroutine animationCoroutine;
+    private Transform target;
     
     // Start is called before the first frame update
     private void OnEnable()
@@ -91,7 +93,7 @@ public class Fuma : Skill
     {
         if(this.abilityInstance != summonerInstance)
             return;
-        
+        StopCoroutine(animationCoroutine);
         SetAbilityConnected(true);
     }
 
@@ -112,7 +114,7 @@ public class Fuma : Skill
                         Debug.Log("Animation Delay: " + abilityComponent.animationComponent.animation + " for: " + abilityComponent.animationComponent.animationEndDelay);
                         if(!GetAbilityConnected())
                         {
-                            StartCoroutine(AnimationDelay(abilityComponent.animationComponent));
+                            animationCoroutine = StartCoroutine(AnimationDelay(abilityComponent.animationComponent));
                             yield return new WaitUntil(() => GetAbilityConnected());
                         }
                         else
@@ -164,6 +166,13 @@ public class Fuma : Skill
                 break;
             case AbilityComponent.MovementDirection.Backward:
                 GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position - GetPlayerReference().transform.forward*abilityComponent.playerMovementAmount, abilityComponent.playerMovementTime);
+                break;
+            case AbilityComponent.MovementDirection.BackwardDiagonalLeft:
+                Vector3 diagonalVector = (GetPlayerReference().transform.forward * abilityComponent.playerMovementAmount) + (GetPlayerReference().transform.right * abilityComponent.playerMovementAmount);
+                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position - diagonalVector, abilityComponent.playerMovementTime);
+                break;
+            case AbilityComponent.MovementDirection.Up:
+                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position - GetPlayerReference().transform.up*abilityComponent.playerMovementAmount, abilityComponent.playerMovementTime);
                 break;
             default:
                 break;

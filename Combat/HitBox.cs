@@ -76,7 +76,15 @@ public class HitBox : MonoBehaviour
                 //Scriptable Object collison
                 if(GetSummoner() != null)
                 {
-                    collision.Invoke(other.gameObject.GetComponent<HurtBox>().Agent, other.gameObject, GetSummoner(), abilityComponent);
+                    try
+                    {
+                        collision.Invoke(other.gameObject.GetComponent<HurtBox>().Agent, other.gameObject, GetSummoner(), abilityComponent);
+                    }
+                    catch (System.Exception exception)
+                    {
+                        Debug.Log("Attempted to invoke collision but it failed: " + exception);
+                        throw;
+                    }
                 }
 
             }

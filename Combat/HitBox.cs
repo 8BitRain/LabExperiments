@@ -74,8 +74,11 @@ public class HitBox : MonoBehaviour
                 //screenShakeImpulse.GenerateImpulse();
 
                 //Scriptable Object collison
-                collision.Invoke(other.gameObject.GetComponent<HurtBox>().Agent, other.gameObject, GetSummoner(), abilityComponent);
-                
+                if(GetSummoner() != null)
+                {
+                    collision.Invoke(other.gameObject.GetComponent<HurtBox>().Agent, other.gameObject, GetSummoner(), abilityComponent);
+                }
+
             }
         }
     }

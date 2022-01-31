@@ -29,6 +29,7 @@ public class Fuma : Skill
 
     private GameObject abilityInstance;
     private bool abilityConnected = false;
+    private Coroutine abilityCoroutine;
     
     // Start is called before the first frame update
     private void OnEnable()
@@ -79,7 +80,7 @@ public class Fuma : Skill
         abilityInstance.transform.LookAt(Camera.main.transform.forward);
         
         //Iterate through ability instances modular components
-        StartCoroutine(PlayModularComponents());
+        this.abilityCoroutine = StartCoroutine(PlayModularComponents());
 
         skillUsed = true;
     }
@@ -109,10 +110,14 @@ public class Fuma : Skill
                     if(abilityComponent.animationComponent.animationEndDelay != 0)
                     {
                         Debug.Log("Animation Delay: " + abilityComponent.animationComponent.animation + " for: " + abilityComponent.animationComponent.animationEndDelay);
-                        yield return new WaitForSeconds(abilityComponent.animationComponent.animationEndDelay);
                         if(!GetAbilityConnected())
                         {
-                            Destroy(this.gameObject);
+                            StartCoroutine(AnimationDelay(abilityComponent.animationComponent));
+                            yield return new WaitUntil(() => GetAbilityConnected());
+                        }
+                        else
+                        {
+                            yield return new WaitForSeconds(abilityComponent.animationComponent.animationEndDelay);
                         }
                     }
                     else
@@ -123,6 +128,14 @@ public class Fuma : Skill
             }
         }
         EngageCooldown();
+    }
+
+    public IEnumerator AnimationDelay(AnimationComponent animationComponent)
+    {
+
+        yield return new WaitForSeconds(animationComponent.animationEndDelay);
+        StopCoroutine(abilityCoroutine);
+        Destroy(this.gameObject);
     }
 
     public void PlayModularComponent(GameObject modularAbilityInstance, AbilityComponent abilityComponent)

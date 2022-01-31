@@ -29,6 +29,7 @@ public class CameraController : MonoBehaviour
 
     //Events
     public static event Action<GameObject, Transform> onEnableThirdPersonCamera;
+    public static event Action<GameObject, float> onEnableThirdPersonCameraRetargeting;
     //public static event Action<GameObject, Transform> onEnableLockOnCamera;
 
     private void OnEnable()
@@ -90,6 +91,11 @@ public class CameraController : MonoBehaviour
         
         cameraGroupInstance.GetComponent<CameraGroup>().UpdateDynamicTargetLock(cameraGroupInstance, target);
 
+    }
+
+    public void RecenterThirdPersonCam(float time)
+    {
+        onEnableThirdPersonCameraRetargeting.Invoke(cameraGroupInstance, time);
     }
 
     void UpdateDynamicTargetLockCam()

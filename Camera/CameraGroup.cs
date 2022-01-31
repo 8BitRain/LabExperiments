@@ -12,11 +12,13 @@ public class CameraGroup : MonoBehaviour
     private void OnEnable()
     {
         CameraController.onEnableThirdPersonCamera += EnableThirdPersonCamera;
+        CameraController.onEnableThirdPersonCameraRetargeting += RecenterCamera;
     }
 
     private void OnDisable()
     {
         CameraController.onEnableThirdPersonCamera -= EnableThirdPersonCamera;
+        CameraController.onEnableThirdPersonCameraRetargeting -= RecenterCamera;
     }
 
     // Start is called before the first frame update
@@ -99,5 +101,21 @@ public class CameraGroup : MonoBehaviour
             Debug.Log("Enabling Target to look at Body");
             targetGroup.m_Targets[1].target = target.transform;
         }
+    }
+
+    public void RecenterCamera(GameObject instance, float time)
+    {
+        if(this.gameObject != instance)
+            return;
+        
+        thirdPersonCamera.GetComponent<CinemachineFreeLook>().m_RecenterToTargetHeading.m_RecenteringTime = time;
+        thirdPersonCamera.GetComponent<CinemachineFreeLook>().m_RecenterToTargetHeading.m_enabled = true;
+        StartCoroutine(Delay(time*2));
+    }
+
+    public IEnumerator Delay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        thirdPersonCamera.GetComponent<CinemachineFreeLook>().m_RecenterToTargetHeading.m_enabled = false;
     }
 }

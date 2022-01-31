@@ -31,7 +31,7 @@ public class Fuma : Skill
     private bool abilityConnected = false;
     private Coroutine abilityCoroutine;
     private Coroutine animationCoroutine;
-    private Transform target;
+    private Transform targetInstance;
     
     // Start is called before the first frame update
     private void OnEnable()
@@ -94,6 +94,8 @@ public class Fuma : Skill
         if(this.abilityInstance != summonerInstance)
             return;
         StopCoroutine(animationCoroutine);
+
+        this.targetInstance = targetInstance.transform;
         SetAbilityConnected(true);
     }
 
@@ -157,7 +159,8 @@ public class Fuma : Skill
             default:
                 break;
         }
-
+        
+        Vector3 diagonalVector = new Vector3(0,0,0);
         //Controls how the player travels
         switch (abilityComponent.playerMovementDirection)
         {
@@ -168,11 +171,25 @@ public class Fuma : Skill
                 GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position - GetPlayerReference().transform.forward*abilityComponent.playerMovementAmount, abilityComponent.playerMovementTime);
                 break;
             case AbilityComponent.MovementDirection.BackwardDiagonalLeft:
-                Vector3 diagonalVector = (GetPlayerReference().transform.forward * abilityComponent.playerMovementAmount) + (GetPlayerReference().transform.right * abilityComponent.playerMovementAmount);
+                diagonalVector = (GetPlayerReference().transform.forward * abilityComponent.playerMovementAmount) + (GetPlayerReference().transform.right * abilityComponent.playerMovementAmount);
                 GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position - diagonalVector, abilityComponent.playerMovementTime);
                 break;
+            case AbilityComponent.MovementDirection.ForwardDiagonalRight:
+                diagonalVector = (GetPlayerReference().transform.forward * abilityComponent.playerMovementAmount) + (GetPlayerReference().transform.right * abilityComponent.playerMovementAmount);
+                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + diagonalVector, abilityComponent.playerMovementTime);
+                break;
             case AbilityComponent.MovementDirection.Up:
-                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position - GetPlayerReference().transform.up*abilityComponent.playerMovementAmount, abilityComponent.playerMovementTime);
+                float distanceToTarget = 0;
+                /*if(targetInstance != null)
+                {
+                    distanceToTarget = (GetPlayerReference().transform.position - targetInstance.transform.position).magnitude; 
+                    GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.up*abilityComponent.playerMovementAmount, abilityComponent.playerMovementTime);
+                } 
+                else
+                {
+                    GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.up*abilityComponent.playerMovementAmount, abilityComponent.playerMovementTime);
+                }*/
+                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.up*abilityComponent.playerMovementAmount, abilityComponent.playerMovementTime);
                 break;
             default:
                 break;
@@ -202,6 +219,22 @@ public class Fuma : Skill
             string animation = abilityComponent.animationComponent.animation.ToString();
             Debug.Log("Play Animation: " + animation);
             GetAnimationController().ChangeAnimationState(GetPlayerReference().GetComponent<Animator>(),animation);
+        }
+
+        //TODO check if player can turn while using this skill
+        if(targetInstance != null && abilityComponent.lookAtTarget)
+        {
+            if(abilityComponent.lookAtTargetLockY)
+            {
+                GetPlayerReference().transform
+                .DOLookAt(new Vector3(targetInstance.transform.position.x, GetPlayerReference().transform.position.y, targetInstance.transform.position.z), .75f);
+            }
+            else
+            {
+                GetPlayerReference().transform.DOLookAt(targetInstance.transform.position, .75f);
+            }
+            
+           GetPlayerReference().GetComponent<CameraController>().RecenterThirdPersonCam(abilityComponent.reTargetTime);
         }
     
     }

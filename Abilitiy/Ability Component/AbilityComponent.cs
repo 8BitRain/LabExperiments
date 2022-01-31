@@ -50,6 +50,9 @@ public class AbilityComponent : ScriptableObject
     public float playerMovementAmount;
     public float playerMovementTime;
     public float playerMovementDelay;
+    public bool lookAtTarget;
+    public bool lookAtTargetLockY;
+    public float reTargetTime;
     [Header("Animation Settings")]
     public AnimationComponent animationComponent;
     [Header("HitBox Settings")]

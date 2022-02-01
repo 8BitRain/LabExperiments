@@ -282,6 +282,7 @@ public class Fuma : Skill
         GetAnimationController().PlayerAnimationLock(recoilAnimationLockTime, GetPlayerReference().GetComponent<PlayerMovementController>(), isMobileSkill);
         
         cooldownTriggered = true;
+        Destroy(this.gameObject);
     }
 
     //This function unparents a spell component

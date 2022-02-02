@@ -122,6 +122,7 @@ public class Fuma : Skill
                         else
                         {
                             yield return new WaitForSeconds(abilityComponent.animationComponent.animationEndDelay);
+                            FireModularProjectile(modularComponent.gameObject);
                         }
                     }
                     else
@@ -237,6 +238,17 @@ public class Fuma : Skill
            GetPlayerReference().GetComponent<CameraController>().RecenterThirdPersonCam(abilityComponent.reTargetTime);
         }
     
+    }
+
+    public void FireModularProjectile(GameObject modularAbilityInstance)
+    {
+        if(modularAbilityInstance.TryGetComponent<ModularAbilityComponent>(out ModularAbilityComponent modularAbilityComponent))
+        {
+            if(modularAbilityComponent.GetProjectile() != null)
+            {
+                Projectile modularProjectile = Instantiate(modularAbilityComponent.GetProjectile(), GetSkillSpawnPosition().position, GetSkillSpawnPosition().rotation);
+            }
+        }
     }
 
     public void TriggerHitBox(GameObject modularAbilityInstance, bool isActive)

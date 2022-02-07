@@ -29,10 +29,25 @@ public class WoodenDummy : MonoBehaviour
         switch (collisionComponent.knockbackDirection)
         {
             case CollisionComponent.KnockBackDirection.Forward:
-                transform.DOMove(transform.position + transform.forward*collisionComponent.knockbackAmount, collisionComponent.knockbackTime);
+                
+                if(TryGetComponent<Rigidbody>(out Rigidbody rigidbodyInstance1))
+                {
+                    rigidbodyInstance1.AddForce(transform.forward*collisionComponent.knockbackAmount/40);
+                }
+                else
+                {
+                    transform.DOMove(transform.position + transform.forward*collisionComponent.knockbackAmount, collisionComponent.knockbackTime);
+                }
                 break;
             case CollisionComponent.KnockBackDirection.Backward:
-                transform.DOMove(transform.position - transform.forward*collisionComponent.knockbackAmount, collisionComponent.knockbackTime);
+                if(TryGetComponent<Rigidbody>(out Rigidbody rigidbodyInstance2))
+                {
+                    rigidbodyInstance2.AddForce(transform.forward*collisionComponent.knockbackAmount/40);
+                }
+                else
+                {
+                    transform.DOMove(transform.position - transform.forward*collisionComponent.knockbackAmount, collisionComponent.knockbackTime);
+                }
                 break;
             case CollisionComponent.KnockBackDirection.Lateral:
                 transform.DOMove(transform.position + transform.right*collisionComponent.knockbackAmount, collisionComponent.knockbackTime);

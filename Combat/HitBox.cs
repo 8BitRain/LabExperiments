@@ -54,7 +54,7 @@ public class HitBox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print("HitBox OnTrigger Enter");
+        print("HitBox belonging to: " + this.transform.parent.name + " OnTrigger Enter");
         foreach (var layer in layers)
         {
             //Collision w/ defined layer(s)
@@ -94,7 +94,10 @@ public class HitBox : MonoBehaviour
     public void TriggerHitbox(GameObject instance, GameObject summoner, bool isActivated, float delay)
     {
         if(instance != this.gameObject)
+        {
+            Debug.Log("Attempting to TriggerHitbox, but " + instance.name + " is not equivalent to: " + this.gameObject.name);
             return;
+        }
         
         SetSummoner(summoner);
         

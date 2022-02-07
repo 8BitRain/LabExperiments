@@ -9,6 +9,7 @@ public class Fuma : Skill
     [Header("Skill Settings")]
     public float cooldownTime;
     public Cooldown cooldownObjRef;
+    //TODO set this position in the ability controller
     public Skill.CooldownBar cooldownBarPosition;
     private bool cooldownTriggered = false;
     public bool isMobileSkill = false;
@@ -247,6 +248,7 @@ public class Fuma : Skill
             if(modularAbilityComponent.GetProjectile() != null)
             {
                 Projectile modularProjectile = Instantiate(modularAbilityComponent.GetProjectile(), GetSkillSpawnPosition().position, GetSkillSpawnPosition().rotation);
+                Instantiate(modularAbilityComponent.GetProjectile().GetVFX(), GetSkillSpawnPosition().position, GetSkillSpawnPosition().rotation);
             }
         }
     }

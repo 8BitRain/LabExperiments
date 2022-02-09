@@ -18,7 +18,8 @@ public class PlayerMovementController : MonoBehaviour
 
     [Header("Movement Settings")]
     public float speed = 6.0f;
-    private float defaultSpeed;
+    public float topSpeed = 10.0f;
+    public float defaultSpeed;
     public float acceleration = .1f;
     public float friction = .025f;
     public float gravity = -9.81f;
@@ -28,7 +29,8 @@ public class PlayerMovementController : MonoBehaviour
     public float turnSmoothTime = 0.1f;
     public float turnSmoothVelocity;
     private bool dashInput = false;
-    private Vector2 movementDirection;
+    //private Vector2 movementDirection;
+    private Vector3 movementDirection;
 
     [Header("Dash Settings")]
     public float dashSpeed = 6.0f;
@@ -102,7 +104,7 @@ public class PlayerMovementController : MonoBehaviour
         animator = this.GetComponent<Animator>();
         animationController = this.GetComponent<AnimationController>();
         gravity = gravity/2.0f;
-        defaultSpeed = speed;
+        //defaultSpeed = speed;
     }
 
     void Update()
@@ -181,7 +183,11 @@ public class PlayerMovementController : MonoBehaviour
                     }
                     else
                     {
-                        speed = defaultSpeed;
+                        //speed = defaultSpeed;
+
+                        //increase speed;
+
+                        
                         //TODO: Trigger Camera Controller Here
                         //freeLookCamera.GetComponent<CinemachineFreeLook>().m_Lens.FieldOfView = 40;
                         speedLines.SetActive(false);
@@ -204,6 +210,11 @@ public class PlayerMovementController : MonoBehaviour
 
             if(direction.magnitude >= .1f && moveCharacter)
             {
+                //Acceleration
+                if(speed < topSpeed)
+                {
+                    Accelerate();
+                }
 
                 //Atan2 returns angle between x axis and the angle between 0
                 //Gives us an angle in radians
@@ -212,14 +223,14 @@ public class PlayerMovementController : MonoBehaviour
                 
                 float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + GetComponent<CameraController>().GetCameraInstance().eulerAngles.y;
                 float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-                Vector3 moveDir;
+                //Vector3 moveDir;
                 //Standard Movement
                 if(!_isWallRunning)
                 {
                     transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
 
                     //Move Forward as normal
-                    moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+                    movementDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 
                     //Moving forward no tilt
                     if(movementInput.x == 0 && movementInput.y > 0)
@@ -232,12 +243,12 @@ public class PlayerMovementController : MonoBehaviour
                     Vector3 slopeNormal = Vector3.zero;
                     if(Physics.Raycast(_groundChecker.position, Vector3.down, out slopeHit, GroundDistance, Ground))
                     {
-                        Slide(slopeNormal, slopeHit, moveDir);
+                        Slide(slopeNormal, slopeHit, movementDirection);
                     } 
                     
                     if(!glide && !_isGrounded)
                     {
-                        _controller.Move(moveDir.normalized * speed * Time.deltaTime);
+                        _controller.Move(movementDirection.normalized * speed * Time.deltaTime);
                     } 
                 }
                 else
@@ -254,7 +265,7 @@ public class PlayerMovementController : MonoBehaviour
                     transform.rotation = Quaternion.LookRotation(turnDirection);
 
                     
-                    moveDir = wallVector;
+                    movementDirection = wallVector;
 
                     //Look up parabolic motion. There seem to be animation cuves, bezier curves, and other lines to use.
                     //I'm curious what mathmatical functions simulate parbolas. How do you achieve x^2?
@@ -263,6 +274,14 @@ public class PlayerMovementController : MonoBehaviour
 
                     _controller.Move(wallVector * speed * Time.deltaTime); 
                 }          
+            }
+
+            if(direction.magnitude <= 0)
+            {
+                if(speed > defaultSpeed)
+                {
+                    Decelerate();
+                }
             }
 
             if (jumpInput && canUseRightSideFaceButtonInputs){
@@ -384,6 +403,17 @@ public class PlayerMovementController : MonoBehaviour
     void Land()
     {
         animator.SetBool("Landing", false);
+    }
+
+    public void Accelerate()
+    {
+        speed += acceleration * Time.deltaTime;
+    }
+
+    public void Decelerate()
+    {
+        speed -= friction * Time.deltaTime;
+        _controller.Move(movementDirection.normalized * speed * Time.deltaTime);
     }
 
     /** WALL RUN LOGIC **/

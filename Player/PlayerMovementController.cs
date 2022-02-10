@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using DG.Tweening;
 using UnityEngine;
 
 public class PlayerMovementController : MonoBehaviour
@@ -71,6 +72,7 @@ public class PlayerMovementController : MonoBehaviour
 
     [Header("VFX")]
     public GameObject speedLines;
+    private GameObject speedLinesInstance;
     public GameObject dustTrails;
     public GameObject _jumpVFX;
 
@@ -186,13 +188,29 @@ public class PlayerMovementController : MonoBehaviour
                         //speed = defaultSpeed;
 
                         //increase speed;
-
-                        
                         //TODO: Trigger Camera Controller Here
                         //freeLookCamera.GetComponent<CinemachineFreeLook>().m_Lens.FieldOfView = 40;
-                        speedLines.SetActive(false);
+                        //speedLines.SetActive(false);
                         //TODO: Ensure we are not sprinting
                         //animator.SetBool("Sprinting", false);
+
+                        if(speed > 30)
+                        {
+                           if(speedLinesInstance == null)
+                           {
+                               TriggerSpeedLinesVFX(true);
+                           }
+                           else
+                           {
+                                UpdateSpeedLinesVFXEmission();
+                           }
+                        }
+                        else
+                        {
+                            TriggerSpeedLinesVFX(false);
+                        }
+
+
                     }
                 }
 
@@ -412,8 +430,16 @@ public class PlayerMovementController : MonoBehaviour
 
     public void Decelerate()
     {
-        speed -= friction * Time.deltaTime;
-        _controller.Move(movementDirection.normalized * speed * Time.deltaTime);
+        if(speed > defaultSpeed)
+        {
+            //animationController.ChangeAnimationState(animator, "Esc_Slide_Left");
+            speed -= friction * Time.deltaTime;
+            _controller.Move(movementDirection.normalized * speed * Time.deltaTime);
+            if(speed < defaultSpeed)
+            {
+                speed = defaultSpeed;
+            }
+        }
     }
 
     /** WALL RUN LOGIC **/
@@ -530,5 +556,56 @@ public class PlayerMovementController : MonoBehaviour
         if(this.gameObject != instance)
             return;
         canUseRightSideFaceButtonInputs = true;
+    }
+
+    public void TriggerSpeedLinesVFX(bool isActive)
+    {
+
+
+        if(isActive)
+        {
+            if(speedLinesInstance == null)
+            {
+                speedLines.SetActive(true);
+                speedLinesInstance = Instantiate(speedLines, transform.position, transform.rotation);
+
+                //Fade speedLines In
+                Debug.Log(speedLinesInstance.GetComponent<Renderer>().material.shaderKeywords);
+                speedLinesInstance.GetComponent<Renderer>().material.DOFade(1, "Color_5D392A5", .25f);
+                
+                //Set parent of speedLinesInstance to camera instance
+                speedLinesInstance.transform.SetParent(GetComponent<CameraController>().GetCameraInstance());
+            }
+        }
+        else
+        {
+            if(speedLinesInstance != null)
+            {
+                //Fade speedLines Out, then remove them.
+                speedLinesInstance.GetComponent<Renderer>().material.DOFade(0, "Color_5D392A5", 5f).OnComplete(() => {
+                    speedLinesInstance.SetActive(false);
+                    Destroy(speedLinesInstance, 1f);
+                });
+                
+                
+            }
+        }
+    }
+
+    //Increase number of speedLine particles as player speed increases
+    public void UpdateSpeedLinesVFXEmission()
+    {
+        if(speedLinesInstance != null)
+        {
+            float speedRate = speed/topSpeed;
+            
+            ParticleSystem speedLinePS = speedLinesInstance.GetComponent<ParticleSystem>();
+            var emissionModule = speedLinePS.emission; 
+            if(emissionModule.rateOverTime.constant < 100.0)
+            {
+                emissionModule.rateOverTime = Mathf.Lerp(50, 100, speedRate); 
+            }
+            
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using DG.Tweening;
+using UnityEngine.Events;
 using UnityEngine;
 
 public class PlayerMovementController : MonoBehaviour
@@ -32,6 +33,8 @@ public class PlayerMovementController : MonoBehaviour
     private bool dashInput = false;
     //private Vector2 movementDirection;
     private Vector3 movementDirection;
+    public MovementComponent movementComponent;
+
 
     [Header("Dash Settings")]
     public float dashSpeed = 6.0f;
@@ -111,6 +114,8 @@ public class PlayerMovementController : MonoBehaviour
 
     void Update()
     {
+        UpdateMovementComponent();
+
         RaycastHit groundedRaycast;
         _isGrounded = Physics.Raycast(_groundChecker.position, Vector3.down, out groundedRaycast, GroundDistance, Ground);
         if(_isGrounded)
@@ -571,7 +576,6 @@ public class PlayerMovementController : MonoBehaviour
 
                 //Fade speedLines In
                 Debug.Log(speedLinesInstance.GetComponent<Renderer>().material.shaderKeywords);
-                speedLinesInstance.GetComponent<Renderer>().material.DOFade(1, "Color_5D392A5", .25f);
                 
                 //Set parent of speedLinesInstance to camera instance
                 speedLinesInstance.transform.SetParent(GetComponent<CameraController>().GetCameraInstance());
@@ -582,11 +586,10 @@ public class PlayerMovementController : MonoBehaviour
             if(speedLinesInstance != null)
             {
                 //Fade speedLines Out, then remove them.
-                speedLinesInstance.GetComponent<Renderer>().material.DOFade(0, "Color_5D392A5", 5f).OnComplete(() => {
-                    speedLinesInstance.SetActive(false);
-                    Destroy(speedLinesInstance, 1f);
-                });
-                
+                speedLinesInstance.SetActive(false);
+
+                //define some value for fade time
+                Destroy(speedLinesInstance, 1f);
                 
             }
         }
@@ -597,15 +600,32 @@ public class PlayerMovementController : MonoBehaviour
     {
         if(speedLinesInstance != null)
         {
-            float speedRate = speed/topSpeed;
+            if(speed < 30)
+            {
+                Destroy(speedLinesInstance);
+            }
+            //Take current speed (speed)
+            //Take top speed (topSpeed)
+            // Take the speed value that acts as the point where speed lines take effect (30)
+            
+            //For instance if the speed necessary to display speedlines is 30, then 45 - 30 gives us a range
+            float range = topSpeed - 30;
+
+            //Now we can subtract the speedLine range from the top speed subsctracted by the currentSpeed 
+            float currentSpeedLineValue = range - (topSpeed - speed);
+
+            //Define a speed rate
+            float speedRate = currentSpeedLineValue/range;
             
             ParticleSystem speedLinePS = speedLinesInstance.GetComponent<ParticleSystem>();
             var emissionModule = speedLinePS.emission; 
-            if(emissionModule.rateOverTime.constant < 100.0)
-            {
-                emissionModule.rateOverTime = Mathf.Lerp(50, 100, speedRate); 
-            }
-            
+            emissionModule.rateOverTime = Mathf.Lerp(10, 100, speedRate); 
+        
         }
+    }
+
+    public void UpdateMovementComponent()
+    {
+        movementComponent.currentSpeed = speed;
     }
 }

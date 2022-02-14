@@ -7,11 +7,15 @@ using UnityEngine;
 public class MovementComponent : ScriptableObject
 {
     [Header("Movement Details")]
-    public float speed = 6.0f;
+    public float currentSpeed = 6.0f;
+    public float defaultSpeed = 6.0f;
+    public float topSpeed = 15.0f;
     public float acceleration = .1f;
     public float friction = .025f;
+    public bool moveCharacter;
     public float gravity = -9.81f;
     public bool applyGravity = true;
-    public float turnSmoothTime = 0.1f;
-    public float turnSmoothVelocity;
+    public bool move = true;
+
+
 }

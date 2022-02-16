@@ -627,5 +627,7 @@ public class PlayerMovementController : MonoBehaviour
     public void UpdateMovementComponent()
     {
         movementComponent.currentSpeed = speed;
+        movementComponent.gravity = gravity;
+        movementComponent.isGrounded = _isGrounded;
     }
 }

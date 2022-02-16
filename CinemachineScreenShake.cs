@@ -5,45 +5,50 @@ using Cinemachine;
 
 public class CinemachineScreenShake : MonoBehaviour
 {
-    public static CinemachineScreenShake Instance {get; private set;}
     public CinemachineFreeLook cinemachineCam;
-    private float shakeTimer;
+    private float defaultFOV;
 
-    private void Awake()
+    public void Start()
     {
-        Instance = this;
-        //cinemachineCam = this.gameObject.GetComponent<CinemachineFreeLook>();
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        //this.GetComponent<CinemachineFreeLook>().GetRig(1).GetC
+        defaultFOV = cinemachineCam.m_Lens.FieldOfView;
     }
 
-    // Update is called once per frame
-    void Update()
+    void Noise(float amplitude, float frequency)
     {
-        if(shakeTimer > 0)
-        {
-            shakeTimer -= Time.deltaTime;
-            if(shakeTimer <= 0)
-            {
-                CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin =
-                cinemachineCam.GetRig(1).GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        
-                cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0;
-            }
-        }
+        cinemachineCam.GetRig(0).GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = amplitude;
+        cinemachineCam.GetRig(0).GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain = frequency;
+        cinemachineCam.GetRig(1).GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = amplitude;
+        cinemachineCam.GetRig(1).GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain = frequency;
+        cinemachineCam.GetRig(2).GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = amplitude;
+        cinemachineCam.GetRig(2).GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain = frequency;
     }
 
-    public void screenShake(float intensity, float timer)
+    void SetZoom(float zoom)
     {
-        Debug.Log("ScreenShake: Shake the screeeen");
-        CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin =
-                    cinemachineCam.GetRig(1).GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = intensity;
+        cinemachineCam.m_Lens.FieldOfView = zoom;
+    }
 
-        shakeTimer = timer;
+    public void DoShake(ScreenShakeComponent screenShakeComponent)
+    {
+        Debug.Log("Starting Screenshake Camera");
+        StartCoroutine(Shake(screenShakeComponent));
+    }
 
+    public IEnumerator FreezeScreen(ScreenShakeComponent screenShakeComponent)
+    {
+        Time.timeScale = screenShakeComponent.deltaTime;
+        yield return new WaitForSecondsRealtime(screenShakeComponent.realtimeDelay);
+        Time.timeScale = 1;
+    }
+
+
+    public IEnumerator Shake(ScreenShakeComponent screenShakeComponent)
+    {
+        StartCoroutine(FreezeScreen(screenShakeComponent));
+        if(screenShakeComponent.useZoom) SetZoom(screenShakeComponent.zoom);
+        Noise(screenShakeComponent.amplitude, screenShakeComponent.frequency);
+        yield return new WaitForSeconds(screenShakeComponent.time);
+        SetZoom(defaultFOV);
+        Noise(0,0);
     }
 }

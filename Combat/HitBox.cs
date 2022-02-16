@@ -15,7 +15,8 @@ public class HitBox : MonoBehaviour
     public AbilityComponent abilityComponent;
     private GameObject Summoner;
 
-    public CinemachineImpulseSource screenShakeImpulse;
+    public AudioComponent audioComponent;
+    public GameEvent screenShakeEvent;
 
     private bool rumble = true;
 
@@ -71,7 +72,18 @@ public class HitBox : MonoBehaviour
                 StartCoroutine(RumbleCountdown(.2f));
                 rumble = false;
                 
-                //screenShakeImpulse.GenerateImpulse();
+                //Screenshake
+                if(screenShakeEvent != null)
+                {
+                    screenShakeEvent.Raise();
+                }
+
+                //Play Audio
+                if(audioComponent != null)
+                {
+                    GetComponent<AudioSource>().clip = audioComponent.connected;
+                    GetComponent<AudioSource>().Play();
+                }
 
                 //Scriptable Object collison
                 if(GetSummoner() != null)

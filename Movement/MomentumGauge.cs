@@ -30,7 +30,7 @@ public class MomentumGauge : MonoBehaviour
             decelerationEvent.Raise();
         }
 
-        if(movementComponent.currentSpeed == movementComponent.defaultSpeed)
+        if(movementComponent.currentSpeed == movementComponent.defaultSpeed || !movementComponent.isGrounded)
         {
             stationaryEvent.Raise();
         }

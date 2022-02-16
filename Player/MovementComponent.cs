@@ -16,6 +16,5 @@ public class MovementComponent : ScriptableObject
     public float gravity = -9.81f;
     public bool applyGravity = true;
     public bool move = true;
-
-
+    public bool isGrounded = false;
 }

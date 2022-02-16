@@ -238,6 +238,16 @@ public class Fuma : Skill
             
            GetPlayerReference().GetComponent<CameraController>().RecenterThirdPersonCam(abilityComponent.reTargetTime);
         }
+
+        //Does the modular component play an audio effect?
+        if(abilityComponent.audioComponent != null)
+        {
+            if(modularAbilityInstance.TryGetComponent( out AudioSource audioSource))
+            {
+                audioSource.clip = abilityComponent.audioComponent.ambient;
+                audioSource.Play();
+            }
+        }
     
     }
 

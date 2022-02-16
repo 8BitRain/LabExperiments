@@ -1344,6 +1344,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
        //Apply screenshake TODO: Supply a variable to this function that holds the intensity and time values, that way each effect that defines an impact can define a screenshake!
        //CinemachineScreenShake.Instance.screenShake(10.0f, .5f);
+       //Evoke Shake Event
     }
 
 

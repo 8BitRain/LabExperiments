@@ -177,7 +177,8 @@ public class Grapple : MonoBehaviour
             StartCoroutine(AdjustTime(0,.1f));
             //StartCoroutine(_ProcessShake(1000f,2f));
 
-            CinemachineScreenShake.Instance.screenShake(20.0f, .1f);
+            //CinemachineScreenShake.Instance.screenShake(20.0f, .1f);
+            //Invoke ShakeEvent
 
         }
     }

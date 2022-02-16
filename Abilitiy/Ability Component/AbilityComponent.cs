@@ -59,4 +59,6 @@ public class AbilityComponent : ScriptableObject
     public float hitBoxDuration;
     [Header("Collision Component")]
     public CollisionComponent collisionComponent;
+    [Header("Audio Component")]
+    public AudioComponent audioComponent;
 }

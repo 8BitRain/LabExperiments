@@ -55,7 +55,11 @@ public class Projectile : MonoBehaviour
         }
 
         Debug.Log("Projectile: " + this.gameObject.name + " " + "collided with " + targetInstance.gameObject.name);
-        Instantiate(VFX, targetInstance.transform.position, targetInstance.transform.rotation);
+        Debug.Log("Spawning at: " + targetInstance.transform.position + "rotation: " + targetInstance.transform.rotation);
+        GameObject vfxInstance = Instantiate(VFX, targetInstance.transform.position, Quaternion.identity);
+        //vfxInstance.transform.SetParent(targetInstance.transform);
+        //vfxInstance.transform.position = new Vector3(0,0,0);
+        Debug.Log("Projectile VFX: position is " + vfxInstance.transform.position);
     }
 
     public Quaternion GetInitialRotation()

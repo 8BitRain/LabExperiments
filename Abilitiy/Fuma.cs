@@ -248,6 +248,14 @@ public class Fuma : Skill
                 audioSource.Play();
             }
         }
+
+        //Does the modular component spawn a clone?
+        if(modularAbilityInstance.TryGetComponent(out SummonClone summonClone))
+        {
+            GameObject cloneInstance = Instantiate(summonClone.clone, GetPlayerReference().transform.position, GetPlayerReference().transform.rotation);
+            Debug.Log("Summoning Clone: " + GetAnimationController());
+            summonClone.UpdateSummonAnimation(cloneInstance, GetPlayerReference().GetComponent<Animator>(), GetAnimationController());
+        }
     
     }
 
@@ -258,7 +266,10 @@ public class Fuma : Skill
             if(modularAbilityComponent.GetProjectile() != null)
             {
                 Projectile modularProjectile = Instantiate(modularAbilityComponent.GetProjectile(), GetSkillSpawnPosition().position, GetSkillSpawnPosition().rotation);
-                Instantiate(modularAbilityComponent.GetProjectile().GetVFX(), GetSkillSpawnPosition().position, GetSkillSpawnPosition().rotation);
+                if(modularAbilityComponent.GetProjectile().GetVFX() != null)
+                {
+                    Instantiate(modularAbilityComponent.GetProjectile().GetVFX(), GetSkillSpawnPosition().position, GetSkillSpawnPosition().rotation);
+                }
             }
         }
     }
@@ -315,6 +326,7 @@ public class Fuma : Skill
         yield return new WaitForSeconds(duration);
         abilityComponent.SetParent(null);
     }
+
     
 
     public void SetAbilityConnected(bool hasConnected)

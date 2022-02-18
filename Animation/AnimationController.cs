@@ -38,6 +38,13 @@ public class AnimationController : MonoBehaviour
         return currentState;
     }
 
+    public float GetCurrentAnimatorTime(Animator targetAnim, int layer = 0)
+    {
+        AnimatorStateInfo animState = targetAnim.GetCurrentAnimatorStateInfo(layer);
+        float currentTime = animState.normalizedTime % 1;
+        return currentTime;
+    }
+
     public void PlayerAnimationLock(float duration, PlayerMovementController player, bool isMobileSkill)
     {
         StartCoroutine(PlayerAnimationLockCoroutine(duration, player, isMobileSkill));

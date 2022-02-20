@@ -98,6 +98,9 @@ public class Fuma : Skill
 
         this.targetInstance = targetInstance.transform;
         SetAbilityConnected(true);
+
+        //Use multi viewpoint camera to render action scene
+        //GetPlayerReference().GetComponent<CameraController>().EngageDynamicTargetLock(GetPlayerReference(), this.targetInstance, CameraGroup.FrameShotStyle.WIDESHOT);
     }
 
     public IEnumerator PlayModularComponents()
@@ -148,6 +151,12 @@ public class Fuma : Skill
     {
 
         TriggerHitBox(modularAbilityInstance, true);
+
+        //Use multi viewpoint camera to render action scene
+        if(abilityComponent.cameraSettings != null && this.targetInstance != null)
+        {
+            GetPlayerReference().GetComponent<CameraController>().EngageDynamicTargetLock(GetPlayerReference(), this.targetInstance, abilityComponent.cameraSettings);
+        }
 
         //Controls how the component travels
         switch (abilityComponent.travelDirection)
@@ -236,7 +245,7 @@ public class Fuma : Skill
                 GetPlayerReference().transform.DOLookAt(targetInstance.transform.position, .75f);
             }
             
-           GetPlayerReference().GetComponent<CameraController>().RecenterThirdPersonCam(abilityComponent.reTargetTime);
+           //GetPlayerReference().GetComponent<CameraController>().RecenterThirdPersonCam(abilityComponent.reTargetTime);
         }
 
         //Does the modular component play an audio effect?
@@ -304,6 +313,8 @@ public class Fuma : Skill
 
     public void EngageCooldown()
     {
+        //Reset Camera
+        GetPlayerReference().GetComponent<CameraController>().DisengageDynamicTargetLock(GetPlayerReference());
         Cooldown cooldownInstance = Instantiate(cooldownObjRef, transform.position, transform.rotation);
         cooldownInstance.time = cooldownTime;
         cooldownInstance.activeSkill = this.gameObject;

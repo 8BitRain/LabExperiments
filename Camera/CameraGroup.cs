@@ -6,6 +6,11 @@ using UnityEngine;
 
 public class CameraGroup : MonoBehaviour
 {
+    public enum FrameShotStyle
+    {
+        NONE,
+        WIDESHOT,
+    }
     public GameObject lockOnCamera;
     public GameObject thirdPersonCamera;
 
@@ -41,7 +46,7 @@ public class CameraGroup : MonoBehaviour
         thirdPersonCamera.GetComponent<CinemachineFreeLook>().m_LookAt = target;
     }
 
-    public void EnableLockOnCamera(GameObject instance, GameObject looker, Transform target)
+    public void EnableLockOnCamera(GameObject instance, GameObject looker, Transform target, CameraSettings cameraSettings)
     {
         if(this.gameObject != instance)
             return;
@@ -50,8 +55,19 @@ public class CameraGroup : MonoBehaviour
         lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Priority = 12;
         thirdPersonCamera.GetComponent<CinemachineFreeLook>().m_Priority = 10;
 
-        lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Follow = looker.GetComponent<CameraController>().thirdPersonCameraTargetBack;
+        //lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Follow = looker.GetComponent<CameraController>().thirdPersonCameraTargetBack;
+        if(cameraSettings != null)
+        {
+            DefineGameObjectToFollow(looker, target, cameraSettings.frameShotStyle);
+            lockOnCamera.GetComponent<CinemachineCameraOffset>().m_Offset = cameraSettings.cameraOffset;
+            lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Lens.Dutch = cameraSettings.dutch;
+        }
+        else
+        {
+            DefineGameObjectToFollow(looker, target, CameraGroup.FrameShotStyle.NONE);
+        }
 
+       
         CinemachineTargetGroup targetGroup = lockOnCamera.GetComponentInChildren<CinemachineTargetGroup>();
         targetGroup.AddMember(looker.transform, 1, 2);
 
@@ -117,5 +133,20 @@ public class CameraGroup : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         thirdPersonCamera.GetComponent<CinemachineFreeLook>().m_RecenterToTargetHeading.m_enabled = false;
+    }
+
+    void DefineGameObjectToFollow(GameObject source, Transform target, FrameShotStyle frameShotStyle)
+    {
+        switch (frameShotStyle)
+        {
+            case FrameShotStyle.NONE:
+                lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Follow = source.GetComponent<CameraController>().thirdPersonCameraTargetBack;
+                break;
+            case FrameShotStyle.WIDESHOT:
+                lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Follow = target;
+                break;
+            default:
+                break;
+        }
     }
 }

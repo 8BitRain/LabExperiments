@@ -22,6 +22,9 @@ public class TargetingController : MonoBehaviour
     [Header("Target List")]
     public LayerMask Target; 
 
+    [Header("Camera Settings")]
+    public CameraSettings cameraSettings;
+
     public Transform[] targets;
 
     //Timer
@@ -35,7 +38,7 @@ public class TargetingController : MonoBehaviour
     public static event Action<GameObject, GameObject, Camera> onUpdateTargetArrowPosition;
     public static event Action<GameObject> onEnableTargetArrow;
     public static event Action<GameObject> onDisableTargetArrow;
-    public static event Action<GameObject, Transform> onEnableLockOnCamera;
+    public static event Action<GameObject, Transform, CameraSettings> onEnableLockOnCamera;
     public static event Action<GameObject> onDisableLockOnCamera;
     public static event Action<GameObject, Transform> onUpdateLockOnCameraTarget;
 
@@ -105,7 +108,7 @@ public class TargetingController : MonoBehaviour
                 print("Target to lock: " + targetToLockHead);
 
                 //Activate Lock On Camera
-                onEnableLockOnCamera.Invoke(this.gameObject, targetToLockHead);
+                onEnableLockOnCamera.Invoke(this.gameObject, targetToLockHead, cameraSettings);
 
                 //Activate & Adjust position of targeter
                 onEnableTargetArrow.Invoke(this.gameObject);

@@ -61,4 +61,6 @@ public class AbilityComponent : ScriptableObject
     public CollisionComponent collisionComponent;
     [Header("Audio Component")]
     public AudioComponent audioComponent;
+    [Header("Camera Settings")]
+    public CameraSettings cameraSettings;
 }

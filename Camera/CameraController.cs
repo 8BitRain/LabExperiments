@@ -67,13 +67,13 @@ public class CameraController : MonoBehaviour
         //UpdateDynamicTargetLockCam();
     }
 
-    public void EngageDynamicTargetLock(GameObject instance, Transform target)
+    public void EngageDynamicTargetLock(GameObject instance, Transform target, CameraSettings cameraSettings)
     {
         if(this.gameObject != instance)
             return;
 
         GameObject looker = instance;
-        cameraGroupInstance.GetComponent<CameraGroup>().EnableLockOnCamera(cameraGroupInstance, looker, target);
+        cameraGroupInstance.GetComponent<CameraGroup>().EnableLockOnCamera(cameraGroupInstance, looker, target, cameraSettings);
     }
 
     public void DisengageDynamicTargetLock(GameObject instance)

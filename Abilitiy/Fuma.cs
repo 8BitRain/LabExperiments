@@ -153,6 +153,9 @@ public class Fuma : Skill
 
         TriggerHitBox(modularAbilityInstance, true);
 
+        //Does the modular component have ambient vfx to play?
+        SummonVFX(modularAbilityInstance);
+
         //Use multi viewpoint camera to render action scene
         if(abilityComponent.cameraSettings != null && this.targetInstance != null)
         {
@@ -267,6 +270,17 @@ public class Fuma : Skill
             summonClone.UpdateSummonAnimation(cloneInstance, GetPlayerReference().GetComponent<Animator>(), GetAnimationController());
         }
     
+    }
+
+    public void SummonVFX(GameObject modularAbilityInstance)
+    {
+        if(modularAbilityInstance.TryGetComponent<ModularAbilityComponent>(out ModularAbilityComponent modularAbilityComponent))
+        {
+            if(modularAbilityComponent.GetVFX() != null)
+            {
+                Instantiate(modularAbilityComponent.GetVFX(), GetPlayerReference().transform.position, GetPlayerReference().transform.rotation);
+            }
+        }
     }
 
     public void FireModularProjectile(GameObject modularAbilityInstance)

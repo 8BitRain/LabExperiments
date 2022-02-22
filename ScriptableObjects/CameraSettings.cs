@@ -10,4 +10,5 @@ public class CameraSettings : ScriptableObject
     public CameraGroup.FrameShotStyle frameShotStyle;
     public float dutch;
     public Vector3 cameraOffset;
+    public float cameraBlendTime;
 }

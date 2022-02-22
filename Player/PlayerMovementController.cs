@@ -160,7 +160,7 @@ public class PlayerMovementController : MonoBehaviour
                     animator.SetBool("Falling", false);
                     //TODO: Ensure a landing animation plays
                     animator.SetBool("Landing", true);
-
+                    StartCoroutine(LandTimer(1f));
                     //Roll land if moving, standard land if not moving
                     if(movementInput.x != 0 || movementInput.y != 0)
                         animationController.ChangeAnimationState(animator, "Player_landing_roll");
@@ -627,6 +627,12 @@ public class PlayerMovementController : MonoBehaviour
         
         }
     }
+
+    public IEnumerator LandTimer(float time)
+    {
+        yield return new WaitForSeconds(time);
+        Land();
+    } 
 
     public void UpdateMovementComponent()
     {

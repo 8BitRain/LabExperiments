@@ -61,6 +61,7 @@ public class CameraGroup : MonoBehaviour
             DefineGameObjectToFollow(looker, target, cameraSettings.frameShotStyle);
             lockOnCamera.GetComponent<CinemachineCameraOffset>().m_Offset = cameraSettings.cameraOffset;
             lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Lens.Dutch = cameraSettings.dutch;
+            Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend.m_Time = cameraSettings.cameraBlendTime;
         }
         else
         {

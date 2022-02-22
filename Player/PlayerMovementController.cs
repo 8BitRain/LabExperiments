@@ -383,6 +383,7 @@ public class PlayerMovementController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext ctx) => movementInput = ctx.ReadValue<Vector2>();
     public void OnJump(InputAction.CallbackContext ctx) => jumpInput = ctx.ReadValueAsButton();
     public void OnEnviromentInteraction(InputAction.CallbackContext ctx) => enviromentActionInput = ctx.ReadValueAsButton();
+    public void OnDash(InputAction.CallbackContext ctx) => dashInput = ctx.ReadValueAsButton();
 
     public void EnableMovement()
     {
@@ -430,7 +431,10 @@ public class PlayerMovementController : MonoBehaviour
 
     public void Accelerate()
     {
-        speed += acceleration * Time.deltaTime;
+        if(dashInput)
+        {
+            speed += acceleration * Time.deltaTime;
+        }
     }
 
     public void Decelerate()

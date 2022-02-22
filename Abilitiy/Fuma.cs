@@ -121,6 +121,7 @@ public class Fuma : Skill
                         if(!GetAbilityConnected())
                         {
                             animationCoroutine = StartCoroutine(AnimationDelay(abilityComponent.animationComponent));
+                            FireModularProjectile(modularComponent.gameObject);
                             yield return new WaitUntil(() => GetAbilityConnected());
                         }
                         else
@@ -270,11 +271,13 @@ public class Fuma : Skill
 
     public void FireModularProjectile(GameObject modularAbilityInstance)
     {
+        Debug.Log("Fire Modular Projectile");
         if(modularAbilityInstance.TryGetComponent<ModularAbilityComponent>(out ModularAbilityComponent modularAbilityComponent))
         {
             if(modularAbilityComponent.GetProjectile() != null)
             {
                 Projectile modularProjectile = Instantiate(modularAbilityComponent.GetProjectile(), GetSkillSpawnPosition().position, GetSkillSpawnPosition().rotation);
+                modularProjectile.transform.SetParent(GetPlayerReference().transform);
                 if(modularAbilityComponent.GetProjectile().GetVFX() != null)
                 {
                     Instantiate(modularAbilityComponent.GetProjectile().GetVFX(), GetSkillSpawnPosition().position, GetSkillSpawnPosition().rotation);

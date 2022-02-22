@@ -22,6 +22,9 @@ public class WoodenDummy : MonoBehaviour
             return;
         Debug.Log(gameObject.name + "is processing collision");
 
+        //Flash Red color when hit
+        DamageFlash();
+
         CollisionComponent collisionComponent = abilityComponent.collisionComponent;
         transform.DOPunchScale(UnityEngine.Random.insideUnitSphere * collisionComponent.squashAndStretchAmount, collisionComponent.squashAndStretchTime);
         transform.DORotate(transform.rotation.eulerAngles + transform.rotation.eulerAngles*720, 1.5f);
@@ -56,5 +59,18 @@ public class WoodenDummy : MonoBehaviour
                 break;
         }
         
+    }
+
+    public void DamageFlash()
+    {
+        foreach (Transform child in GetComponentsInChildren<Transform>())
+        {
+            if(child.TryGetComponent<Renderer>(out Renderer renderer))
+            {
+                renderer.material.DOColor(Color.red, "_Tint", .2f).OnComplete(() => {
+                    renderer.material.DOColor(Color.white, "_Tint", .2f);
+                }).SetLoops(6);
+            }
+        }
     }
 }

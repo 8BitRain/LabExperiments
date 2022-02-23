@@ -63,4 +63,11 @@ public class AbilityComponent : ScriptableObject
     public AudioComponent audioComponent;
     [Header("Camera Settings")]
     public CameraSettings cameraSettings;
+    [Header("VFX Settings")]
+    public VFXSpawnLocation vfxSpawnLocation;
+    public enum VFXSpawnLocation
+    {
+        DEFAULT,
+        BACK,
+    }
 }

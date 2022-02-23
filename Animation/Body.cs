@@ -6,6 +6,7 @@ public class Body : MonoBehaviour
 {
     public Transform Head;
     public Transform BlockCore;
+    public Transform Back;
     // Start is called before the first frame update
     void Start()
     {

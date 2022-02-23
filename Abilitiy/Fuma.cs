@@ -278,7 +278,18 @@ public class Fuma : Skill
         {
             if(modularAbilityComponent.GetVFX() != null)
             {
-                Instantiate(modularAbilityComponent.GetVFX(), GetPlayerReference().transform.position, GetPlayerReference().transform.rotation);
+                Body summonerBody = GetPlayerReference().GetComponent<Body>();
+                switch (modularAbilityComponent.abilityComponent.vfxSpawnLocation)
+                {
+                    case AbilityComponent.VFXSpawnLocation.DEFAULT:
+                        Instantiate(modularAbilityComponent.GetVFX(), GetPlayerReference().transform.position, GetPlayerReference().transform.rotation);
+                        break;
+                    case AbilityComponent.VFXSpawnLocation.BACK:
+                        Instantiate(modularAbilityComponent.GetVFX(), summonerBody.Back.position, summonerBody.Back.rotation);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

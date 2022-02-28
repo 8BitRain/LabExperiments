@@ -30,6 +30,7 @@ public class CameraController : MonoBehaviour
     //Events
     public static event Action<GameObject, Transform> onEnableThirdPersonCamera;
     public static event Action<GameObject, float> onEnableThirdPersonCameraRetargeting;
+    public static event Action<Camera> onCameraLoaded;
     //public static event Action<GameObject, Transform> onEnableLockOnCamera;
 
     private void OnEnable()
@@ -59,6 +60,9 @@ public class CameraController : MonoBehaviour
 
         cameraInstance = Instantiate(Camera);
         cameraInstance.tag = "MainCamera";
+
+        Debug.Log(cameraInstance);
+        onCameraLoaded?.Invoke(cameraInstance);
     }
 
     // Update is called once per frame

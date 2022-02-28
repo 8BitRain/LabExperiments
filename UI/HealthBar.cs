@@ -9,8 +9,18 @@ public class HealthBar : MonoBehaviour
     public Slider slider;
 
     private GameManager gameManager;
-    private Camera[] playerCameras;
 
+    private GameObject ownerInstance;
+
+    private void OnEnable()
+    {
+        HurtBox.gotCollision += SetHP;
+    }
+
+    private void OnDisable()
+    {
+        HurtBox.gotCollision -= SetHP;
+    }
     // Start is called before the first frame update
     public void SetHealth(float health)
     {
@@ -28,7 +38,23 @@ public class HealthBar : MonoBehaviour
         return slider.value;
     }
 
-    //Update enemy health bar
+    public void SetOwnerInstance(GameObject ownerInstance)
+    {
+        this.ownerInstance = ownerInstance;
+    }
+
+    public void SetHP(GameObject hurtBoxAgentInstance,GameObject hurtBoxInstance,AbilityComponent abilityComponent)
+    {
+        if(this.ownerInstance != hurtBoxAgentInstance)
+            return;
+        
+        Debug.Log("Collision recieved setting health");
+        
+        SetHealth(GetHealth() - abilityComponent.collisionComponent.hpDamage);
+    }
+
+
+    //TODO: Remove reference. Relies on old Game Manager logic Update enemy health bar
     public void PositionEnemyHealthBar(Camera playerCam, Transform enemy, Transform player)
     {
         RectTransform healthBarRectTransform = this.GetComponent<RectTransform>();
@@ -48,10 +74,5 @@ public class HealthBar : MonoBehaviour
             healthBarCanvas.enabled = false;
 
         }
-
-
-        //transform.LookAt()
-        //transform.LookAt(player.position);
-        //transform.rotation = Quaternion.Euler(player.rotation.x, 90, player.rotation.z);
     }
 }

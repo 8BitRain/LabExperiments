@@ -21,4 +21,5 @@ public class CollisionComponent : ScriptableObject
     public float spinVelocity;
     public float squashAndStretchAmount;
     public float squashAndStretchTime;
+    public float hpDamage;
 }

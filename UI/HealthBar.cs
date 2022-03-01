@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class HealthBar : MonoBehaviour
 {
 
     public Slider slider;
+    public Slider redChunk;
 
     private GameManager gameManager;
 
@@ -21,16 +23,27 @@ public class HealthBar : MonoBehaviour
     {
         HurtBox.gotCollision -= SetHP;
     }
-    // Start is called before the first frame update
+    
     public void SetHealth(float health)
     {
         slider.value = health;
+
+        if(redChunk != null)
+        {
+            StartCoroutine(redChunkDelayDecrease(1.5f));
+        }
     }
 
     public void SetMaxHealth(float health)
     {
         slider.maxValue = health;
         slider.value = health;
+
+        if(redChunk != null)
+        {
+            redChunk.maxValue = health;
+            redChunk.value = health;
+        }
     }
 
     public float GetHealth()
@@ -51,6 +64,12 @@ public class HealthBar : MonoBehaviour
         Debug.Log("Collision recieved setting health");
         
         SetHealth(GetHealth() - abilityComponent.collisionComponent.hpDamage);
+    }
+
+    public IEnumerator redChunkDelayDecrease(float time)
+    {
+        yield return new WaitForSeconds(time);
+        redChunk.DOValue(slider.value, .5f);
     }
 
 

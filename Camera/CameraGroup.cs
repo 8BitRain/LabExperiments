@@ -10,9 +10,12 @@ public class CameraGroup : MonoBehaviour
     {
         NONE,
         WIDESHOT,
+        ZoomToFace
     }
+
     public GameObject lockOnCamera;
     public GameObject thirdPersonCamera;
+    public GameObject zoomToFaceCamera;
 
     private void OnEnable()
     {
@@ -38,6 +41,52 @@ public class CameraGroup : MonoBehaviour
         
     }
 
+    public void RouteToCameraEngage(GameObject instance, GameObject looker, Transform target, CameraSettings cameraSettings)
+    {
+        if(this.gameObject != instance)
+            return;
+
+        switch (cameraSettings.frameShotStyle)
+        {
+            case FrameShotStyle.NONE:
+                EnableLockOnCamera(instance, looker, target, cameraSettings);
+                break;
+            case FrameShotStyle.WIDESHOT:
+                EnableLockOnCamera(instance, looker, target, cameraSettings);
+                break;
+            case FrameShotStyle.ZoomToFace:
+                EnableZoomToFaceCamera(instance, looker, target, cameraSettings);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void EnableZoomToFaceCamera(GameObject instance, GameObject looker, Transform target, CameraSettings cameraSettings)
+    {
+        //If method is triggered from an event, rememeber to check instance
+        /*
+        if(this.gameObject != instance)
+            return;
+        */
+
+        zoomToFaceCamera.SetActive(true);
+        zoomToFaceCamera.GetComponent<CinemachineFreeLook>().m_Priority = 12;
+        thirdPersonCamera.GetComponent<CinemachineFreeLook>().m_Priority = 10;
+        lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Priority = 10;
+
+        zoomToFaceCamera.GetComponent<CinemachineFreeLook>().m_Follow = looker.GetComponent<Body>().Head;
+        zoomToFaceCamera.GetComponent<CinemachineFreeLook>().m_LookAt = looker.GetComponent<Body>().Head;
+
+        if(cameraSettings != null)
+        {
+            Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend.m_Time = cameraSettings.cameraBlendTime;
+            CinemachineFreeLook freeLook = zoomToFaceCamera.GetComponent<CinemachineFreeLook>();
+            freeLook.m_Heading.m_Bias = cameraSettings.cameraBias;
+            freeLook.GetComponent<CinemachineCameraOffset>().m_Offset = cameraSettings.cameraOffset;
+        }
+    }
+
     public void EnableThirdPersonCamera(GameObject instance, Transform target)
     {
         if(this.gameObject != instance)
@@ -58,6 +107,13 @@ public class CameraGroup : MonoBehaviour
         //lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Follow = looker.GetComponent<CameraController>().thirdPersonCameraTargetBack;
         if(cameraSettings != null)
         {
+            //Quick test of zooming to face
+            /*if(cameraSettings.frameShotStyle == FrameShotStyle.ZoomToFace)
+            {
+                DisableLockOnCamera(looker);
+                ZoomToTargetFace(cameraSettings);
+                return;
+            }*/
             DefineGameObjectToFollow(looker, target, cameraSettings.frameShotStyle);
             lockOnCamera.GetComponent<CinemachineCameraOffset>().m_Offset = cameraSettings.cameraOffset;
             lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Lens.Dutch = cameraSettings.dutch;
@@ -84,6 +140,27 @@ public class CameraGroup : MonoBehaviour
         }
     }
 
+    public void RouteToCameraDisengage(GameObject instance, CameraSettings cameraSettings)
+    {
+        if(this.gameObject != instance)
+            return;
+
+        switch (cameraSettings.frameShotStyle)
+        {
+            case FrameShotStyle.NONE:
+                DisableLockOnCamera(instance);
+                break;
+            case FrameShotStyle.WIDESHOT:
+                DisableLockOnCamera(instance);
+                break;
+            case FrameShotStyle.ZoomToFace:
+                DisableZoomToFaceCamera(instance);
+                break;
+            default:
+                break;
+        }
+    }
+
     public void DisableLockOnCamera(GameObject instance)
     {
         if(this.gameObject != instance)
@@ -99,6 +176,18 @@ public class CameraGroup : MonoBehaviour
         lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Priority = 10;
         thirdPersonCamera.GetComponent<CinemachineFreeLook>().m_Priority = 11;
 
+    }
+
+    public void DisableZoomToFaceCamera(GameObject instance)
+    {
+        //If method is triggered from an event, rememeber to check instance
+        /*
+        if(this.gameObject != instance)
+            return;
+        */
+
+        zoomToFaceCamera.GetComponent<CinemachineFreeLook>().m_Priority = 10;
+        thirdPersonCamera.GetComponent<CinemachineFreeLook>().m_Priority = 11;
     }
 
     public void UpdateDynamicTargetLock(GameObject instance, Transform target)
@@ -145,6 +234,8 @@ public class CameraGroup : MonoBehaviour
                 break;
             case FrameShotStyle.WIDESHOT:
                 lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Follow = target;
+                break;
+            case FrameShotStyle.ZoomToFace:
                 break;
             default:
                 break;

@@ -33,6 +33,7 @@ public class Fuma : Skill
     private Coroutine abilityCoroutine;
     private Coroutine animationCoroutine;
     private Transform targetInstance;
+    private CameraSettings cameraSettingsInstance;
     
     // Start is called before the first frame update
     private void OnEnable()
@@ -159,7 +160,10 @@ public class Fuma : Skill
         //Use multi viewpoint camera to render action scene
         if(abilityComponent.cameraSettings != null && this.targetInstance != null)
         {
-            GetPlayerReference().GetComponent<CameraController>().EngageDynamicTargetLock(GetPlayerReference(), this.targetInstance, abilityComponent.cameraSettings);
+            //I would prefer this to route to a more generic method, that then branches out to Engaging Dynamic TargetLock or Engages a special third person camera
+            //GetPlayerReference().GetComponent<CameraController>().EngageDynamicTargetLock(GetPlayerReference(), this.targetInstance, abilityComponent.cameraSettings);
+            GetPlayerReference().GetComponent<CameraController>().RouteToCameraEngage(GetPlayerReference(), this.targetInstance, abilityComponent.cameraSettings);
+            cameraSettingsInstance = abilityComponent.cameraSettings;
         }
 
         //Controls how the component travels
@@ -342,7 +346,8 @@ public class Fuma : Skill
     public void EngageCooldown()
     {
         //Reset Camera
-        GetPlayerReference().GetComponent<CameraController>().DisengageDynamicTargetLock(GetPlayerReference());
+        //GetPlayerReference().GetComponent<CameraController>().DisengageDynamicTargetLock(GetPlayerReference());
+        GetPlayerReference().GetComponent<CameraController>().RouteToCameraDisengage(GetPlayerReference(), cameraSettingsInstance);
         Cooldown cooldownInstance = Instantiate(cooldownObjRef, transform.position, transform.rotation);
         cooldownInstance.time = cooldownTime;
         cooldownInstance.activeSkill = this.gameObject;

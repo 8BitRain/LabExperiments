@@ -17,6 +17,9 @@ public class CameraGroup : MonoBehaviour
     public GameObject thirdPersonCamera;
     public GameObject zoomToFaceCamera;
 
+    public static event Action<GameObject> onShowLetterBox;
+    public static event Action<GameObject> onHideLetterBox;
+
     private void OnEnable()
     {
         CameraController.onEnableThirdPersonCamera += EnableThirdPersonCamera;
@@ -84,6 +87,11 @@ public class CameraGroup : MonoBehaviour
             CinemachineFreeLook freeLook = zoomToFaceCamera.GetComponent<CinemachineFreeLook>();
             freeLook.m_Heading.m_Bias = cameraSettings.cameraBias;
             freeLook.GetComponent<CinemachineCameraOffset>().m_Offset = cameraSettings.cameraOffset;
+
+            if(cameraSettings.freezeFrame)
+            {
+                StartCoroutine(AdjustTimeScaleAfterDelay(cameraSettings));
+            }
         }
     }
 
@@ -240,5 +248,26 @@ public class CameraGroup : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    /*Time Scale Adjustement*/
+    public IEnumerator AdjustTimeScaleAfterDelay(CameraSettings cameraSettings)
+    {
+        yield return new WaitForSeconds(cameraSettings.freezeFrameDelay);
+        onShowLetterBox.Invoke(this.gameObject);
+        AdjustTimeScale(cameraSettings.freezeFrameScale);
+        StartCoroutine(SetTimeScaleToDefault(cameraSettings.freezeDuration));
+    }
+
+    public IEnumerator SetTimeScaleToDefault(float time)
+    {
+        yield return new WaitForSecondsRealtime(time);
+        AdjustTimeScale(1);
+        onHideLetterBox.Invoke(this.gameObject);
+    }
+
+    public void AdjustTimeScale(float time)
+    {
+        Time.timeScale = time;
     }
 }

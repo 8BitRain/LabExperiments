@@ -39,6 +39,15 @@ public class HUDController : MonoBehaviour
         
     }
 
+    public void ActivateDutchedLetterBox()
+    {
+        HUDInstance.gameObject.GetComponent<HUD>().ActivateDutchedLetterBox();
+    }
+
+    public void DeactivateDutchedLetterBox()
+    {
+        HUDInstance.gameObject.GetComponent<HUD>().DeactivateDutchedLetterBox();
+    }
 
     public void ActivateTargetArrow(GameObject instance)
     {

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Events;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class HUD : MonoBehaviour
@@ -13,6 +14,9 @@ public class HUD : MonoBehaviour
     public CooldownBar cooldownBarB;
     public CooldownBar cooldownBarC;
     public CooldownBar cooldownBarD;
+
+    public Canvas dutchedLetterBox;
+    private Canvas dutchedLetterBoxInstance;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +31,16 @@ public class HUD : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void ActivateDutchedLetterBox()
+    {
+        dutchedLetterBoxInstance = Instantiate(dutchedLetterBox);
+    }
+
+    public void DeactivateDutchedLetterBox()
+    {
+        Destroy(dutchedLetterBoxInstance.gameObject);
     }
 
     public void ActivateTargetArrow(GameObject instance)

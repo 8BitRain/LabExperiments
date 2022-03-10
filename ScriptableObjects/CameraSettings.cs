@@ -12,5 +12,11 @@ public class CameraSettings : ScriptableObject
     public Vector3 cameraOffset;
     [Range(-180,180)]
     public float cameraBias;
+    [Header("Freeze Frame Settings")]
+    public bool freezeFrame;
+    public float freezeFrameScale;
+    public float freezeFrameDelay;
+    public float freezeDuration;
+    [Header("Transition to another Camera Settings")]
     public float cameraBlendTime;
 }

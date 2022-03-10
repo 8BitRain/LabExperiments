@@ -38,6 +38,8 @@ public class CameraController : MonoBehaviour
         TargetingController.onEnableLockOnCamera += EngageDynamicTargetLock;
         TargetingController.onDisableLockOnCamera += DisengageDynamicTargetLock;
         TargetingController.onUpdateLockOnCameraTarget += UpdateDynamicTargetLock;
+        CameraGroup.onShowLetterBox += ShowDutchedLetterBox;
+        CameraGroup.onHideLetterBox += HideDutchedLetterBox;
     }
 
     private void OnDisable()
@@ -45,6 +47,8 @@ public class CameraController : MonoBehaviour
         TargetingController.onEnableLockOnCamera -= EngageDynamicTargetLock;
         TargetingController.onDisableLockOnCamera -= DisengageDynamicTargetLock;
         TargetingController.onUpdateLockOnCameraTarget -= UpdateDynamicTargetLock;
+        CameraGroup.onShowLetterBox -= ShowDutchedLetterBox;
+        CameraGroup.onHideLetterBox -= HideDutchedLetterBox;
     }
 
 
@@ -69,6 +73,24 @@ public class CameraController : MonoBehaviour
     void Update()
     {
         //UpdateDynamicTargetLockCam();
+    }
+
+    public void ShowDutchedLetterBox(GameObject instance)
+    {
+        if(instance != cameraGroupInstance)
+            return;
+
+        if(TryGetComponent<HUDController>(out HUDController hudController))
+            hudController.ActivateDutchedLetterBox();
+    }
+
+    public void HideDutchedLetterBox(GameObject instance)
+    {
+        if(instance != cameraGroupInstance)
+            return;
+
+        if(TryGetComponent<HUDController>(out HUDController hudController))
+            hudController.DeactivateDutchedLetterBox();
     }
 
     public void RouteToCameraEngage(GameObject instance, Transform target, CameraSettings cameraSettings)

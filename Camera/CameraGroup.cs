@@ -110,6 +110,7 @@ public class CameraGroup : MonoBehaviour
 
         lockOnCamera.SetActive(true);
         lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Priority = 12;
+        zoomToFaceCamera.GetComponent<CinemachineFreeLook>().m_Priority = 10;
         thirdPersonCamera.GetComponent<CinemachineFreeLook>().m_Priority = 10;
 
         //lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Follow = looker.GetComponent<CameraController>().thirdPersonCameraTargetBack;

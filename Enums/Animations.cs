@@ -10,6 +10,7 @@ public static class Animations
         FumaDashAttack_01,
         FumaDashAttack_02,
         FumaDashAttack_03,
-        FumaDashAttack_04
+        FumaDashAttack_04,
+        FumaDashRecoil_01
     }
 }

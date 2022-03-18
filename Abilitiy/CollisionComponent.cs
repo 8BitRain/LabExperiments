@@ -11,7 +11,8 @@ public class CollisionComponent : ScriptableObject
     {
         Forward,
         Backward,
-        Lateral
+        Lateral,
+        Up
     }
 
     [Header("CollisionDetails")]

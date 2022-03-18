@@ -17,6 +17,6 @@ public class CameraSettings : ScriptableObject
     public float freezeFrameScale;
     public float freezeFrameDelay;
     public float freezeDuration;
-    [Header("Transition to another Camera Settings")]
+    [Header("Time to blend to current Camera")]
     public float cameraBlendTime;
 }

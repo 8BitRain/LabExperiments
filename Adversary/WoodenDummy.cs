@@ -55,6 +55,10 @@ public class WoodenDummy : MonoBehaviour
             case CollisionComponent.KnockBackDirection.Lateral:
                 transform.DOMove(transform.position + transform.right*collisionComponent.knockbackAmount, collisionComponent.knockbackTime);
                 break;
+            case CollisionComponent.KnockBackDirection.Up:
+                //TODO: Add Rigidbody based force movement
+                transform.DOMove(transform.position + transform.up*collisionComponent.knockbackAmount, collisionComponent.knockbackTime);
+                break;
             default:
                 break;
         }

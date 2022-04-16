@@ -17,7 +17,7 @@ public class ConeHitDetection : MonoBehaviour
 
     void OnTriggerEnter(Collider other){
         if(other.tag == "EarthernElement"){
-            Collision collision = new Collision(other.name, other.gameObject);
+            CustomCollision collision = new CustomCollision(other.name, other.gameObject);
             Debug.Log(this.gameObject.name + "collided with: " + other.gameObject.name);
             this.SendMessageUpwards("addEarthernElement", collision);
         }
@@ -26,7 +26,7 @@ public class ConeHitDetection : MonoBehaviour
     void OnTriggerExit(Collider other){
         if(other.tag == "EarthernElement"){
             Debug.Log(this.gameObject.name + "exited: " + other.gameObject.name);
-            Collision collision = new Collision(other.name, other.gameObject);
+            CustomCollision collision = new CustomCollision(other.name, other.gameObject);
             this.SendMessageUpwards("removeEarthernElement", collision);
         }
     }

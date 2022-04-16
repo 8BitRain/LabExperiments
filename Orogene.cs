@@ -18,7 +18,7 @@ public class Orogene : MonoBehaviour
     //private Rigidbody rockRB;
     public Transform torus;
 
-    public List<Collision> collisions = new List<Collision>();
+    public List<CustomCollision> collisions = new List<CustomCollision>();
 
 
     private Vector3 direction;
@@ -59,7 +59,7 @@ public class Orogene : MonoBehaviour
         anim.Play("push");
         //Loop through objects in list
         if(collisions.Count != 0){
-            foreach(Collision collision in collisions){
+            foreach(CustomCollision collision in collisions){
                 Rigidbody earthernElement = collision.collisionHit.GetComponent<Rigidbody>();
                 direction = (collision.collisionHit.transform.position - transform.position).normalized;
                 earthernElement.AddForce(direction * thrust); 
@@ -77,7 +77,7 @@ public class Orogene : MonoBehaviour
         //direction = (rock.transform.position - transform.position).normalized;
         //rockRB.AddForce(-direction * thrust);
         if(collisions.Count != 0){
-            foreach(Collision collision in collisions){
+            foreach(CustomCollision collision in collisions){
                 Rigidbody earthernElement = collision.collisionHit.GetComponent<Rigidbody>();
                 direction = (collision.collisionHit.transform.position - transform.position).normalized;
                 earthernElement.AddForce(-direction * thrust); 
@@ -86,15 +86,15 @@ public class Orogene : MonoBehaviour
     }
 
     /* Add Earthern Element to Target Cone*/
-    void addEarthernElement(Collision collision){
+    void addEarthernElement(CustomCollision collision){
         this.collisions.Add(collision);
         print("Added collision");
     }
 
     /* Remove Earthern Element from Target Cone*/
-    void removeEarthernElement(Collision collision){
+    void removeEarthernElement(CustomCollision collision){
         //Loop through current list of collisions and remove specified collison
-        foreach(Collision earthernElement in collisions.ToList<Collision>()){
+        foreach(CustomCollision earthernElement in collisions.ToList<CustomCollision>()){
             if(collision.colliderName == earthernElement.colliderName 
             && collision.collisionHit.name == collision.collisionHit.name){
                 print(this.collisions.Remove(earthernElement));

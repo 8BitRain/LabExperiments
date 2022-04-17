@@ -9,10 +9,11 @@ public class WithinSight : Conditional
    // The tag of the targets
    public string targetTag;
    // Set the target variable when a target has been found so the subsequent tasks know which object is the target
-   public SharedTransform target;
+   public SharedGameObject targetGameObject;
 
    // A cache of all of the possible targets
    private Transform[] possibleTargets;
+   private Transform currentTarget;
 
    public override void OnAwake()
    {
@@ -30,7 +31,10 @@ public class WithinSight : Conditional
       for (int i = 0; i < possibleTargets.Length; ++i) {
          if (IsWithinSight(possibleTargets[i], fieldOfViewAngle)) {
             // Set the target so other tasks will know which transform is within sight
-            target.Value = possibleTargets[i];
+            //target.Value = possibleTargets[i];
+            var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
+            currentTarget = currentGameObject.GetComponent<Transform>();
+            currentTarget = possibleTargets[i];
             return TaskStatus.Success;
          }
       }

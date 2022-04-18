@@ -49,6 +49,15 @@ public class MeleeAttackBase : MonoBehaviour
         HitBox.collision -= CollisionLogic;
     }
 
+    void OnDestroy()
+    {
+        if(!cooldownTriggered)
+        {
+            EngageCooldown();
+        }
+        Destroy(meleeAttackInstance.gameObject);
+    }
+
     public virtual void Melee()
     {
         //If the skill is current in use, return, we don't need to activate teh skill again
@@ -81,26 +90,26 @@ public class MeleeAttackBase : MonoBehaviour
     {
         foreach (Transform modularComponent in meleeAttackInstance.GetComponentsInChildren<Transform>())
         {
-            if(modularComponent.TryGetComponent<IAbilityComponent>(out IAbilityComponent modularAbilityComponent))
+            if(modularComponent.TryGetComponent<IMeleeAttackComponent>(out IMeleeAttackComponent modularMeleeAttackComponent))
             {
-                AbilityComponent abilityComponent = modularAbilityComponent.GetAbilityComponent();
-                PlayModularComponent(modularComponent.gameObject, modularAbilityComponent.GetAbilityComponent());
+                MeleeAttackComponent meleeAttackComponent = modularMeleeAttackComponent.GetMeleeAttackComponent();
+                PlayModularComponent(modularComponent.gameObject, modularMeleeAttackComponent.GetMeleeAttackComponent());
 
                 //Animation Delay Logic
-                if(abilityComponent.animationComponent != null)
+                if(meleeAttackComponent.animationComponent != null)
                 {
-                    if(abilityComponent.animationComponent.animationEndDelay != 0)
+                    if(meleeAttackComponent.animationComponent.animationEndDelay != 0)
                     {
-                        Debug.Log("Animation Delay: " + abilityComponent.animationComponent.animation + " for: " + abilityComponent.animationComponent.animationEndDelay);
+                        Debug.Log("Animation Delay: " + meleeAttackComponent.animationComponent.animation + " for: " + meleeAttackComponent.animationComponent.animationEndDelay);
                         if(!GetAbilityConnected())
                         {
-                            animationCoroutine = StartCoroutine(AnimationDelay(abilityComponent.animationComponent));
+                            animationCoroutine = StartCoroutine(AnimationDelay(meleeAttackComponent.animationComponent));
                             FireModularProjectile(modularComponent.gameObject);
                             yield return new WaitUntil(() => GetAbilityConnected());
                         }
                         else
                         {
-                            yield return new WaitForSeconds(abilityComponent.animationComponent.animationEndDelay);
+                            yield return new WaitForSeconds(meleeAttackComponent.animationComponent.animationEndDelay);
                             FireModularProjectile(modularComponent.gameObject);
                         }
                     }
@@ -122,7 +131,7 @@ public class MeleeAttackBase : MonoBehaviour
         Destroy(this.gameObject);
     }
 
-    public void PlayModularComponent(GameObject modularAbilityInstance, AbilityComponent abilityComponent)
+    public void PlayModularComponent(GameObject modularAbilityInstance, MeleeAttackComponent meleeAttackComponent)
     {
 
         TriggerHitBox(modularAbilityInstance, true);
@@ -131,22 +140,22 @@ public class MeleeAttackBase : MonoBehaviour
         SummonVFX(modularAbilityInstance);
 
         //Use multi viewpoint camera to render action scene
-        /*if(abilityComponent.cameraSettings != null && this.targetInstance != null)
+        /*if(meleeAttackComponent.cameraSettings != null && this.targetInstance != null)
         {
             //I would prefer this to route to a more generic method, that then branches out to Engaging Dynamic TargetLock or Engages a special third person camera
-            //GetPlayerReference().GetComponent<CameraController>().EngageDynamicTargetLock(GetPlayerReference(), this.targetInstance, abilityComponent.cameraSettings);
-            GetPlayerReference().GetComponent<CameraController>().RouteToCameraEngage(GetPlayerReference(), this.targetInstance, abilityComponent.cameraSettings);
-            cameraSettingsInstance = abilityComponent.cameraSettings;
+            //GetPlayerReference().GetComponent<CameraController>().EngageDynamicTargetLock(GetPlayerReference(), this.targetInstance, meleeAttackComponent.cameraSettings);
+            GetPlayerReference().GetComponent<CameraController>().RouteToCameraEngage(GetPlayerReference(), this.targetInstance, meleeAttackComponent.cameraSettings);
+            cameraSettingsInstance = meleeAttackComponent.cameraSettings;
         }*/
 
         //Controls how the component travels
-        switch (abilityComponent.travelDirection)
+        switch (meleeAttackComponent.travelDirection)
         {
-            case AbilityComponent.MovementDirection.Forward:
-                modularAbilityInstance.transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.forward*abilityComponent.travelAmount, abilityComponent.timeToTravel);
+            case MeleeAttackComponent.MovementDirection.Forward:
+                modularAbilityInstance.transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.forward*meleeAttackComponent.travelAmount, meleeAttackComponent.timeToTravel);
                 break;
-            case AbilityComponent.MovementDirection.Backward:
-                modularAbilityInstance.transform.DOMove(GetPlayerReference().transform.position - GetPlayerReference().transform.forward*abilityComponent.travelAmount, abilityComponent.timeToTravel);
+            case MeleeAttackComponent.MovementDirection.Backward:
+                modularAbilityInstance.transform.DOMove(GetPlayerReference().transform.position - GetPlayerReference().transform.forward*meleeAttackComponent.travelAmount, meleeAttackComponent.timeToTravel);
                 break;
             default:
                 break;
@@ -154,69 +163,69 @@ public class MeleeAttackBase : MonoBehaviour
         
         Vector3 diagonalVector = new Vector3(0,0,0);
         //Controls how the player travels
-        switch (abilityComponent.playerMovementDirection)
+        switch (meleeAttackComponent.playerMovementDirection)
         {
-            case AbilityComponent.MovementDirection.Forward:
-                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.forward*abilityComponent.playerMovementAmount, abilityComponent.playerMovementTime);
+            case MeleeAttackComponent.MovementDirection.Forward:
+                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.forward*meleeAttackComponent.playerMovementAmount, meleeAttackComponent.playerMovementTime);
                 break;
-            case AbilityComponent.MovementDirection.Backward:
-                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position - GetPlayerReference().transform.forward*abilityComponent.playerMovementAmount, abilityComponent.playerMovementTime);
+            case MeleeAttackComponent.MovementDirection.Backward:
+                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position - GetPlayerReference().transform.forward*meleeAttackComponent.playerMovementAmount, meleeAttackComponent.playerMovementTime);
                 break;
-            case AbilityComponent.MovementDirection.BackwardDiagonalLeft:
-                diagonalVector = (GetPlayerReference().transform.forward * abilityComponent.playerMovementAmount) + (GetPlayerReference().transform.right * abilityComponent.playerMovementAmount);
-                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position - diagonalVector, abilityComponent.playerMovementTime);
+            case MeleeAttackComponent.MovementDirection.BackwardDiagonalLeft:
+                diagonalVector = (GetPlayerReference().transform.forward * meleeAttackComponent.playerMovementAmount) + (GetPlayerReference().transform.right * meleeAttackComponent.playerMovementAmount);
+                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position - diagonalVector, meleeAttackComponent.playerMovementTime);
                 break;
-            case AbilityComponent.MovementDirection.ForwardDiagonalRight:
-                diagonalVector = (GetPlayerReference().transform.forward * abilityComponent.playerMovementAmount) + (GetPlayerReference().transform.right * abilityComponent.playerMovementAmount);
-                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + diagonalVector, abilityComponent.playerMovementTime);
+            case MeleeAttackComponent.MovementDirection.ForwardDiagonalRight:
+                diagonalVector = (GetPlayerReference().transform.forward * meleeAttackComponent.playerMovementAmount) + (GetPlayerReference().transform.right * meleeAttackComponent.playerMovementAmount);
+                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + diagonalVector, meleeAttackComponent.playerMovementTime);
                 break;
-            case AbilityComponent.MovementDirection.Up:
+            case MeleeAttackComponent.MovementDirection.Up:
                 float distanceToTarget = 0;
                 /*if(targetInstance != null)
                 {
                     distanceToTarget = (GetPlayerReference().transform.position - targetInstance.transform.position).magnitude; 
-                    GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.up*abilityComponent.playerMovementAmount, abilityComponent.playerMovementTime);
+                    GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.up*meleeAttackComponent.playerMovementAmount, meleeAttackComponent.playerMovementTime);
                 } 
                 else
                 {
-                    GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.up*abilityComponent.playerMovementAmount, abilityComponent.playerMovementTime);
+                    GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.up*meleeAttackComponent.playerMovementAmount, meleeAttackComponent.playerMovementTime);
                 }*/
-                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.up*abilityComponent.playerMovementAmount, abilityComponent.playerMovementTime);
+                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.up*meleeAttackComponent.playerMovementAmount, meleeAttackComponent.playerMovementTime);
                 break;
             default:
                 break;
         }
 
-        if(abilityComponent.stickToPlayer)
+        if(meleeAttackComponent.stickToPlayer)
             modularAbilityInstance.transform.SetParent(GetPlayerReference().transform);
         
-        if(abilityComponent.stickToPlayerTime != 0)
-            StartCoroutine(AbilityComponentStickToPlayerCoroutine(abilityComponent.stickToPlayerTime,modularAbilityInstance.transform));
+        if(meleeAttackComponent.stickToPlayerTime != 0)
+            StartCoroutine(MeleeAttackComponentStickToPlayerCoroutine(meleeAttackComponent.stickToPlayerTime,modularAbilityInstance.transform));
         
-        if(abilityComponent.isMobile)
-            modularAbilityInstance.transform.DOMove(modularAbilityInstance.transform.position + Camera.main.transform.forward * abilityComponent.travelAmount, abilityComponent.timeToTravel);
+        if(meleeAttackComponent.isMobile)
+            modularAbilityInstance.transform.DOMove(modularAbilityInstance.transform.position + Camera.main.transform.forward * meleeAttackComponent.travelAmount, meleeAttackComponent.timeToTravel);
 
         
-        if(abilityComponent.canScale)
+        if(meleeAttackComponent.canScale)
         {
-            modularAbilityInstance.transform.localScale = abilityComponent.minScaleVector;
-            modularAbilityInstance.transform.DOScale(abilityComponent.maxScaleVector * abilityComponent.scaleStrength, abilityComponent.timeToScale);
+            modularAbilityInstance.transform.localScale = meleeAttackComponent.minScaleVector;
+            modularAbilityInstance.transform.DOScale(meleeAttackComponent.maxScaleVector * meleeAttackComponent.scaleStrength, meleeAttackComponent.timeToScale);
         }
 
         TriggerHitBox(modularAbilityInstance, false);
         
         //Does player have an animation component?
-        if(abilityComponent.animationComponent != null)
+        if(meleeAttackComponent.animationComponent != null)
         {
-            string animation = abilityComponent.animationComponent.animation.ToString();
+            string animation = meleeAttackComponent.animationComponent.animation.ToString();
             Debug.Log("Play Animation: " + animation);
             GetAnimationController().ChangeAnimationState(GetPlayerReference().GetComponent<Animator>(),animation);
         }
 
         //TODO check if player can turn while using this skill
-        if(targetInstance != null && abilityComponent.lookAtTarget)
+        if(targetInstance != null && meleeAttackComponent.lookAtTarget)
         {
-            if(abilityComponent.lookAtTargetLockY)
+            if(meleeAttackComponent.lookAtTargetLockY)
             {
                 GetPlayerReference().transform
                 .DOLookAt(new Vector3(targetInstance.transform.position.x, GetPlayerReference().transform.position.y, targetInstance.transform.position.z), .75f);
@@ -226,15 +235,15 @@ public class MeleeAttackBase : MonoBehaviour
                 GetPlayerReference().transform.DOLookAt(targetInstance.transform.position, .75f);
             }
             
-           //GetPlayerReference().GetComponent<CameraController>().RecenterThirdPersonCam(abilityComponent.reTargetTime);
+           //GetPlayerReference().GetComponent<CameraController>().RecenterThirdPersonCam(meleeAttackComponent.reTargetTime);
         }
 
         //Does the modular component play an audio effect?
-        if(abilityComponent.audioComponent != null)
+        if(meleeAttackComponent.audioComponent != null)
         {
             if(modularAbilityInstance.TryGetComponent( out AudioSource audioSource))
             {
-                audioSource.clip = abilityComponent.audioComponent.ambient;
+                audioSource.clip = meleeAttackComponent.audioComponent.ambient;
                 audioSource.Play();
             }
         }
@@ -251,18 +260,18 @@ public class MeleeAttackBase : MonoBehaviour
 
     public void SummonVFX(GameObject modularAbilityInstance)
     {
-        if(modularAbilityInstance.TryGetComponent<ModularAbilityComponent>(out ModularAbilityComponent modularAbilityComponent))
+        if(modularAbilityInstance.TryGetComponent<ModularAttackElement>(out ModularAttackElement modularMeleeAttackComponent))
         {
-            if(modularAbilityComponent.GetVFX() != null)
+            if(modularMeleeAttackComponent.GetVFX() != null)
             {
                 Body summonerBody = GetPlayerReference().GetComponent<Body>();
-                switch (modularAbilityComponent.abilityComponent.vfxSpawnLocation)
+                switch (modularMeleeAttackComponent.meleeAttackComponent.vfxSpawnLocation)
                 {
-                    case AbilityComponent.VFXSpawnLocation.DEFAULT:
-                        Instantiate(modularAbilityComponent.GetVFX(), GetPlayerReference().transform.position, GetPlayerReference().transform.rotation);
+                    case MeleeAttackComponent.VFXSpawnLocation.DEFAULT:
+                        Instantiate(modularMeleeAttackComponent.GetVFX(), GetPlayerReference().transform.position, GetPlayerReference().transform.rotation);
                         break;
-                    case AbilityComponent.VFXSpawnLocation.BACK:
-                        Instantiate(modularAbilityComponent.GetVFX(), summonerBody.Back.position, summonerBody.Back.rotation);
+                    case MeleeAttackComponent.VFXSpawnLocation.BACK:
+                        Instantiate(modularMeleeAttackComponent.GetVFX(), summonerBody.Back.position, summonerBody.Back.rotation);
                         break;
                     default:
                         break;
@@ -274,15 +283,15 @@ public class MeleeAttackBase : MonoBehaviour
     public void FireModularProjectile(GameObject modularAbilityInstance)
     {
         Debug.Log("Fire Modular Projectile");
-        if(modularAbilityInstance.TryGetComponent<ModularAbilityComponent>(out ModularAbilityComponent modularAbilityComponent))
+        if(modularAbilityInstance.TryGetComponent<ModularAttackElement>(out ModularAttackElement modularMeleeAttackComponent))
         {
-            if(modularAbilityComponent.GetProjectile() != null)
+            if(modularMeleeAttackComponent.GetProjectile() != null)
             {
-                Projectile modularProjectile = Instantiate(modularAbilityComponent.GetProjectile(), GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
+                Projectile modularProjectile = Instantiate(modularMeleeAttackComponent.GetProjectile(), GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
                 modularProjectile.transform.SetParent(GetPlayerReference().transform);
-                if(modularAbilityComponent.GetProjectile().GetVFX() != null)
+                if(modularMeleeAttackComponent.GetProjectile().GetVFX() != null)
                 {
-                    Instantiate(modularAbilityComponent.GetProjectile().GetVFX(), GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
+                    Instantiate(modularMeleeAttackComponent.GetProjectile().GetVFX(), GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
                 }
             }
         }
@@ -290,9 +299,9 @@ public class MeleeAttackBase : MonoBehaviour
 
     public void TriggerHitBox(GameObject modularAbilityInstance, bool isActive)
     {
-        if(modularAbilityInstance.TryGetComponent<ModularAbilityComponent>(out ModularAbilityComponent modularAbilityComponent))
+        if(modularAbilityInstance.TryGetComponent<ModularAttackElement>(out ModularAttackElement modularMeleeAttackComponent))
         {
-            HitBox hitBox = modularAbilityComponent.hitBox;
+            HitBox hitBox = modularMeleeAttackComponent.hitBox;
             if(hitBox != null)
             {
                 print("Hitbox Triggered");
@@ -300,7 +309,7 @@ public class MeleeAttackBase : MonoBehaviour
                 {
                     Debug.Log("Spell Instance Name: " + modularAbilityInstance.name);
                     Debug.Log("Hitbox instance name: " + hitBox.gameObject.name);
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.meleeAttackInstance, false, modularAbilityComponent.GetAbilityComponent().hitBoxDuration);
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.meleeAttackInstance, false, modularMeleeAttackComponent.GetMeleeAttackComponent().hitBoxDuration);
                 }
                 else
                 {
@@ -330,10 +339,10 @@ public class MeleeAttackBase : MonoBehaviour
     }
 
     //This function unparents a spell component
-    public IEnumerator AbilityComponentStickToPlayerCoroutine(float duration, Transform abilityComponent)
+    public IEnumerator MeleeAttackComponentStickToPlayerCoroutine(float duration, Transform meleeAttackComponent)
     {
         yield return new WaitForSeconds(duration);
-        abilityComponent.SetParent(null);
+        meleeAttackComponent.SetParent(null);
     }
 
     //Getters & Setters Code
@@ -384,7 +393,7 @@ public class MeleeAttackBase : MonoBehaviour
     }
 
     //Collision Code
-    public void CollisionLogic(GameObject targetInstance, GameObject hurtBoxInstance, GameObject summonerInstance, AbilityComponent abilityComponent)
+    public void CollisionLogic(GameObject targetInstance, GameObject hurtBoxInstance, GameObject summonerInstance, AbilityComponent meleeAttackComponent)
     {
         if(this.meleeAttackInstance != summonerInstance)
             return;
@@ -396,7 +405,4 @@ public class MeleeAttackBase : MonoBehaviour
         //Use multi viewpoint camera to render action scene
         //GetPlayerReference().GetComponent<CameraController>().EngageDynamicTargetLock(GetPlayerReference(), this.targetInstance, CameraGroup.FrameShotStyle.WIDESHOT);
     }
-
-
-
 }

@@ -18,4 +18,9 @@ public class Body : MonoBehaviour
     {
         
     }
+
+    public void GetHurtBox()
+    {
+        
+    }
 }

@@ -4,8 +4,10 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 
+
 public class WoodenDummy : MonoBehaviour
 {
+    public bool isColliding;
     private void OnEnable()
     {
         HurtBox.gotCollision += CollisionLogic;
@@ -21,6 +23,7 @@ public class WoodenDummy : MonoBehaviour
         if(instance != this.gameObject)
             return;
         Debug.Log(gameObject.name + "is processing collision");
+        isColliding = true;
 
         //Flash Red color when hit
         DamageFlash();

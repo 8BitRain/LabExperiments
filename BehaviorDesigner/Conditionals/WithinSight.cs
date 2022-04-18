@@ -11,6 +11,8 @@ public class WithinSight : Conditional
    // Set the target variable when a target has been found so the subsequent tasks know which object is the target
    public SharedGameObject targetGameObject;
 
+   public float range;
+
    // A cache of all of the possible targets
    private Transform[] possibleTargets;
    private Transform currentTarget;
@@ -29,14 +31,17 @@ public class WithinSight : Conditional
    {
       // Return success if a target is within sight
       for (int i = 0; i < possibleTargets.Length; ++i) {
-         if (IsWithinSight(possibleTargets[i], fieldOfViewAngle)) {
+        if (IsWithinSight(possibleTargets[i], fieldOfViewAngle)) {
             // Set the target so other tasks will know which transform is within sight
             //target.Value = possibleTargets[i];
-            var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-            currentTarget = currentGameObject.GetComponent<Transform>();
-            currentTarget = possibleTargets[i];
-            return TaskStatus.Success;
-         }
+            if(IsWithinRange(possibleTargets[i]))
+            {
+                var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
+                currentTarget = currentGameObject.GetComponent<Transform>();
+                currentTarget = possibleTargets[i];
+                return TaskStatus.Success;
+            }
+        }
       }
       return TaskStatus.Failure;
    }
@@ -47,5 +52,20 @@ public class WithinSight : Conditional
       Vector3 direction = targetTransform.position - transform.position;
       // An object is within sight if the angle is less than field of view
       return Vector3.Angle(direction, transform.forward) < fieldOfViewAngle;
+   }
+
+   public bool IsWithinRange(Transform targetTranform)
+   {
+       Vector3 direction = targetTranform.position - transform.position;
+       float totalDistance = direction.magnitude;
+       if(totalDistance < range)
+       {
+           return true;
+       }
+       if(totalDistance > range)
+       {
+           return false;
+       }
+       return totalDistance < range;
    }
 }

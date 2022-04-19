@@ -33,12 +33,21 @@ public class MeleeAttackController : MonoBehaviour
 
     void Update()
     {
-        if(lightAttackButtonPressed.action.triggered && lightAttack != null)
+        if(lightAttackButtonPressed != null && heavyAttackButtonPressed != null)
+        {
+            GetPlayerInput();
+        }
+
+    }
+
+    public void GetPlayerInput()
+    {
+        if(lightAttackButtonPressed.action.triggered && lightAttackInstance == null)
         {
             PerformMelee(MeleeAttackType.Light);
         }
 
-        if(heavyAttackButtonPressed.action.triggered && heavyAttack != null)
+        if(heavyAttackButtonPressed.action.triggered && heavyAttackInstance == null)
         {
             PerformMelee(MeleeAttackType.Heavy);
         }

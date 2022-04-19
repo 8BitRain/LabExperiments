@@ -67,13 +67,27 @@ public class MeleeAttackBase : MonoBehaviour
         if(isMobileMelee)
         {
             //Lock Player RightSideFaceButtonActions
-            GetPlayerReference().GetComponent<PlayerMovementController>().LockInputRightSideControllerFaceButtons(this.gameObject);
+            try
+            {
+                GetPlayerReference().GetComponent<PlayerMovementController>().LockInputRightSideControllerFaceButtons(this.gameObject);
+            }
+            catch (System.Exception)
+            {
+                //throw;
+            }
         }
         else
         {
             //Lock Player Movement
-            GetPlayerReference().GetComponent<PlayerMovementController>().DisableMovement();
-            //GetPlayerReference().GetComponent<PlayerMovementController>().EnableSteering();
+            try
+            {
+                GetPlayerReference().GetComponent<PlayerMovementController>().DisableMovement();
+                //GetPlayerReference().GetComponent<PlayerMovementController>().EnableSteering();
+            }
+            catch (System.Exception)
+            {
+                //throw;
+            }
         }
 
         //Instantiate ability
@@ -332,7 +346,14 @@ public class MeleeAttackBase : MonoBehaviour
 
         //Unlock player movement
         //Animation Controller Coroutine
-        GetAnimationController().PlayerAnimationLock(movementLockDuration, GetPlayerReference().GetComponent<PlayerMovementController>(), isMobileMelee);
+        try
+        {
+            GetAnimationController().PlayerAnimationLock(movementLockDuration, GetPlayerReference().GetComponent<PlayerMovementController>(), isMobileMelee);
+        }
+        catch (System.Exception)
+        {
+            //throw;
+        }
         
         cooldownTriggered = true;
         Destroy(this.gameObject);

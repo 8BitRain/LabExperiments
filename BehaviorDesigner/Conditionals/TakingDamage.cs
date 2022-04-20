@@ -7,10 +7,6 @@ public class TakingDamage : Conditional
 {
 
     public float takeDamageTime;
-    public override void OnStart()
-    {
-        //TakeDamage();
-    }   
     public override TaskStatus OnUpdate()
     {
         //IsTakingDamage(this.transform) ? TaskStatus.Success : TaskStatus.Running;
@@ -25,19 +21,11 @@ public class TakingDamage : Conditional
     }   
     public override void OnEnd()
     {
-        this.GetComponent<WoodenDummy>().isColliding = false;
+        //this.GetComponent<WoodenDummy>().isColliding = false;
     }   
     // Returns true if targetTransform is within sight of current transform
     public bool IsTakingDamage(Transform target)
     {
-        return this.GetComponent<WoodenDummy>().isColliding;
+        return this.GetComponent<Animator>().GetBool("Damaged");
     }   
-    public void TakeDamage()
-    {
-        DOVirtual.DelayedCall(takeDamageTime, () => 
-        {
-            this.GetComponent<WoodenDummy>().isColliding = false;
-        });
-    }
-
 }

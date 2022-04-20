@@ -7,8 +7,6 @@ using System;
 
 public class WoodenDummy : MonoBehaviour
 {
-    public bool isColliding;
-
     [Header("Gravity/Verticality Settings")]
     public float gravity = -9.81f;
     public bool applyGravity;
@@ -40,6 +38,10 @@ public class WoodenDummy : MonoBehaviour
         {
             Gravity();
         }
+
+        //Lock Rotation
+        //transform.DORotate(new Vector3(0,transform.eulerAngles.y,0),0);
+        transform.rotation = Quaternion.Euler(0,transform.eulerAngles.y,0);
     }
 
     void CollisionLogic(GameObject instance, GameObject collisionPoint, AbilityComponent abilityComponent)
@@ -47,7 +49,9 @@ public class WoodenDummy : MonoBehaviour
         if(instance != this.gameObject)
             return;
         Debug.Log(gameObject.name + "is processing collision");
-        isColliding = true;
+
+        //Set Damaged State
+        transform.GetComponent<Animator>().SetBool("Damaged", true);
 
         //Flash Red color when hit
         DamageFlash();

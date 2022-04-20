@@ -15,6 +15,7 @@ public class StartCombat : Action
         currentTarget = currentGameObject.GetComponent<Transform>();
 
         //Return a task status of success once combat action has been performed
+        Debug.Log("CurrentAnimationState" + transform.GetComponent<AnimationController>().GetCurrentState());
         transform.LookAt(currentTarget);
         transform.GetComponent<MeleeAttackController>().PerformMelee(MeleeAttackController.MeleeAttackType.Light);
         return TaskStatus.Success;

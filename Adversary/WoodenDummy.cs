@@ -8,6 +8,18 @@ using System;
 public class WoodenDummy : MonoBehaviour
 {
     public bool isColliding;
+
+    [Header("Gravity/Verticality Settings")]
+    public float gravity = -9.81f;
+    public bool applyGravity;
+    public bool _isGrounded = false;
+    public Transform _groundChecker;
+    public LayerMask Ground;
+    public float JumpHeight = 2f;
+    private Vector3 _velocity;
+    public float GroundDistance = 0.2f;
+
+
     private void OnEnable()
     {
         HurtBox.gotCollision += CollisionLogic;
@@ -16,6 +28,18 @@ public class WoodenDummy : MonoBehaviour
     private void OnDisable()
     {
         HurtBox.gotCollision -= CollisionLogic;
+    }
+
+    public void Update()
+    {
+        RaycastHit groundedRaycast;
+        _isGrounded = Physics.Raycast(_groundChecker.position, Vector3.down, out groundedRaycast, GroundDistance, Ground);
+        Debug.DrawRay(_groundChecker.position, Vector3.down * GroundDistance, Color.red);
+        _velocity.y = 0f;
+        if(!_isGrounded)
+        {
+            Gravity();
+        }
     }
 
     void CollisionLogic(GameObject instance, GameObject collisionPoint, AbilityComponent abilityComponent)
@@ -30,7 +54,7 @@ public class WoodenDummy : MonoBehaviour
 
         CollisionComponent collisionComponent = abilityComponent.collisionComponent;
         transform.DOPunchScale(UnityEngine.Random.insideUnitSphere * collisionComponent.squashAndStretchAmount, collisionComponent.squashAndStretchTime);
-        transform.DORotate(transform.rotation.eulerAngles + transform.rotation.eulerAngles*720, 1.5f);
+        //transform.DORotate(transform.rotation.eulerAngles + transform.rotation.eulerAngles*720, 1.5f);
 
         switch (collisionComponent.knockbackDirection)
         {
@@ -78,6 +102,17 @@ public class WoodenDummy : MonoBehaviour
                     renderer.material.DOColor(Color.white, "_Tint", .2f);
                 }).SetLoops(6);
             }
+        }
+    }
+
+    public void Gravity()
+    {
+        if(applyGravity)
+        {
+            _velocity.y += gravity * Time.deltaTime;
+            //Getting a better jumping arc will probably be factored here
+            transform.Translate(_velocity);
+            Debug.Log("Applying gravity" + _velocity.y);
         }
     }
 }

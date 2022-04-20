@@ -33,6 +33,11 @@ public class AnimationController : MonoBehaviour
         currentState = newState;
     }
 
+    public void ResetAnimationState()
+    {
+        currentState = "resetAnimationState";
+    }
+
     public string GetCurrentState()
     {
         return currentState;

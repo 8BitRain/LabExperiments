@@ -32,10 +32,10 @@ public class WithinSight : Conditional
       // Return success if a target is within sight
       for (int i = 0; i < possibleTargets.Length; ++i) {
         if (IsWithinSight(possibleTargets[i], fieldOfViewAngle)) {
-            // Set the target so other tasks will know which transform is within sight
-            //target.Value = possibleTargets[i];
+            // Return success if a target is also within range
             if(IsWithinRange(possibleTargets[i]))
             {
+                // Set the target so other tasks will know which transform is within sight
                 var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
                 currentTarget = currentGameObject.GetComponent<Transform>();
                 currentTarget = possibleTargets[i];

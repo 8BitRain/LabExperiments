@@ -13,6 +13,7 @@ public class MeleeAttackBase : MonoBehaviour
     private GameObject meleeAttackInstance;
     private Transform targetInstance;
     private Transform meleeSpawnPosition;
+    private CameraSettings cameraSettingsInstance;
     
     [Header("Attack Components")]
     public GameObject attackComponent;
@@ -137,7 +138,7 @@ public class MeleeAttackBase : MonoBehaviour
         EngageCooldown();
     }
 
-        public IEnumerator AnimationDelay(AnimationComponent animationComponent)
+    public IEnumerator AnimationDelay(AnimationComponent animationComponent)
     {
 
         yield return new WaitForSeconds(animationComponent.animationEndDelay);
@@ -161,6 +162,18 @@ public class MeleeAttackBase : MonoBehaviour
             GetPlayerReference().GetComponent<CameraController>().RouteToCameraEngage(GetPlayerReference(), this.targetInstance, meleeAttackComponent.cameraSettings);
             cameraSettingsInstance = meleeAttackComponent.cameraSettings;
         }*/
+
+        //Update ThirdPerson Camera for melee attacks
+        //We check to make sure this is a player before manipulating camera
+        if(this.GetPlayerReference().GetComponent<PlayerMovementController>() != null)
+        {
+            if(meleeAttackComponent.cameraSettings != null)
+            {
+                Debug.Log("Trigger Camera Controller");
+                cameraSettingsInstance = meleeAttackComponent.cameraSettings;
+                this.GetPlayerReference().GetComponent<CameraController>().UpdateThirdPersonCameraOffset(GetPlayerReference(), meleeAttackComponent.cameraSettings);
+            }
+        }
 
         //Controls how the component travels
         switch (meleeAttackComponent.travelDirection)
@@ -353,6 +366,16 @@ public class MeleeAttackBase : MonoBehaviour
         catch (System.Exception)
         {
             //throw;
+        }
+
+        //Update ThirdPerson Camera for melee attacks
+        //We check to make sure this is a player before manipulating camera
+        if(this.GetPlayerReference().GetComponent<PlayerMovementController>() != null)
+        {
+            if(cameraSettingsInstance != null)
+            {
+                this.GetPlayerReference().GetComponent<CameraController>().ResetThirdPersonCameraOffset(GetPlayerReference());   
+            }
         }
         
         cooldownTriggered = true;

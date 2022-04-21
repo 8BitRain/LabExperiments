@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cinemachine;
 using System;
 using UnityEngine;
+using DG.Tweening;
 
 public class CameraGroup : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class CameraGroup : MonoBehaviour
     public GameObject thirdPersonCamera;
     public GameObject zoomToFaceCamera;
 
+    private GameObject combatCamera;
+
     public static event Action<GameObject> onShowLetterBox;
     public static event Action<GameObject> onHideLetterBox;
 
@@ -24,12 +27,16 @@ public class CameraGroup : MonoBehaviour
     {
         CameraController.onEnableThirdPersonCamera += EnableThirdPersonCamera;
         CameraController.onEnableThirdPersonCameraRetargeting += RecenterCamera;
+        CameraController.onUpdateThirdPersonCameraOffset += UpdateThirdPersonCameraOffset;
+        CameraController.onResetThirdPersonCameraOffset += ResetThirdPersonCameraOffset;
     }
 
     private void OnDisable()
     {
         CameraController.onEnableThirdPersonCamera -= EnableThirdPersonCamera;
         CameraController.onEnableThirdPersonCameraRetargeting -= RecenterCamera;
+        CameraController.onUpdateThirdPersonCameraOffset -= UpdateThirdPersonCameraOffset;
+        CameraController.onResetThirdPersonCameraOffset -= ResetThirdPersonCameraOffset;
     }
 
     // Start is called before the first frame update
@@ -249,6 +256,40 @@ public class CameraGroup : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    //Updates the offset of ThirdPersonCamera
+    public void UpdateThirdPersonCameraOffset(GameObject instance, CameraSettings cameraSettings)
+    {
+        if(this.gameObject != instance)
+        {
+            return;
+        }
+
+        Debug.Log("UpdatingCameraOffset");
+        //thirdPersonCamera.GetComponent<CinemachineCameraOffset>().m_Offset = cameraSettings.cameraOffset;
+        
+
+        //Testing building a CameraTransition
+        if(combatCamera == null)
+        {
+            combatCamera = Instantiate(thirdPersonCamera);
+            combatCamera.transform.SetParent(this.transform);
+        }
+
+
+        combatCamera.GetComponent<CinemachineCameraOffset>().m_Offset = cameraSettings.cameraOffset;
+        Camera.main.GetComponent<CinemachineBrain>().m_DefaultBlend.m_Time = cameraSettings.cameraBlendTime;
+        combatCamera.GetComponent<CinemachineFreeLook>().m_Priority = 18;
+    }
+
+    public void ResetThirdPersonCameraOffset(GameObject instance)
+    {
+        if(this.gameObject != instance)
+            return;
+
+        combatCamera.GetComponent<CinemachineFreeLook>().m_Priority = 0;
+        Destroy(combatCamera);
     }
 
     /*Time Scale Adjustement*/

@@ -31,6 +31,8 @@ public class CameraController : MonoBehaviour
     public static event Action<GameObject, Transform> onEnableThirdPersonCamera;
     public static event Action<GameObject, float> onEnableThirdPersonCameraRetargeting;
     public static event Action<Camera> onCameraLoaded;
+    public static event Action<GameObject, CameraSettings> onUpdateThirdPersonCameraOffset; 
+    public static event Action<GameObject> onResetThirdPersonCameraOffset;
     //public static event Action<GameObject, Transform> onEnableLockOnCamera;
 
     private void OnEnable()
@@ -134,6 +136,25 @@ public class CameraController : MonoBehaviour
         
         cameraGroupInstance.GetComponent<CameraGroup>().UpdateDynamicTargetLock(cameraGroupInstance, target);
 
+    }
+
+
+    //Updates Third Person camera offset. Useful when abilities or skills should show more of the field
+    public void UpdateThirdPersonCameraOffset(GameObject instance, CameraSettings cameraSettings)
+    {
+        Debug.Log("UpdatingCameraOffset");
+        if(this.gameObject != instance)
+            return;
+        
+        onUpdateThirdPersonCameraOffset.Invoke(cameraGroupInstance, cameraSettings);
+    }
+
+    public void ResetThirdPersonCameraOffset(GameObject instance)
+    {
+        if(this.gameObject != instance)
+            return;
+            
+        onResetThirdPersonCameraOffset.Invoke(cameraGroupInstance);
     }
 
     public void RecenterThirdPersonCam(float time)

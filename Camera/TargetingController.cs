@@ -103,7 +103,8 @@ public class TargetingController : MonoBehaviour
                 currentTarget = 0;
                 targetToLock = targets[currentTarget];
 
-                //Need TODO determine target head based on offset
+                //Target lock set to TargetLockPosition of target
+                //Transform targetToLockHead = targetToLock.GetComponent<Body>().TargetLock;
                 Transform targetToLockHead = targetToLock;
                 print("Target to lock: " + targetToLockHead);
 

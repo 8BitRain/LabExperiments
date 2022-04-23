@@ -11,6 +11,7 @@ public class Knockdown : Action
     {
         //Return a task status of success once idle animation has been started
         transform.GetComponent<AnimationController>().ChangeAnimationState(transform.GetComponent<Animator>(),animationName);
+        transform.GetComponent<Animator>().SetBool("Wakeup", false);
         return TaskStatus.Success;
     }
 }

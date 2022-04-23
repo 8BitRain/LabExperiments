@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine;
+using DG.Tweening;
 
 public class HUD : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class HUD : MonoBehaviour
 
     public Canvas dutchedLetterBox;
     private Canvas dutchedLetterBoxInstance;
+
+    private bool canUpdateTargetPosition = true;
 
     // Start is called before the first frame update
     void Start()
@@ -67,9 +70,16 @@ public class HUD : MonoBehaviour
     {
         if(this.gameObject != instance)
             return;
-
-        TargetArrow.transform.position = cam.WorldToScreenPoint(target.transform.position + new Vector3(0,target.GetComponent<Collider>().bounds.size.y,0));
-        Debug.Log("Updating Target arrow position from: " + TargetArrow.transform.position + " to: " + target.transform.position);
+        
+        if(canUpdateTargetPosition)
+        {
+            canUpdateTargetPosition = false;        
+            TargetArrow.transform.position = cam.WorldToScreenPoint(target.GetComponent<Body>().TargetLock.transform.position);
+            TargetArrow.transform.DOMove(cam.WorldToScreenPoint(target.GetComponent<Body>().TargetLock.transform.position), 0f).OnComplete(() => {
+                canUpdateTargetPosition = true;
+            });
+        }
+        Debug.Log("Updating Target arrow position from: " + TargetArrow.transform.position + " to: " + target.GetComponent<Body>().TargetLock.transform.position);
         
     }
 

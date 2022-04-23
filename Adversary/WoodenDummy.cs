@@ -51,7 +51,14 @@ public class WoodenDummy : MonoBehaviour
         Debug.Log(gameObject.name + "is processing collision");
 
         //Set Damaged State
+        transform.GetComponent<Animator>().SetBool("Wakeup", false);
+        //Setting to false then true to trigger a state re-run in behavior tree
+        transform.GetComponent<Animator>().SetBool("Damaged", false);
         transform.GetComponent<Animator>().SetBool("Damaged", true);
+
+        /*DOVirtual.DelayedCall(1.0f, () => {
+            transform.GetComponent<Animator>().SetBool("Damaged", true);
+        });*/
 
         //Flash Red color when hit
         DamageFlash();

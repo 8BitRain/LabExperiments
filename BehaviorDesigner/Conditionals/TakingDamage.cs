@@ -6,7 +6,6 @@ using DG.Tweening;
 public class TakingDamage : Conditional
 {
 
-    public float takeDamageTime;
     public override TaskStatus OnUpdate()
     {
         //IsTakingDamage(this.transform) ? TaskStatus.Success : TaskStatus.Running;

@@ -6,6 +6,7 @@ public class StartCombat : Action
 {
     // The transform that the object is moving towards
     public SharedGameObject targetGameObject;
+    public MeleeAttackController.MeleeAttackType attackType;
 
     private Transform currentTarget;
 
@@ -17,7 +18,7 @@ public class StartCombat : Action
         //Return a task status of success once combat action has been performed
         Debug.Log("CurrentAnimationState" + transform.GetComponent<AnimationController>().GetCurrentState());
         transform.LookAt(currentTarget);
-        transform.GetComponent<MeleeAttackController>().PerformMelee(MeleeAttackController.MeleeAttackType.Light);
+        transform.GetComponent<MeleeAttackController>().PerformMelee(attackType);
         return TaskStatus.Success;
     }
 }

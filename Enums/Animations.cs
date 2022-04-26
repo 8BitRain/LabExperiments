@@ -12,6 +12,8 @@ public static class Animations
         FumaDashAttack_03,
         FumaDashAttack_04,
         FumaDashRecoil_01,
-        FlashStep_01
+        FlashStep_01,
+        RangedAttack01_Channel,
+        RangedAttack01_Cast
     }
 }

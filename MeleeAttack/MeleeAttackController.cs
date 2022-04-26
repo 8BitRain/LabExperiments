@@ -65,6 +65,7 @@ public class MeleeAttackController : MonoBehaviour
             case MeleeAttackType.Heavy:
                 heavyAttackInstance = Instantiate(heavyAttack);
                 InitializeAbility(heavyAttackInstance);
+                heavyAttackInstance.Melee();
                 return;
             default:
                 break;

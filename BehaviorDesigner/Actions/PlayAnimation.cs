@@ -10,8 +10,14 @@ public class PlayAnimation : Action
     public float animationTime;
 
     private bool endAnimation = false;
+    public override void OnStart()
+    {
+        endAnimation = false;
+    }
     public override TaskStatus OnUpdate()
     {
+
+        Debug.Log("endAnimation Value: " + endAnimation);
         //Return a task status of success once idle animation has been started
         if(!endAnimation)
         {

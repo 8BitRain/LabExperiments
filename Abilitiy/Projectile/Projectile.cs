@@ -8,6 +8,7 @@ public class Projectile : MonoBehaviour
     public ProjectileComponent projectileComponent;
     public GameObject VFX;
     public HitBox hitBox;
+    private GameObject projectileSummonerReference;
     // Start is called before the first frame update
 
     private void OnEnable()
@@ -80,6 +81,16 @@ public class Projectile : MonoBehaviour
     public GameObject GetVFX()
     {
         return VFX;
+    }
+
+    public GameObject GetProjectileSummonerReference()
+    {
+        return projectileSummonerReference;
+    }
+
+    public void SetProjectileSummonerReference(GameObject reference)
+    {
+        this.projectileSummonerReference  = reference;
     }
 
     //on collision play vfx;

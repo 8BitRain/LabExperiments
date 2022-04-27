@@ -85,6 +85,7 @@ public class PlayerMovementController : MonoBehaviour
     private bool canSteer = false;
     private bool canPlayerInputMove = true;
     private bool _playerInMovementFrames = false;
+    private bool useGravityLockPlayerInput = false;
 
     private void OnEnable()
     {
@@ -363,7 +364,8 @@ public class PlayerMovementController : MonoBehaviour
             }
             
             //Gravity
-            if(_velocity.y < 0)
+            Gravity();
+            /*if(_velocity.y < 0)
             {
                 //animator.SetBool("Falling", true);
                 animator.SetBool("Jumping", false);
@@ -375,7 +377,12 @@ public class PlayerMovementController : MonoBehaviour
                 _velocity.y += gravity * Time.deltaTime;
                 //Getting a better jumping arc will probably be factored here
                 _controller.Move(_velocity * Time.deltaTime);
-            }
+            }*/
+        }
+
+        if(useGravityLockPlayerInput)
+        {
+            Gravity();
         }
     }
 
@@ -393,6 +400,16 @@ public class PlayerMovementController : MonoBehaviour
     public void DisableMovement()
     {
         canMove = false; 
+    }
+
+    public void EnableApplyGravityLockPlayerInput()
+    {
+        useGravityLockPlayerInput = true;
+    }
+
+    public void DisableApplyGravityLockPlayerInput()
+    {
+        useGravityLockPlayerInput = false;
     }
 
     public void EnableSteering(){canSteer = true;}
@@ -427,6 +444,26 @@ public class PlayerMovementController : MonoBehaviour
     void Land()
     {
         animator.SetBool("Landing", false);
+    }
+
+    void Gravity()
+    {
+        if(_velocity.y < 0)
+        {
+            //animator.SetBool("Falling", true);
+            animator.SetBool("Jumping", false);
+            animator.SetBool("Falling", true);
+            if(!animator.GetBool("Damaged"))
+            {
+                animationController.ChangeAnimationState(animator,"Player_jump_falling");
+            }
+        }
+        if(applyGravity)
+        {
+            _velocity.y += gravity * Time.deltaTime;
+            //Getting a better jumping arc will probably be factored here
+            _controller.Move(_velocity * Time.deltaTime);
+        }
     }
 
     public void Accelerate()

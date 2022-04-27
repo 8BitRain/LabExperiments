@@ -55,6 +55,19 @@ public class HitBox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //Make sure the summoner that summoned the hitbox doens't have its own hurtbox take a collision from this instance
+        if(GetSummoner() != null)
+        {
+            Debug.Log("Summoner info: " + GetSummoner().name);
+            
+            //So Janky ugh
+            if(GetSummoner().transform.parent.transform.parent.gameObject == other.gameObject.GetComponent<HurtBox>().Agent)
+            {
+                Debug.Log("Hitbox owner collided with itself, ignore this");
+                return;
+            }
+        }
+
         print("HitBox belonging to: " + this.transform.parent.name + " OnTrigger Enter");
         foreach (var layer in layers)
         {

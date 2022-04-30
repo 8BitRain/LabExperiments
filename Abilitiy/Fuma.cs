@@ -346,8 +346,10 @@ public class Fuma : Skill
     public void EngageCooldown()
     {
         //Reset Camera
-        //GetPlayerReference().GetComponent<CameraController>().DisengageDynamicTargetLock(GetPlayerReference());
-        GetPlayerReference().GetComponent<CameraController>().RouteToCameraDisengage(GetPlayerReference(), cameraSettingsInstance);
+        if(cameraSettingsInstance != null)
+        {
+            GetPlayerReference().GetComponent<CameraController>().RouteToCameraDisengage(GetPlayerReference(), cameraSettingsInstance);
+        }
         Cooldown cooldownInstance = Instantiate(cooldownObjRef, transform.position, transform.rotation);
         cooldownInstance.time = cooldownTime;
         cooldownInstance.activeSkill = this.gameObject;

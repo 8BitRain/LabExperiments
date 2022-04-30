@@ -61,10 +61,17 @@ public class HitBox : MonoBehaviour
             Debug.Log("Summoner info: " + GetSummoner().name);
             
             //So Janky ugh
-            if(GetSummoner().transform.parent.transform.parent.gameObject == other.gameObject.GetComponent<HurtBox>().Agent)
+            try
             {
-                Debug.Log("Hitbox owner collided with itself, ignore this");
-                return;
+                if(GetSummoner().transform.parent.transform.parent.gameObject == other.gameObject.GetComponent<HurtBox>().Agent)
+                {
+                    Debug.Log("Hitbox owner collided with itself, ignore this");
+                    return;
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log("HitBox Error: " + e);
             }
         }
 

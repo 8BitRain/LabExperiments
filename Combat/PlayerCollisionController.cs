@@ -82,6 +82,7 @@ public class PlayerCollisionController : CollisionController
         DOVirtual.DelayedCall(3f, () => {
             playerMovementController.DisableApplyGravityLockPlayerInput();
             playerMovementController.EnableMovement();
+            transform.GetComponent<Animator>().SetBool("Damaged", false);
         });
     }
 

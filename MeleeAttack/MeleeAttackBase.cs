@@ -246,6 +246,10 @@ public class MeleeAttackBase : MonoBehaviour
         {
             string animation = meleeAttackComponent.animationComponent.animation.ToString();
             Debug.Log("Play Animation: " + animation);
+            //Reset animation state first
+            GetAnimationController().ResetAnimationState();
+
+            //Play Animation
             GetAnimationController().ChangeAnimationState(GetPlayerReference().GetComponent<Animator>(),animation);
         }
 

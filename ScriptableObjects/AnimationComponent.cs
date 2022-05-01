@@ -10,4 +10,8 @@ public class AnimationComponent : ScriptableObject
     public Animations.AnimationState animation;
     public float animationStartDelay;
     public float animationEndDelay;
+
+    [Header("HitStop")]
+    public bool applyHitStop = false;
+    public float hitStopDuration = 0;
 }

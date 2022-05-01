@@ -93,6 +93,7 @@ public class MeleeAttackBase : MonoBehaviour
 
         //Instantiate ability
         meleeAttackInstance = Instantiate(attackComponent, GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
+        meleeAttackInstance.transform.SetParent(GetPlayerReference().transform);
         meleeAttackInstance.transform.LookAt(Camera.main.transform.forward);
         
         //Iterate through ability instances modular components
@@ -116,17 +117,9 @@ public class MeleeAttackBase : MonoBehaviour
                     if(meleeAttackComponent.animationComponent.animationEndDelay != 0)
                     {
                         Debug.Log("Animation Delay: " + meleeAttackComponent.animationComponent.animation + " for: " + meleeAttackComponent.animationComponent.animationEndDelay);
-                        if(!GetAbilityConnected())
-                        {
-                            animationCoroutine = StartCoroutine(AnimationDelay(meleeAttackComponent.animationComponent));
-                            FireModularProjectile(modularComponent.gameObject);
-                            yield return new WaitUntil(() => GetAbilityConnected());
-                        }
-                        else
-                        {
-                            yield return new WaitForSeconds(meleeAttackComponent.animationComponent.animationEndDelay);
-                            FireModularProjectile(modularComponent.gameObject);
-                        }
+                        animationCoroutine = StartCoroutine(AnimationDelay(meleeAttackComponent.animationComponent));
+                        FireModularProjectile(modularComponent.gameObject);
+                        yield return new WaitForSeconds(meleeAttackComponent.animationComponent.animationEndDelay);
                     }
                     else
                     {
@@ -440,16 +433,31 @@ public class MeleeAttackBase : MonoBehaviour
         return this.abilityConnected;
     }
 
-    //Collision Code
+    //Collision Code //This code may noit fire for this instance.     
     public void CollisionLogic(GameObject targetInstance, GameObject hurtBoxInstance, GameObject summonerInstance, AbilityComponent meleeAttackComponent)
     {
         if(this.meleeAttackInstance != summonerInstance)
-            return;
-        StopCoroutine(animationCoroutine);
+        {
+            Debug.Log(this.meleeAttackInstance.name + " is not the same game object as " + summonerInstance.gameObject);
+            if(this.meleeAttackInstance.transform.parent.gameObject != summonerInstance.transform.parent.parent.gameObject)
+            {
+                Debug.Log(this.meleeAttackInstance.transform.parent.name + " is not the same game object as " + summonerInstance.transform.parent.parent.name);
+                return;
+            }
+        }
+
+        //Hitstop
+        GetPlayerReference().GetComponent<Animator>().speed = 0;
+        DOVirtual.DelayedCall(.2f, () => {
+            GetPlayerReference().GetComponent<Animator>().speed = 1;
+        });
+
+        //StopCoroutine(animationCoroutine);
 
         this.targetInstance = targetInstance.transform;
         SetAbilityConnected(true);
 
+        Debug.Log(this.gameObject.name +  "Processing Collision Logic");
         //Use multi viewpoint camera to render action scene
         //GetPlayerReference().GetComponent<CameraController>().EngageDynamicTargetLock(GetPlayerReference(), this.targetInstance, CameraGroup.FrameShotStyle.WIDESHOT);
     }

@@ -5,6 +5,7 @@ using Cinemachine;
 using UnityEngine.Events;
 using System;
 using UnityEngine;
+using DG.Tweening;
 
 [System.Serializable]
 public class VFXEvent : UnityEvent <Transform> {}
@@ -14,6 +15,7 @@ public class HitBox : MonoBehaviour
     public LayerMask[] layers;
     public AbilityComponent abilityComponent;
     private GameObject Summoner;
+    private GameObject entityGameObjectParent;
 
     public AudioComponent audioComponent;
     public GameEvent screenShakeEvent;
@@ -56,14 +58,14 @@ public class HitBox : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //Make sure the summoner that summoned the hitbox doens't have its own hurtbox take a collision from this instance
-        if(GetSummoner() != null)
+        if(GetSummoner() != null && other.gameObject.GetComponent<HurtBox>() != null)
         {
             Debug.Log("Summoner info: " + GetSummoner().name);
             
-            //So Janky ugh
+            //So Janky ugh this is to ensure hitboxes don't collide w/ their own hurtbox. 
             try
             {
-                if(GetSummoner().transform.parent.transform.parent.gameObject == other.gameObject.GetComponent<HurtBox>().Agent)
+                if(GetSummoner().transform.parent.parent.gameObject == other.gameObject.GetComponent<HurtBox>().Agent)
                 {
                     Debug.Log("Hitbox owner collided with itself, ignore this");
                     return;
@@ -71,10 +73,29 @@ public class HitBox : MonoBehaviour
             }
             catch (System.Exception e)
             {
-                Debug.Log("HitBox Error: " + e);
+                Debug.Log("HitBox Error: "  + "HitBox Summoner" + GetSummoner() + "\n" + e);
+                Debug.Log("HitBox Summoner" + GetSummoner() + " parent is " + GetSummoner().transform.parent.name);
+                Debug.Log("HitBox Summoner's parent" + GetSummoner().transform.parent.name + " parent is " + GetSummoner().transform.parent.parent.name);
+                Debug.Log("Hurtbox: " + other.gameObject.GetComponent<HurtBox>().gameObject.name + " belongs to " + other.gameObject.GetComponent<HurtBox>().Agent.name);
+                try
+                {
+                    if(GetSummoner().transform.parent.gameObject == other.gameObject.GetComponent<HurtBox>().Agent)
+                    {
+                        Debug.Log("Hitbox owner collided with itself, ignore this");
+                        return;
+                    }
+                }
+                catch (System.Exception f)
+                {
+                    Debug.Log("HitBox Error: "  + "HitBox Summoner" + GetSummoner() + "\n" + f);
+                    Debug.Log("HitBox Summoner" + GetSummoner() + " parent is " + GetSummoner().transform.parent.name);
+                    Debug.Log("HitBox Summoner's parent" + GetSummoner().transform.parent.name + " parent is " + GetSummoner().transform.parent.parent.name);
+                    Debug.Log("Hurtbox: " + other.gameObject.GetComponent<HurtBox>().gameObject.name + " belongs to " + other.gameObject.GetComponent<HurtBox>().Agent.name);
+                }
             }
         }
 
+        
         print("HitBox belonging to: " + this.transform.parent.name + " OnTrigger Enter");
         foreach (var layer in layers)
         {
@@ -87,6 +108,7 @@ public class HitBox : MonoBehaviour
                     print("HitBox: we already collided with target return");
                     return;
                 }
+                
 
                 Gamepad.current.SetMotorSpeeds(0.25f,0.55f);
                 StartCoroutine(RumbleCountdown(.2f));

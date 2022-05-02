@@ -12,6 +12,10 @@ public class ProjectileComponent : ScriptableObject
     public float time;
     public float keepAliveTime;
 
+    [Header("HitBox Settings")]
+    public float hitBoxStartDelay;
+    public float hitBoxDuration;
+
     [Header("Rotation Details")]
     public Vector3 initialRotation;
     public bool canRotate;

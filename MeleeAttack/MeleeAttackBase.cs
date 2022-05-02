@@ -333,11 +333,12 @@ public class MeleeAttackBase : MonoBehaviour
                 {
                     Debug.Log("Spell Instance Name: " + modularAbilityInstance.name);
                     Debug.Log("Hitbox instance name: " + hitBox.gameObject.name);
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.meleeAttackInstance, false, modularMeleeAttackComponent.GetMeleeAttackComponent().hitBoxDuration);
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.meleeAttackInstance, false, 
+                    modularMeleeAttackComponent.GetMeleeAttackComponent().hitBoxStartDelay, modularMeleeAttackComponent.GetMeleeAttackComponent().hitBoxDuration);
                 }
                 else
                 {
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.meleeAttackInstance, true, 0);
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.meleeAttackInstance, true, 0, modularMeleeAttackComponent.GetMeleeAttackComponent().hitBoxDuration);
                 }
                     
             }
@@ -448,7 +449,9 @@ public class MeleeAttackBase : MonoBehaviour
 
         //Hitstop
         GetPlayerReference().GetComponent<Animator>().speed = 0;
-        DOVirtual.DelayedCall(.2f, () => {
+        Debug.Log(GetPlayerReference().name + " Start Hitstop: " + Time.time);
+        DOVirtual.DelayedCall(meleeAttackInstance.GetComponent<ModularAttackElement>().GetMeleeAttackComponent().animationComponent.hitStopDuration, () => {
+            Debug.Log(GetPlayerReference().name + " Stop Hitstop: " + Time.time);
             GetPlayerReference().GetComponent<Animator>().speed = 1;
         });
 

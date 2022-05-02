@@ -148,11 +148,12 @@ public class MoonBolt : Skill
                 {
                     Debug.Log("Spell Instance Name: " + spellInstance.name);
                     Debug.Log("Hitbox instance name: " + hitBox.gameObject.name);
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.spellInstance, false, modularAbilityComponent.GetAbilityComponent().hitBoxDuration);
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.spellInstance, false, modularAbilityComponent.GetAbilityComponent().hitBoxStartDelay, 
+                        modularAbilityComponent.GetAbilityComponent().hitBoxDuration);
                 }
                 else
                 {
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.spellInstance, true, 0);
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.spellInstance, true, 0, modularAbilityComponent.GetAbilityComponent().hitBoxDuration);
                 }
                     
             }

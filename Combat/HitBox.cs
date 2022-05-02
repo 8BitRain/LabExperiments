@@ -145,7 +145,7 @@ public class HitBox : MonoBehaviour
         }
     }
 
-    public void TriggerHitbox(GameObject instance, GameObject summoner, bool isActivated, float delay)
+    public void TriggerHitbox(GameObject instance, GameObject summoner, bool isActivated, float delayStart, float duration)
     {
         if(instance != this.gameObject)
         {
@@ -157,19 +157,26 @@ public class HitBox : MonoBehaviour
         
         if(isActivated)
         {
-            ActivateHitBox();
+            //Enable hitbox after delay
+            if(delayStart != 0)
+            {
+                Debug.Log("Delay Start for hitbox belonging to: " + GetSummoner().name + "for " + delayStart);
+                DOVirtual.DelayedCall(delayStart, () => {
+                    Debug.Log("Activate hitbox belonging to: " + GetSummoner().name);
+                    ActivateHitBox();
+                    StartCoroutine(HitBoxDeactivationDelay(duration));
+                });
+            }
+            //Enable hitbox 
+            else
+            {
+                ActivateHitBox();
+                StartCoroutine(HitBoxDeactivationDelay(duration));
+            }
         }
         else
         {
-            if(delay == 0)
-            {
-                DeactivateHitBox();
-            }
-            else
-            {
-                print("Remove Hitbox");
-                StartCoroutine(HitBoxDeactivationDelay(delay));
-            }
+            ActivateHitBox();
         }
     }
 

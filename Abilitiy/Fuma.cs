@@ -327,11 +327,12 @@ public class Fuma : Skill
                 {
                     Debug.Log("Spell Instance Name: " + modularAbilityInstance.name);
                     Debug.Log("Hitbox instance name: " + hitBox.gameObject.name);
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.abilityInstance, false, modularAbilityComponent.GetAbilityComponent().hitBoxDuration);
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.abilityInstance, false, 
+                        modularAbilityComponent.GetAbilityComponent().hitBoxStartDelay, modularAbilityComponent.GetAbilityComponent().hitBoxDuration);
                 }
                 else
                 {
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.abilityInstance, true, 0);
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.abilityInstance, true, 0, modularAbilityComponent.GetAbilityComponent().hitBoxDuration);
                 }
                     
             }

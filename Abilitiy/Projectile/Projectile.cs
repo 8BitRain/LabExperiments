@@ -27,7 +27,7 @@ public class Projectile : MonoBehaviour
 
         if(hitBox != null)
         {
-            EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.gameObject, true, projectileComponent.keepAliveTime);
+            EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.gameObject, true, projectileComponent.hitBoxStartDelay, projectileComponent.hitBoxDuration);
             Debug.Log("Projectile: " + this.gameObject.name + "Triggering Hitbox");
         }
 

@@ -56,6 +56,7 @@ public class AbilityComponent : ScriptableObject
     [Header("Animation Settings")]
     public AnimationComponent animationComponent;
     [Header("HitBox Settings")]
+    public float hitBoxStartDelay;
     public float hitBoxDuration;
     [Header("Collision Component")]
     public CollisionComponent collisionComponent;

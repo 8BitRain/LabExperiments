@@ -12,6 +12,9 @@ public class ProjectileComponent : ScriptableObject
     public float time;
     public float keepAliveTime;
 
+    [Header("Projectile Timing")]
+    public float startDelay = 0;
+
     [Header("HitBox Settings")]
     public float hitBoxStartDelay;
     public float hitBoxDuration;

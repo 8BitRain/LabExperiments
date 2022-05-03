@@ -23,6 +23,11 @@ public class Projectile : MonoBehaviour
 
     void Start()
     {
+        Initialize();
+    }
+
+    public void Initialize()
+    {
         Destroy(this.gameObject, projectileComponent.keepAliveTime);
 
         if(hitBox != null)

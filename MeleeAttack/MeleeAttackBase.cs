@@ -313,9 +313,16 @@ public class MeleeAttackBase : MonoBehaviour
             {
                 Projectile modularProjectile = Instantiate(modularMeleeAttackComponent.GetProjectile(), GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
                 modularProjectile.transform.SetParent(GetPlayerReference().transform);
+                if(modularProjectile.projectileComponent.startDelay != 0)
+                {
+                    modularProjectile.gameObject.SetActive(false);
+                    DOVirtual.DelayedCall(modularProjectile.projectileComponent.startDelay, () =>{
+                        modularProjectile.gameObject.SetActive(true);
+                    });
+                }
                 if(modularMeleeAttackComponent.GetProjectile().GetVFX() != null)
                 {
-                    Instantiate(modularMeleeAttackComponent.GetProjectile().GetVFX(), GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
+                   Instantiate(modularMeleeAttackComponent.GetProjectile().GetVFX(), GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
                 }
             }
         }

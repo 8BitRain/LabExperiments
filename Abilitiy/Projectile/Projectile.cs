@@ -9,7 +9,6 @@ public class Projectile : MonoBehaviour
     public GameObject VFX;
     public HitBox hitBox;
     private GameObject projectileSummonerReference;
-    // Start is called before the first frame update
 
     private void OnEnable()
     {
@@ -23,17 +22,25 @@ public class Projectile : MonoBehaviour
 
     void Start()
     {
-        Initialize();
+        
+        //Initialize();
     }
 
     public void Initialize()
     {
+        Debug.Log("Running initialize" + Time.time);
+        //Debug.Log("Printing hitbox value: " + hitBox.gameObject.name);
         Destroy(this.gameObject, projectileComponent.keepAliveTime);
 
-        if(hitBox != null)
+        if(this.hitBox != null)
         {
-            EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.gameObject, true, projectileComponent.hitBoxStartDelay, projectileComponent.hitBoxDuration);
+            Debug.Log("PROJECTILE SUMMONER REFERENCE: ", GetProjectileSummonerReference());
+            EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, GetProjectileSummonerReference(), true, projectileComponent.hitBoxStartDelay, projectileComponent.hitBoxDuration);
             Debug.Log("Projectile: " + this.gameObject.name + "Triggering Hitbox");
+        }
+        else
+        {
+            Debug.Log("Hitbox is null");
         }
 
         if(GetRotationBool())
@@ -95,6 +102,7 @@ public class Projectile : MonoBehaviour
 
     public void SetProjectileSummonerReference(GameObject reference)
     {
+        Debug.Log("Setting projectileSummonerReference to: " + reference.name);
         this.projectileSummonerReference  = reference;
     }
 

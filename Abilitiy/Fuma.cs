@@ -307,6 +307,8 @@ public class Fuma : Skill
             {
                 Projectile modularProjectile = Instantiate(modularAbilityComponent.GetProjectile(), GetSkillSpawnPosition().position, GetSkillSpawnPosition().rotation);
                 modularProjectile.transform.SetParent(GetPlayerReference().transform);
+                modularProjectile.SetProjectileSummonerReference(GetPlayerReference());
+
                 if(modularAbilityComponent.GetProjectile().GetVFX() != null)
                 {
                     Instantiate(modularAbilityComponent.GetProjectile().GetVFX(), GetSkillSpawnPosition().position, GetSkillSpawnPosition().rotation);
@@ -327,12 +329,12 @@ public class Fuma : Skill
                 {
                     Debug.Log("Spell Instance Name: " + modularAbilityInstance.name);
                     Debug.Log("Hitbox instance name: " + hitBox.gameObject.name);
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.abilityInstance, false, 
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, GetPlayerReference(), false, 
                         modularAbilityComponent.GetAbilityComponent().hitBoxStartDelay, modularAbilityComponent.GetAbilityComponent().hitBoxDuration);
                 }
                 else
                 {
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.abilityInstance, true, 0, modularAbilityComponent.GetAbilityComponent().hitBoxDuration);
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, GetPlayerReference(), true, 0, modularAbilityComponent.GetAbilityComponent().hitBoxDuration);
                 }
                     
             }

@@ -313,11 +313,17 @@ public class MeleeAttackBase : MonoBehaviour
             {
                 Projectile modularProjectile = Instantiate(modularMeleeAttackComponent.GetProjectile(), GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
                 modularProjectile.transform.SetParent(GetPlayerReference().transform);
+                modularProjectile.SetProjectileSummonerReference(GetPlayerReference());
+
                 if(modularProjectile.projectileComponent.startDelay != 0)
                 {
                     modularProjectile.gameObject.SetActive(false);
                     DOVirtual.DelayedCall(modularProjectile.projectileComponent.startDelay, () =>{
                         modularProjectile.gameObject.SetActive(true);
+                        //modularProjectile.Initialize();
+                        //Slightly dangerous. Assumes projectile is a direct child of its container, and the first child.
+                        modularProjectile.transform.GetChild(0).GetComponent<Projectile>().SetProjectileSummonerReference(GetPlayerReference());
+                        modularProjectile.transform.GetChild(0).GetComponent<Projectile>().Initialize();
                     });
                 }
                 if(modularMeleeAttackComponent.GetProjectile().GetVFX() != null)
@@ -340,12 +346,12 @@ public class MeleeAttackBase : MonoBehaviour
                 {
                     Debug.Log("Spell Instance Name: " + modularAbilityInstance.name);
                     Debug.Log("Hitbox instance name: " + hitBox.gameObject.name);
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.meleeAttackInstance, false, 
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, GetPlayerReference(), false, 
                     modularMeleeAttackComponent.GetMeleeAttackComponent().hitBoxStartDelay, modularMeleeAttackComponent.GetMeleeAttackComponent().hitBoxDuration);
                 }
                 else
                 {
-                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, this.meleeAttackInstance, true, 0, modularMeleeAttackComponent.GetMeleeAttackComponent().hitBoxDuration);
+                    EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, GetPlayerReference(), true, 0, modularMeleeAttackComponent.GetMeleeAttackComponent().hitBoxDuration);
                 }
                     
             }

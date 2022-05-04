@@ -450,14 +450,15 @@ public class MeleeAttackBase : MonoBehaviour
     //Collision Code //This code may noit fire for this instance.     
     public void CollisionLogic(GameObject targetInstance, GameObject hurtBoxInstance, GameObject summonerInstance, AbilityComponent meleeAttackComponent)
     {
-        if(this.meleeAttackInstance != summonerInstance)
+        if(GetPlayerReference() != summonerInstance)
         {
             Debug.Log(this.meleeAttackInstance.name + " is not the same game object as " + summonerInstance.gameObject);
-            if(this.meleeAttackInstance.transform.parent.gameObject != summonerInstance.transform.parent.parent.gameObject)
+            return;
+            /*if(this.meleeAttackInstance.transform.parent.gameObject != summonerInstance.transform.parent.parent.gameObject)
             {
                 Debug.Log(this.meleeAttackInstance.transform.parent.name + " is not the same game object as " + summonerInstance.transform.parent.parent.name);
                 return;
-            }
+            }*/
         }
 
         //Hitstop

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.Events;
 using System;
+using Cinemachine;
 using UnityEngine;
 
 
@@ -57,7 +58,33 @@ public class HurtBox : MonoBehaviour
     {
         if(this.gameObject != hurtBoxInstance)
             return;
-    
+
+        CameraShake(summoner, abilityComponent);
         gotCollision.Invoke(hurtBoxAgentInstance, hurtBoxInstance, abilityComponent);
+    }
+
+    //Modular camera shake to help
+    void CameraShake(GameObject hitBoxAgent, AbilityComponent abilityComponent)
+    {
+        if(abilityComponent.screenShakeComponent != null)
+        {
+            Debug.Log("Trigger Screenshake");
+            //We check to see if the hitBoxAgent has a cameraController attached.
+            if(hitBoxAgent.TryGetComponent<CameraController>(out CameraController cameraControllerA))
+            {
+                GameObject virtualCam = cameraControllerA.GetCameraInstance().GetComponent<CinemachineBrain>().ActiveVirtualCamera.VirtualCameraGameObject;
+                Debug.Log("VirtualCam name: " + virtualCam.name);
+                virtualCam.GetComponent<CinemachineScreenShake>().DoShake(abilityComponent.screenShakeComponent);
+            }
+
+
+            //We check to see if the current instance has a cameraController attached. 
+            if(Agent.TryGetComponent<CameraController>(out CameraController cameraControllerB))
+            {
+                GameObject virtualCam = cameraControllerB.GetCameraInstance().GetComponent<CinemachineBrain>().ActiveVirtualCamera.VirtualCameraGameObject;
+                Debug.Log("VirtualCam name: " + virtualCam.name);
+                virtualCam.GetComponent<CinemachineScreenShake>().DoShake(abilityComponent.screenShakeComponent);
+            }
+        }
     }
 }

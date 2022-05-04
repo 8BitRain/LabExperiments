@@ -64,6 +64,8 @@ public class AbilityComponent : ScriptableObject
     public AudioComponent audioComponent;
     [Header("Camera Settings")]
     public CameraSettings cameraSettings;
+    [Header("ScreenShake Settings")]
+    public ScreenShakeComponent screenShakeComponent;
     [Header("VFX Settings")]
     public VFXSpawnLocation vfxSpawnLocation;
     public enum VFXSpawnLocation

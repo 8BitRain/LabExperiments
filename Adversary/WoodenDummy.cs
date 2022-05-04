@@ -123,7 +123,7 @@ public class WoodenDummy : MonoBehaviour
             _velocity.y += gravity * Time.deltaTime;
             //Getting a better jumping arc will probably be factored here
             transform.Translate(_velocity);
-            Debug.Log("Applying gravity" + _velocity.y);
+            //Debug.Log("Applying gravity" + _velocity.y);
         }
     }
 }

@@ -114,11 +114,6 @@ public class HitBox : MonoBehaviour
                 StartCoroutine(RumbleCountdown(.2f));
                 rumble = false;
                 
-                //Screenshake
-                if(screenShakeEvent != null)
-                {
-                    screenShakeEvent.Raise();
-                }
 
                 //Play Audio
                 if(audioComponent != null)

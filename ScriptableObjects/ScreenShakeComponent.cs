@@ -15,7 +15,7 @@ public class ScreenShakeComponent : ScriptableObject
     public float zoom;
     public bool freezeScreen;
     [Range(0,1)]
-    public float deltaTime;
+    public float freezeScreenDeltaTime;
     [Range(0,1)]
     public float realtimeDelay;
 }

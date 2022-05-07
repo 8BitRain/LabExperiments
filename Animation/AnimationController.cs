@@ -11,14 +11,22 @@ public class AnimationController : MonoBehaviour
         
     }
 
-    public void ChangeAnimationState(Animator animator, string newState)
+    public void ChangeAnimationState(Animator animator, string newState, float normalizedTime = 0)
     {
         if(currentState == newState)
         {
             return;
         }
         
-        animator.Play(newState);
+        if(normalizedTime == 0)
+        {
+            animator.Play(newState);
+        }
+        else
+        {
+            Debug.Log("Playing animation: " + newState + " starting at: " + normalizedTime);
+            animator.Play(newState, -1, normalizedTime);
+        }
 
         currentState = newState;
     }

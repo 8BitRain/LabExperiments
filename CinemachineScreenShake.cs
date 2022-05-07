@@ -36,7 +36,7 @@ public class CinemachineScreenShake : MonoBehaviour
 
     public IEnumerator FreezeScreen(ScreenShakeComponent screenShakeComponent)
     {
-        Time.timeScale = screenShakeComponent.deltaTime;
+        Time.timeScale = screenShakeComponent.freezeScreenDeltaTime;
         yield return new WaitForSecondsRealtime(screenShakeComponent.realtimeDelay);
         Time.timeScale = 1;
     }

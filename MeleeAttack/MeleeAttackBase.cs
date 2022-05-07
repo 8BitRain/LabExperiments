@@ -464,8 +464,12 @@ public class MeleeAttackBase : MonoBehaviour
         //Hitstop
         GetPlayerReference().GetComponent<Animator>().speed = 0;
         Debug.Log(GetPlayerReference().name + " Start Hitstop: " + Time.time);
+        float stoppedAnimationTime = GetPlayerReference().GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime;
+        string animationStateBeforeReset = GetAnimationController().GetCurrentState();
         DOVirtual.DelayedCall(meleeAttackInstance.GetComponent<ModularAttackElement>().GetMeleeAttackComponent().animationComponent.hitStopDuration, () => {
             Debug.Log(GetPlayerReference().name + " Stop Hitstop: " + Time.time);
+            GetAnimationController().ResetAnimationState();
+            GetAnimationController().ChangeAnimationState(GetPlayerReference().GetComponent<Animator>(), animationStateBeforeReset, stoppedAnimationTime - .05f);
             GetPlayerReference().GetComponent<Animator>().speed = 1;
         });
 

@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
 using System;
 using UnityEngine.UI;
+using DG.Tweening;
 using UnityEngine;
 
 public class MeleeAttackController : MonoBehaviour
@@ -12,10 +13,15 @@ public class MeleeAttackController : MonoBehaviour
     public Transform meleeSpawn;
 
     public MeleeAttackBase lightAttack;
+    public MeleeAttackBase[] lightAttacks;
     public MeleeAttackBase heavyAttack;
 
     private MeleeAttackBase lightAttackInstance;
     private MeleeAttackBase heavyAttackInstance;
+
+    private int lightAttackState = 0;
+
+    private Tween comboInputDelay;
 
     public enum MeleeAttackType
     {
@@ -58,9 +64,11 @@ public class MeleeAttackController : MonoBehaviour
         switch (meleeAttackType)
         {
             case MeleeAttackType.Light:
-                lightAttackInstance = Instantiate(lightAttack);
+                //lightAttackInstance = Instantiate(lightAttack);
+                lightAttackInstance = Instantiate(lightAttacks[lightAttackState]);
                 InitializeAbility(lightAttackInstance);
                 lightAttackInstance.Melee();
+                UpdateLightAttackState();
                 return;
             case MeleeAttackType.Heavy:
                 heavyAttackInstance = Instantiate(heavyAttack);
@@ -70,6 +78,25 @@ public class MeleeAttackController : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void UpdateLightAttackState()
+    {
+        DOTween.Kill(comboInputDelay);
+        if(lightAttackState < lightAttacks.Length - 1)
+        {
+            lightAttackState++;
+            //Establish combatInputDelay
+            float animationTime = lightAttackInstance.attackComponent.GetComponent<ModularAttackElement>().meleeAttackComponent.animationComponent.animationEndDelay;
+            comboInputDelay = DOVirtual.DelayedCall(animationTime + .5f, () => {
+                lightAttackState = 0;
+            }, default);
+        }
+        else
+        {
+            lightAttackState = 0;
+        }
+        Debug.Log("Light Attack State" + lightAttackState);
     }
 
     public void InitializeAbility(MeleeAttackBase meleeAttackBase)

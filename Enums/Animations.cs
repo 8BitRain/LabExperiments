@@ -15,6 +15,7 @@ public static class Animations
         FlashStep_01,
         RangedAttack01_Channel,
         RangedAttack01_Cast,
-        UpwardStrike_01
+        UpwardStrike_01,
+        ReverseSlash
     }
 }

@@ -22,6 +22,7 @@ public class MeleeAttackController : MonoBehaviour
     private int lightAttackState = 0;
 
     private Tween comboInputDelay;
+    private bool playerInputCanInterruptCombo = false;
 
     public enum MeleeAttackType
     {
@@ -51,16 +52,29 @@ public class MeleeAttackController : MonoBehaviour
         if(lightAttackButtonPressed.action.triggered && lightAttackInstance == null)
         {
             PerformMelee(MeleeAttackType.Light);
+            return;
+        }
+
+        //Logic for continuing a combo on hit, cancelling hitstop
+        if(lightAttackButtonPressed.action.triggered && lightAttackInstance != null && GetPlayerInputCanInterruptCombo())
+        {
+            lightAttackInstance.CancelHitStop();
+            //Destroy(lightAttackInstance.gameObject);
+            PerformMelee(MeleeAttackType.Light);
+            SetPlayerInputCanInterruptCombo(false);
+            return;
         }
 
         if(heavyAttackButtonPressed.action.triggered && heavyAttackInstance == null)
         {
             PerformMelee(MeleeAttackType.Heavy);
+            return;
         }
     }
 
     public void PerformMelee(MeleeAttackType meleeAttackType)
     {
+        this.GetComponent<Animator>().SetBool("Attacking", true);
         switch (meleeAttackType)
         {
             case MeleeAttackType.Light:
@@ -105,5 +119,16 @@ public class MeleeAttackController : MonoBehaviour
         meleeAttackBase.SetPlayerReference(this.gameObject);
         meleeAttackBase.SetMeleeSpawnPoint(this.meleeSpawn);
     }
+
+    public bool GetPlayerInputCanInterruptCombo()
+    {
+        return playerInputCanInterruptCombo;
+    }
+
+    public void SetPlayerInputCanInterruptCombo(bool value)
+    {
+        playerInputCanInterruptCombo = value;
+    }
+
 
 }

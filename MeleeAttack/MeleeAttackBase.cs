@@ -40,6 +40,10 @@ public class MeleeAttackBase : MonoBehaviour
     private Coroutine animationCoroutine;
     private Coroutine meleeCoroutine;
 
+    [Header("Tweens")]
+    private Tween hitStop;
+    private Coroutine hitStopCouroutine;
+
     private void OnEnable()
     {
         HitBox.collision += CollisionLogic;
@@ -447,31 +451,20 @@ public class MeleeAttackBase : MonoBehaviour
         return this.abilityConnected;
     }
 
-    //Collision Code //This code may noit fire for this instance.     
     public void CollisionLogic(GameObject targetInstance, GameObject hurtBoxInstance, GameObject summonerInstance, AbilityComponent meleeAttackComponent)
     {
         if(GetPlayerReference() != summonerInstance)
         {
             Debug.Log(this.meleeAttackInstance.name + " is not the same game object as " + summonerInstance.gameObject);
             return;
-            /*if(this.meleeAttackInstance.transform.parent.gameObject != summonerInstance.transform.parent.parent.gameObject)
-            {
-                Debug.Log(this.meleeAttackInstance.transform.parent.name + " is not the same game object as " + summonerInstance.transform.parent.parent.name);
-                return;
-            }*/
         }
 
+        //MeleeAttack connected, let's allow the player to press the melee button again to trigger another melee attack
+        GetPlayerReference().GetComponent<MeleeAttackController>().SetPlayerInputCanInterruptCombo(true);
+
+        
         //Hitstop
-        GetPlayerReference().GetComponent<Animator>().speed = 0;
-        Debug.Log(GetPlayerReference().name + " Start Hitstop: " + Time.time);
-        float stoppedAnimationTime = GetPlayerReference().GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime;
-        string animationStateBeforeReset = GetAnimationController().GetCurrentState();
-        DOVirtual.DelayedCall(meleeAttackInstance.GetComponent<ModularAttackElement>().GetMeleeAttackComponent().animationComponent.hitStopDuration, () => {
-            Debug.Log(GetPlayerReference().name + " Stop Hitstop: " + Time.time);
-            GetAnimationController().ResetAnimationState();
-            GetAnimationController().ChangeAnimationState(GetPlayerReference().GetComponent<Animator>(), animationStateBeforeReset, stoppedAnimationTime - .05f);
-            GetPlayerReference().GetComponent<Animator>().speed = 1;
-        });
+        StartHitStop();
 
         //StopCoroutine(animationCoroutine);
 
@@ -479,7 +472,42 @@ public class MeleeAttackBase : MonoBehaviour
         SetAbilityConnected(true);
 
         Debug.Log(this.gameObject.name +  "Processing Collision Logic");
-        //Use multi viewpoint camera to render action scene
-        //GetPlayerReference().GetComponent<CameraController>().EngageDynamicTargetLock(GetPlayerReference(), this.targetInstance, CameraGroup.FrameShotStyle.WIDESHOT);
+    }
+
+    public void StartHitStop()
+    {
+        //Set Animation speed to 0 to sell freeze
+        GetPlayerReference().GetComponent<Animator>().speed = 0;
+        Debug.Log(GetPlayerReference().name + " Start Hitstop: " + Time.time);
+        //Get the current playback time of the sprite
+        float stoppedAnimationTime = GetPlayerReference().GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime;
+        //Store animation animation that is playing. Return to this animation after hit stop.
+        string animationStateBeforeReset = GetAnimationController().GetCurrentState();
+
+        //Couroutine used for hitstop. Can be interrupted by user input
+        hitStopCouroutine = StartCoroutine(
+            hitStopDelay(meleeAttackInstance.GetComponent<ModularAttackElement>().GetMeleeAttackComponent().animationComponent.hitStopDuration, 
+            stoppedAnimationTime, 
+            animationStateBeforeReset));
+    }
+
+    public IEnumerator hitStopDelay(float duration, float stoppedAnimationTime, string animationStateBeforeReset)
+    {
+        yield return new WaitForSeconds(duration);
+        Debug.Log(GetPlayerReference().name + " Stop Hitstop: " + Time.time);
+        GetAnimationController().ResetAnimationState();
+        GetAnimationController().ChangeAnimationState(GetPlayerReference().GetComponent<Animator>(), animationStateBeforeReset, stoppedAnimationTime - .05f);
+        GetPlayerReference().GetComponent<Animator>().speed = 1;
+    }
+
+    public void CancelHitStop()
+    {
+        //StopCoroutine(animationCoroutine);
+        Debug.Break();
+        Debug.Log("CancelHitStop");
+        //Debug.Log("Tweens killed: " + DOTween.Kill(this.hitStop));
+        StopCoroutine(hitStopCouroutine);
+        GetPlayerReference().GetComponent<Animator>().speed = 1;
+        Destroy(this.gameObject);
     }
 }

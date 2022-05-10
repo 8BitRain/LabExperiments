@@ -126,21 +126,52 @@ public class AnimationController : MonoBehaviour
                 {
                     //material.shader.
                     bool materialTextureNeedsReset = false;
-                    if(material.GetInt("USE_TEXTURE") == 1)
+                    try
                     {
-                        material.SetInt("USE_TEXTURE", 0);
-                        materialTextureNeedsReset = true;
+                        if(material.HasProperty("USE_TEXTURE"))
+                        {
+                            if(material.GetFloat("USE_TEXTURE") == 1)
+                            {
+                                material.SetFloat("USE_TEXTURE", 0);
+                                materialTextureNeedsReset = true;
+                            }
+                        }
                     }
-                    material.DOColor(Color.yellow, "Color_8E73BA40", .2f).OnComplete(() => {
-                        material.DOColor(Color.black, "Color_8E73BA40", .2f);
-                    }).SetLoops(6).OnComplete(() => {
-                        if(materialTextureNeedsReset)
-                            material.SetInt("USE_TEXTURE", 1);
-                    });
+                    catch (System.Exception e)
+                    { 
+                        Debug.Log("Caught error: " + e.Message);
+                    }
 
+                    if(material.HasProperty("Color_8E73BA40"))
+                    {
+                        Color ogColorA = material.GetColor("Color_8E73BA40");
+                        Debug.Log("Color info: " + ogColorA.ToString());
+                        material.DOColor(Color.yellow, "Color_8E73BA40", .2f).OnComplete(() => {
+                            material.DOColor(ogColorA, "Color_8E73BA40", .2f);
+                        }).SetLoops(3).OnComplete(() => {
+                            if(materialTextureNeedsReset)
+                            {
+                                //material.DOColor(ogColorA, "Color_8E73BA40", .2f);
+                                material.SetFloat("USE_TEXTURE", 1);
+                            }
+                        });
+                    }
+
+                    if(material.HasProperty("_Tint"))
+                    {
+                        Color ogColorB = material.GetColor("_Tint");
+                        Debug.Log("Color info: " + ogColorB.ToString());
+                        material.DOColor(Color.yellow, "_Tint", .2f).OnComplete(() => {
+                            material.DOColor(ogColorB, "_Tint", .2f);
+                        }).SetLoops(3);
+                    }
+
+
+                    /*Color ogColorB = material.GetColor("_Tint");
+                    Debug.Log("Color info: " + ogColorB.ToString());
                     material.DOColor(Color.yellow, "_Tint", .2f).OnComplete(() => {
-                        material.DOColor(Color.white, "_Tint", .2f);
-                    }).SetLoops(6);          
+                        material.DOColor(ogColorB, "_Tint", .2f);
+                    }).SetLoops(3);*/      
                 }
             }
         }

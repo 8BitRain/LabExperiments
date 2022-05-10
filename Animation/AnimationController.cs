@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class AnimationController : MonoBehaviour
 {
@@ -107,10 +108,41 @@ public class AnimationController : MonoBehaviour
 
         //We are still attacking, let's make sure we stay in this state
         this.GetComponent<Animator>().SetBool("Attacking", true);
+        //GoldLinkConfirmFlash();
         if(this.hitStopCoroutine != null)
         {
             StopCoroutine(this.hitStopCoroutine);
         }
         this.GetComponent<Animator>().speed = 1;
+    }
+
+    public void GoldLinkConfirmFlash()
+    {
+        foreach (Transform child in GetComponentsInChildren<Transform>())
+        {
+            if(child.TryGetComponent<Renderer>(out Renderer renderer))
+            {
+                foreach (var material in renderer.materials)
+                {
+                    //material.shader.
+                    bool materialTextureNeedsReset = false;
+                    if(material.GetInt("USE_TEXTURE") == 1)
+                    {
+                        material.SetInt("USE_TEXTURE", 0);
+                        materialTextureNeedsReset = true;
+                    }
+                    material.DOColor(Color.yellow, "Color_8E73BA40", .2f).OnComplete(() => {
+                        material.DOColor(Color.black, "Color_8E73BA40", .2f);
+                    }).SetLoops(6).OnComplete(() => {
+                        if(materialTextureNeedsReset)
+                            material.SetInt("USE_TEXTURE", 1);
+                    });
+
+                    material.DOColor(Color.yellow, "_Tint", .2f).OnComplete(() => {
+                        material.DOColor(Color.white, "_Tint", .2f);
+                    }).SetLoops(6);          
+                }
+            }
+        }
     }
 }

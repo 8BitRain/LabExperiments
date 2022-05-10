@@ -128,6 +128,4 @@ public class MeleeAttackController : MonoBehaviour
     {
         playerInputCanInterruptCombo = value;
     }
-
-
 }

@@ -11,6 +11,7 @@ public class MeleeAttackController : MonoBehaviour
 {
     public Transform Agent;
     public Transform meleeSpawn;
+    public bool isAIAgent = false;
 
     public MeleeAttackBase lightAttack;
     public MeleeAttackBase[] lightAttacks;
@@ -94,6 +95,9 @@ public class MeleeAttackController : MonoBehaviour
 
     public void UpdateLightAttackState()
     {
+        //If this agent is an AI entity, let's not update combo states for now
+        if(GetIsAIAgent())
+            return;
         DOTween.Kill(comboInputDelay);
         if(lightAttackState < lightAttacks.Length - 1)
         {
@@ -127,5 +131,10 @@ public class MeleeAttackController : MonoBehaviour
     public void SetPlayerInputCanInterruptCombo(bool value)
     {
         playerInputCanInterruptCombo = value;
+    }
+
+    public bool GetIsAIAgent()
+    {
+        return isAIAgent;
     }
 }

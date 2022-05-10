@@ -148,7 +148,7 @@ public class AnimationController : MonoBehaviour
                         Debug.Log("Color info: " + ogColorA.ToString());
                         material.DOColor(Color.yellow, "Color_8E73BA40", .2f).OnComplete(() => {
                             material.DOColor(ogColorA, "Color_8E73BA40", .2f);
-                        }).SetLoops(3).OnComplete(() => {
+                        }).SetLoops(0).OnComplete(() => {
                             if(materialTextureNeedsReset)
                             {
                                 //material.DOColor(ogColorA, "Color_8E73BA40", .2f);
@@ -163,7 +163,7 @@ public class AnimationController : MonoBehaviour
                         Debug.Log("Color info: " + ogColorB.ToString());
                         material.DOColor(Color.yellow, "_Tint", .2f).OnComplete(() => {
                             material.DOColor(ogColorB, "_Tint", .2f);
-                        }).SetLoops(3);
+                        }).SetLoops(0);
                     }
 
 

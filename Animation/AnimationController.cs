@@ -5,7 +5,9 @@ using UnityEngine;
 public class AnimationController : MonoBehaviour
 {
     private string currentState;
-    // Start is called before the first frame update
+    private Coroutine hitStopCoroutine;
+
+
     void Start()
     {
         
@@ -76,12 +78,39 @@ public class AnimationController : MonoBehaviour
             else
             {
                 player.EnableMovement();
-                //player.DisableSteering();
+
+                //Player Animation Lock is used to prevent unnescesary animations from taking over. When done, we are typically done attacking
+                player.GetComponent<Animator>().SetBool("Attacking", false);
             } 
         }
         catch (System.Exception e)
         {
             Debug.Log("Exception: " + e);
         }
+    }
+
+    public void HitStop(float duration, float stoppedAnimationTime, string animationStateBeforeReset)
+    {
+        hitStopCoroutine = StartCoroutine(HitStopDelay(duration, stoppedAnimationTime, animationStateBeforeReset));
+    }
+
+    private IEnumerator HitStopDelay(float duration, float stoppedAnimationTime, string animationStateBeforeReset)
+    {
+        Debug.Log("HitStopDelay: Running HitStop Delay Coroutine " + Time.time);
+        Debug.Log("Wait Duration: " + duration);
+        yield return new WaitForSecondsRealtime(duration);
+        Debug.Log(this.name + " Stop Hitstop: " + Time.time);
+        ResetAnimationState();
+        ChangeAnimationState(this.GetComponent<Animator>(), animationStateBeforeReset, stoppedAnimationTime - .05f);
+        this.GetComponent<Animator>().speed = 1;
+    }
+
+    public void CancelHitStop()
+    {
+        Debug.Log("CancelHitStop");
+        //We are still attacking, let's make sure we stay in this state
+        this.GetComponent<Animator>().SetBool("Attacking", true);
+        StopCoroutine(hitStopCoroutine);
+        this.GetComponent<Animator>().speed = 1;
     }
 }

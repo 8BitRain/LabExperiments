@@ -127,6 +127,7 @@ public class HitBox : MonoBehaviour
                 {
                     try
                     {
+                        //TODO interrogate the abilityComponent attached. Remember its based on the hitbox's abilityComponent reference
                         //Also pass screenshake component, or attach it to the ability component --<
                         collision.Invoke(other.gameObject.GetComponent<HurtBox>().Agent, other.gameObject, GetSummoner(), abilityComponent);
                     }

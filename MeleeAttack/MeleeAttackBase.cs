@@ -464,9 +464,11 @@ public class MeleeAttackBase : MonoBehaviour
 
         
         //Hitstop
-        StartHitStop();
-
-        //StopCoroutine(animationCoroutine);
+        Debug.Log("HitStop: Attempting hitstop. Reading hitstop value: " + meleeAttackInstance.GetComponent<ModularAttackElement>().GetMeleeAttackComponent().animationComponent.applyHitStop);
+        if(meleeAttackInstance.GetComponent<ModularAttackElement>().GetMeleeAttackComponent().animationComponent.applyHitStop)
+        {
+            StartHitStop();
+        }
 
         this.targetInstance = targetInstance.transform;
         SetAbilityConnected(true);
@@ -486,8 +488,10 @@ public class MeleeAttackBase : MonoBehaviour
 
         //TODO Determine why when we use this method. the hit stop does not correcty play if combat isn't interrupted by user input
         //Couroutine used for hitstop. Can be interrupted by user input
-        hitStopCouroutine = StartCoroutine(hitStopDelay(meleeAttackInstance.GetComponent<ModularAttackElement>().GetMeleeAttackComponent().animationComponent.hitStopDuration, stoppedAnimationTime, animationStateBeforeReset));
-        
+        //StartCoroutine(GetAnimationController().HitStopDelay(meleeAttackInstance.GetComponent<ModularAttackElement>().GetMeleeAttackComponent().animationComponent.hitStopDuration, stoppedAnimationTime, animationStateBeforeReset));
+        GetAnimationController().HitStop(meleeAttackInstance.GetComponent<ModularAttackElement>().GetMeleeAttackComponent().animationComponent.hitStopDuration, stoppedAnimationTime, animationStateBeforeReset);
+
+        //Debug.Break();
         //Original hitstop using DelayedCall (This still works even when hit stop isn't canceled.)
         /*this.hitStop = DOVirtual.DelayedCall(meleeAttackInstance.GetComponent<ModularAttackElement>().GetMeleeAttackComponent().animationComponent.hitStopDuration, () => {
             Debug.Log(GetPlayerReference().name + " Stop Hitstop: " + Time.time);
@@ -499,6 +503,7 @@ public class MeleeAttackBase : MonoBehaviour
 
     public IEnumerator hitStopDelay(float duration, float stoppedAnimationTime, string animationStateBeforeReset)
     {
+        Debug.Log("HitStopDelay: Running HitStop Delay Coroutine " + Time.time);
         yield return new WaitForSeconds(duration);
         Debug.Log(GetPlayerReference().name + " Stop Hitstop: " + Time.time);
         GetAnimationController().ResetAnimationState();
@@ -509,11 +514,11 @@ public class MeleeAttackBase : MonoBehaviour
     public void CancelHitStop()
     {
         //StopCoroutine(animationCoroutine);
-        Debug.Break();
-        Debug.Log("CancelHitStop");
+        //Debug.Break();
+        GetAnimationController().CancelHitStop();
         //Debug.Log("Tweens killed: " + DOTween.Kill(this.hitStop));
-        StopCoroutine(hitStopCouroutine);
-        GetPlayerReference().GetComponent<Animator>().speed = 1;
+        //StopCoroutine(hitStopCouroutine);
+        //GetPlayerReference().GetComponent<Animator>().speed = 1;
         Destroy(this.gameObject);
     }
 }

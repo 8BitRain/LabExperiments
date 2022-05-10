@@ -59,7 +59,6 @@ public class MeleeAttackController : MonoBehaviour
         if(lightAttackButtonPressed.action.triggered && lightAttackInstance != null && GetPlayerInputCanInterruptCombo())
         {
             lightAttackInstance.CancelHitStop();
-            //Destroy(lightAttackInstance.gameObject);
             PerformMelee(MeleeAttackType.Light);
             SetPlayerInputCanInterruptCombo(false);
             return;
@@ -78,7 +77,6 @@ public class MeleeAttackController : MonoBehaviour
         switch (meleeAttackType)
         {
             case MeleeAttackType.Light:
-                //lightAttackInstance = Instantiate(lightAttack);
                 lightAttackInstance = Instantiate(lightAttacks[lightAttackState]);
                 InitializeAbility(lightAttackInstance);
                 lightAttackInstance.Melee();
@@ -104,6 +102,7 @@ public class MeleeAttackController : MonoBehaviour
             float animationTime = lightAttackInstance.attackComponent.GetComponent<ModularAttackElement>().meleeAttackComponent.animationComponent.animationEndDelay;
             comboInputDelay = DOVirtual.DelayedCall(animationTime + .5f, () => {
                 lightAttackState = 0;
+                this.GetComponent<Animator>().SetBool("Attacking", false);
             }, default);
         }
         else

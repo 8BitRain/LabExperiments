@@ -7,7 +7,6 @@ public class AnimationController : MonoBehaviour
     private string currentState;
     private Coroutine hitStopCoroutine;
 
-
     void Start()
     {
         
@@ -78,9 +77,6 @@ public class AnimationController : MonoBehaviour
             else
             {
                 player.EnableMovement();
-
-                //Player Animation Lock is used to prevent unnescesary animations from taking over. When done, we are typically done attacking
-                player.GetComponent<Animator>().SetBool("Attacking", false);
             } 
         }
         catch (System.Exception e)
@@ -91,7 +87,7 @@ public class AnimationController : MonoBehaviour
 
     public void HitStop(float duration, float stoppedAnimationTime, string animationStateBeforeReset)
     {
-        hitStopCoroutine = StartCoroutine(HitStopDelay(duration, stoppedAnimationTime, animationStateBeforeReset));
+        this.hitStopCoroutine = StartCoroutine(HitStopDelay(duration, stoppedAnimationTime, animationStateBeforeReset));
     }
 
     private IEnumerator HitStopDelay(float duration, float stoppedAnimationTime, string animationStateBeforeReset)
@@ -108,9 +104,13 @@ public class AnimationController : MonoBehaviour
     public void CancelHitStop()
     {
         Debug.Log("CancelHitStop");
+
         //We are still attacking, let's make sure we stay in this state
         this.GetComponent<Animator>().SetBool("Attacking", true);
-        StopCoroutine(hitStopCoroutine);
+        if(this.hitStopCoroutine != null)
+        {
+            StopCoroutine(this.hitStopCoroutine);
+        }
         this.GetComponent<Animator>().speed = 1;
     }
 }

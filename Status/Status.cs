@@ -28,7 +28,15 @@ public class Status : MonoBehaviour
     {
         if(hp <= 0)
         {
-            Destroy(this.gameObject);
+            //TODO Should probably have a generic death controller that controls OnDeath logic
+            if(TryGetComponent<Enemy>(out Enemy enemy))
+            {
+                enemy.OnDeath();
+            }
+            else
+            {
+                //TODO add logic for player character. 
+            }
         }
     }
 

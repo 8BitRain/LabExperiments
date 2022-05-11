@@ -5,7 +5,7 @@ using DG.Tweening;
 using System;
 
 
-public class WoodenDummy : MonoBehaviour
+public class WoodenDummy : Enemy
 {
     [Header("Gravity/Verticality Settings")]
     public float gravity = -9.81f;

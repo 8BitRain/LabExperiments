@@ -31,6 +31,12 @@ public class HUDController : MonoBehaviour
     void Start()
     {
         HUDInstance = Instantiate(HUD);
+
+        if(TryGetComponent<Status>(out Status status))
+            HUDInstance.GetComponent<HUD>().SetupHealthBar(status.hp, this.gameObject);
+        else
+            Debug.Log("No Status script attached to: " + this.gameObject.name);
+        
     }
 
     // Update is called once per frame

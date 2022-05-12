@@ -43,7 +43,14 @@ public class Status : MonoBehaviour
     public void SetHP(GameObject hurtBoxAgentInstance,GameObject hurtBoxInstance,AbilityComponent abilityComponent)
     {
         if(this.gameObject != hurtBoxAgentInstance)
+        {
+            Debug.Log("Observer Pattern Event Error: " + this.gameObject.name + " is not the same as " + hurtBoxAgentInstance.name);
             return;
+        }
+        else
+        {
+            Debug.Log("Observer Pattern Event Success: " + this.gameObject.name + " is the same as " + hurtBoxAgentInstance.name);
+        }
         
         hp = hp - abilityComponent.collisionComponent.hpDamage;
     }

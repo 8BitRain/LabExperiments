@@ -7,6 +7,7 @@ using DG.Tweening;
 
 public class HUD : MonoBehaviour
 {
+    public HealthBar healthBar;
     public GameObject TargetArrow;
     public UnityEvent onActivateTargetArrow;
     public UnityEvent onDeactivateTargetArrow;
@@ -34,6 +35,14 @@ public class HUD : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void SetupHealthBar(float maxHealth, GameObject ownerInstance)
+    {
+        healthBar.SetMaxHealth(maxHealth);
+        healthBar.SetHealth(maxHealth);
+        healthBar.SetOwnerInstance(ownerInstance);
+        Debug.Log("Setting maxhealth and health to: " + maxHealth);
     }
 
     public void ActivateDutchedLetterBox()

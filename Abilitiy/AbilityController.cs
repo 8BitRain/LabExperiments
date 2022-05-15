@@ -5,20 +5,25 @@ using UnityEngine.InputSystem.Users;
 using System;
 using UnityEngine.UI;
 using UnityEngine;
+using DG.Tweening;
 
 public class AbilityController : MonoBehaviour
 {
+    [Header("Ability Settings")]
     public Transform Agent;
     public Transform abilitySpawn;
     public GameObject selector;
     public enum SelectedButton {North, South, East, West};
     public SelectedButton selectedButton;
-    
+
+
+    [Header("Ability Prefabs")]
     public Skill specialAbilitySouth;
     public Skill specialAbilityNorth;
     public Skill specialAbilityEast;
     public Skill specialAbilityWest;
 
+    
     private Skill abilityNorthInstance;
     private Skill abilitySouthInstance;
     private Skill abilityEastInstance;
@@ -32,7 +37,7 @@ public class AbilityController : MonoBehaviour
     private int abilityC = 0;
     private int abilityD = 0;
 
-
+    [Header("Input Settings")]
     /// <summary>Vector2 action for pressing a face button </summary>
     [Tooltip("Vector2 action for South Button ")]
     public InputActionReference SouthButtonPressed;
@@ -48,11 +53,17 @@ public class AbilityController : MonoBehaviour
     /// <summary>Vector2 action for pressing a face button </summary>
     [Tooltip("Vector2 action for East Button ")]
     public InputActionReference EastButtonPressed;
-    
+
+    private bool gaurdInput = false;
+    public void OnGaurd(InputAction.CallbackContext ctx) => gaurdInput = ctx.ReadValueAsButton();
+
     private bool displayAbilityWindowInput = false;
     public void OnDisplayAbilityWindow(InputAction.CallbackContext ctx) => displayAbilityWindowInput = ctx.ReadValueAsButton();
 
     public static event Action<GameObject, bool> onActivateAbilityWindow;
+
+    //State variables
+    bool dodgeCooldownIsActive = false;
 
     private void OnEnable()
     {
@@ -114,6 +125,93 @@ public class AbilityController : MonoBehaviour
             onActivateAbilityWindow.Invoke(this.gameObject, false);
             EventsManager.instance.OnAbilityWindowInactiveUnlockInput(this.gameObject);
         }
+
+        if(gaurdInput && !GetComponent<Animator>().GetBool("Dodging"))
+        {
+            GetComponent<Animator>().SetBool("Gaurding", true);
+            Gaurd();
+        }
+        
+        if(!gaurdInput)
+        {
+            Debug.Log("Stop Gaurding");
+            GetComponent<Animator>().SetBool("Gaurding", false);
+
+            if(!GetComponent<Animator>().GetBool("Dodging"))
+            {
+                GetMovementController().DisableApplyGravityLockPlayerInput();
+                GetMovementController().EnableMovement();
+            }
+        }
+
+        if(gaurdInput && GetMovementController().movementInput.magnitude != 0)
+        { 
+            Dodge();
+        }
+    }
+
+    public void Gaurd()
+    {
+        GetMovementController().DisableMovement();
+        //GetMovementController().EnableApplyGravityLockPlayerInput();
+        GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Gaurd.ToString());
+    }
+
+    public void Dodge()
+    {
+        if(this.dodgeCooldownIsActive)
+            return;
+
+        GetMovementController().DisableApplyGravityLockPlayerInput();
+        GetMovementController().DisableMovement();
+
+        GetComponent<Animator>().SetBool("Dodging", true);
+        GetComponent<Animator>().SetBool("Gaurding", false);
+
+        float thumbstickX = GetMovementController().movementInput.x;
+        float thumbstickY = GetMovementController().movementInput.y;
+        
+        //Forward
+        if((thumbstickX > 0 && thumbstickY > 0) || (thumbstickX < 0 && thumbstickY > 0))
+        {
+            GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Dodge_F.ToString());
+            GetMovementController().transform.DOMove(GetMovementController().transform.position + GetMovementController().transform.forward*5f, .5f);
+        }
+
+        //Backward
+        if((thumbstickX < 0 && thumbstickY < 0) || (thumbstickX > 0 && thumbstickY < 0))
+        {
+            GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Dodge_B.ToString());
+            GetMovementController().transform.DOMove(GetMovementController().transform.position - GetMovementController().transform.forward*5f, .5f);
+        }
+
+        //Left
+        /*if((thumbstickX < 0 && thumbstickY > 0) || (thumbstickX > 0 && thumbstickY < 0))
+        {
+
+        }
+
+        //Right
+        if((thumbstickX < 0 && thumbstickY < 0) || (thumbstickX > 0 && thumbstickY < 0))
+        {
+
+        }*/
+
+        this.dodgeCooldownIsActive = true;
+        
+        //Dodge Duration
+        DOVirtual.DelayedCall(1f, () => {
+            GetComponent<Animator>().SetBool("Dodging", false);
+            GetMovementController().EnableMovement();
+        });
+
+        //Dodge Cooldown
+        DOVirtual.DelayedCall(1f, () => {
+            this.dodgeCooldownIsActive = false;
+        });
+        
+
+
     }
 
     public void UseAbility()
@@ -209,5 +307,15 @@ public class AbilityController : MonoBehaviour
             default: 
                 break;
         }
+    }
+
+    public AnimationController GetAnimationController()
+    {
+        return this.GetComponent<AnimationController>();
+    }
+    
+    public PlayerMovementController GetMovementController()
+    {
+        return this.GetComponent<PlayerMovementController>();
     }
 }

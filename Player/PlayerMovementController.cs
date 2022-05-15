@@ -356,7 +356,7 @@ public class PlayerMovementController : MonoBehaviour
             } 
             else 
             {
-                if(!_isWallRunning && _isGrounded && !animator.GetBool("Landing") && !animator.GetBool("Attacking"))
+                if(!_isWallRunning && _isGrounded && !animator.GetBool("Landing") && !animator.GetBool("Attacking") && !animator.GetBool("Gaurding") && !animator.GetBool("Dodging"))
                 {
                     //TODO Ensure run animation does not play
                     animationController.ChangeAnimationState(animator,"Player_idle");

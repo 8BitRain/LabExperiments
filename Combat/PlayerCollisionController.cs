@@ -20,6 +20,12 @@ public class PlayerCollisionController : CollisionController
     {
         if(instance != this.gameObject)
             return;
+
+        if(playerAnimator.GetBool("Gaurding"))
+        {
+            return;
+        }
+
         Debug.Log(gameObject.name + "is processing collision");
 
         //Disable Player Movement by controls, but enable gravity.

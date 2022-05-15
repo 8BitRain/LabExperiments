@@ -153,7 +153,6 @@ public class AbilityController : MonoBehaviour
     public void Gaurd()
     {
         GetMovementController().DisableMovement();
-        //GetMovementController().EnableApplyGravityLockPlayerInput();
         GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Gaurd.ToString());
     }
 

@@ -453,7 +453,7 @@ public class PlayerMovementController : MonoBehaviour
             //animator.SetBool("Falling", true);
             animator.SetBool("Jumping", false);
             animator.SetBool("Falling", true);
-            if(!animator.GetBool("Damaged"))
+            if(!animator.GetBool("Damaged") && !animator.GetBool("Attacking") && !animator.GetBool("Gaurding") && !animator.GetBool("Dodging"))
             {
                 animationController.ChangeAnimationState(animator,"Player_jump_falling");
             }

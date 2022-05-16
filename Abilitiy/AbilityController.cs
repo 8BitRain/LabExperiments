@@ -37,6 +37,11 @@ public class AbilityController : MonoBehaviour
     private int abilityC = 0;
     private int abilityD = 0;
 
+    [Header("Dodge Settings")]
+    public float dodgeDistance = 10f;
+    public float dodgeDuration = .5f;
+    public float dodgeTweenTimer = .5f;
+
     [Header("Input Settings")]
     /// <summary>Vector2 action for pressing a face button </summary>
     [Tooltip("Vector2 action for South Button ")]
@@ -170,36 +175,39 @@ public class AbilityController : MonoBehaviour
         float thumbstickX = GetMovementController().movementInput.x;
         float thumbstickY = GetMovementController().movementInput.y;
         
+        Debug.Log("Movement Input values: " + "X: " + thumbstickX + " Y: " + thumbstickY);
         //Forward
         if((thumbstickX > 0 && thumbstickY > 0) || (thumbstickX < 0 && thumbstickY > 0))
         {
             GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Dodge_F.ToString());
-            GetMovementController().transform.DOMove(GetMovementController().transform.position + GetMovementController().transform.forward*5f, .5f);
+            GetMovementController().transform.DOMove(GetMovementController().transform.position + GetMovementController().transform.forward*dodgeDistance, dodgeTweenTimer);
         }
 
         //Backward
         if((thumbstickX < 0 && thumbstickY < 0) || (thumbstickX > 0 && thumbstickY < 0))
         {
             GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Dodge_B.ToString());
-            GetMovementController().transform.DOMove(GetMovementController().transform.position - GetMovementController().transform.forward*5f, .5f);
+            GetMovementController().transform.DOMove(GetMovementController().transform.position - GetMovementController().transform.forward*dodgeDistance, dodgeTweenTimer);
         }
 
         //Left
-        /*if((thumbstickX < 0 && thumbstickY > 0) || (thumbstickX > 0 && thumbstickY < 0))
+        if(thumbstickX <= 0.1 && (thumbstickY <= 0.1 && thumbstickY >= -.01))
         {
-
+            GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Dodge_L.ToString());
+            GetMovementController().transform.DOMove(GetMovementController().transform.position - GetMovementController().transform.right*dodgeDistance, dodgeTweenTimer);
         }
 
         //Right
-        if((thumbstickX < 0 && thumbstickY < 0) || (thumbstickX > 0 && thumbstickY < 0))
+        if(thumbstickX >= .1 && (thumbstickY <= 0.1 && thumbstickY >= -.01))
         {
-
-        }*/
+            GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Dodge_R.ToString());
+            GetMovementController().transform.DOMove(GetMovementController().transform.position + GetMovementController().transform.right*dodgeDistance, dodgeTweenTimer);
+        }
 
         this.dodgeCooldownIsActive = true;
         
         //Dodge Duration
-        DOVirtual.DelayedCall(1f, () => {
+        DOVirtual.DelayedCall(dodgeDuration, () => {
             GetComponent<Animator>().SetBool("Dodging", false);
             GetMovementController().EnableMovement();
         });

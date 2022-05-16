@@ -180,6 +180,12 @@ public class AbilityController : MonoBehaviour
     {
         if(this.dodgeCooldownIsActive)
             return;
+        
+        if(this.VFXBlockInstance != null)
+        {
+            Destroy(VFXBlockInstance);
+        }
+
 
         GetMovementController().DisableApplyGravityLockPlayerInput();
         GetMovementController().DisableMovement();
@@ -225,6 +231,8 @@ public class AbilityController : MonoBehaviour
         DOVirtual.DelayedCall(dodgeDuration, () => {
             GetComponent<Animator>().SetBool("Dodging", false);
             GetMovementController().EnableMovement();
+
+
         });
 
         //Dodge Cooldown

@@ -37,6 +37,11 @@ public class AbilityController : MonoBehaviour
     private int abilityC = 0;
     private int abilityD = 0;
 
+    [Header("Block Settings")]
+    public GameObject VFXBlock;
+    public Transform VFXBlockSpawn;
+    private GameObject VFXBlockInstance;
+
     [Header("Dodge Settings")]
     public float dodgeDistance = 10f;
     public float dodgeDuration = .5f;
@@ -147,6 +152,11 @@ public class AbilityController : MonoBehaviour
                 GetMovementController().DisableApplyGravityLockPlayerInput();
                 GetMovementController().EnableMovement();
             }
+
+            if(VFXBlockInstance != null)
+            {
+                Destroy(VFXBlockInstance);
+            }
         }
 
         if(gaurdInput && GetMovementController().movementInput.magnitude != 0)
@@ -159,6 +169,11 @@ public class AbilityController : MonoBehaviour
     {
         GetMovementController().DisableMovement();
         GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Gaurd.ToString());
+
+        if(VFXBlockInstance == null)
+        {
+            VFXBlockInstance = Instantiate(VFXBlock, VFXBlockSpawn.position, VFXBlockSpawn.rotation);
+        }
     }
 
     public void Dodge()

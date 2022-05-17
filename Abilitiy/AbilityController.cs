@@ -198,33 +198,18 @@ public class AbilityController : MonoBehaviour
         float thumbstickY = GetMovementController().movementInput.y;
         
         Debug.Log("Movement Input values: " + "X: " + thumbstickX + " Y: " + thumbstickY);
-        //Forward
-        if((thumbstickX > 0 && thumbstickY > 0) || (thumbstickX < 0 && thumbstickY > 0))
-        {
+
+
+        float targetAngle = Mathf.Atan2(thumbstickX, thumbstickY) * Mathf.Rad2Deg + GetComponent<CameraController>().GetCameraInstance().eulerAngles.y;
+        transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+        Vector3 movementDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+        GetAnimationController().ResetAnimationState();
+
+        //if block is held down the block animation and run animation can clip
+        DOVirtual.DelayedCall(.1f, () => {
             GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Dodge_F.ToString());
-            GetMovementController().transform.DOMove(GetMovementController().transform.position + GetMovementController().transform.forward*dodgeDistance, dodgeTweenTimer);
-        }
-
-        //Backward
-        if((thumbstickX < 0 && thumbstickY < 0) || (thumbstickX > 0 && thumbstickY < 0))
-        {
-            GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Dodge_B.ToString());
-            GetMovementController().transform.DOMove(GetMovementController().transform.position - GetMovementController().transform.forward*dodgeDistance, dodgeTweenTimer);
-        }
-
-        //Left
-        if(thumbstickX <= 0.1 && (thumbstickY <= 0.1 && thumbstickY >= -.01))
-        {
-            GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Dodge_L.ToString());
-            GetMovementController().transform.DOMove(GetMovementController().transform.position - GetMovementController().transform.right*dodgeDistance, dodgeTweenTimer);
-        }
-
-        //Right
-        if(thumbstickX >= .1 && (thumbstickY <= 0.1 && thumbstickY >= -.01))
-        {
-            GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Dodge_R.ToString());
-            GetMovementController().transform.DOMove(GetMovementController().transform.position + GetMovementController().transform.right*dodgeDistance, dodgeTweenTimer);
-        }
+            GetMovementController().transform.DOMove(GetMovementController().transform.position + movementDirection*dodgeDistance, dodgeTweenTimer);
+        });
 
         this.dodgeCooldownIsActive = true;
         

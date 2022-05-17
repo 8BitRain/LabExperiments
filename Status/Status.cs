@@ -9,6 +9,8 @@ public class Status : MonoBehaviour
     public float hp = 100;
     public float mp = 100;
 
+    public static event Action<GameObject, float> onHealthStatusChange;
+
     private void OnEnable()
     {
         HurtBox.gotCollision += SetHP;
@@ -21,7 +23,7 @@ public class Status : MonoBehaviour
     
     void Start()
     {
-        
+
     }
 
     void Update()
@@ -51,8 +53,18 @@ public class Status : MonoBehaviour
         {
             Debug.Log("Observer Pattern Event Success: " + this.gameObject.name + " is the same as " + hurtBoxAgentInstance.name);
         }
+
+        if(this.gameObject.GetComponent<Animator>().GetBool("Gaurding"))
+        {
+            Debug.Log(this.gameObject.name + " blocked: " + abilityComponent.componentName);
+            //hp = hp - abilityComponent.collisionComponent.hpDamage;
+        }
         
-        hp = hp - abilityComponent.collisionComponent.hpDamage;
+        if(!this.gameObject.GetComponent<Animator>().GetBool("Gaurding"))
+        {
+            hp = hp - abilityComponent.collisionComponent.hpDamage;
+            onHealthStatusChange.Invoke(this.gameObject, hp);
+        }
     }
 
 

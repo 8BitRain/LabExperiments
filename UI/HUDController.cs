@@ -116,5 +116,10 @@ public class HUDController : MonoBehaviour
        {
             HUDInstance.GetComponent<HUD>().AbilityWindow.GetComponent<CanvasGroup>().alpha = 0;
        }
-    }    
+    }
+
+    public HUD GetActiveHUD()
+    {
+        return this.HUDInstance.GetComponent<HUD>();
+    }
 }

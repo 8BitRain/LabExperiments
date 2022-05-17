@@ -16,12 +16,12 @@ public class HealthBar : MonoBehaviour
 
     private void OnEnable()
     {
-        HurtBox.gotCollision += SetHP;
+        Status.onHealthStatusChange += SetHP;
     }
 
     private void OnDisable()
     {
-        HurtBox.gotCollision -= SetHP;
+        Status.onHealthStatusChange -= SetHP;
     }
     
     public void SetHealth(float health)
@@ -56,14 +56,14 @@ public class HealthBar : MonoBehaviour
         this.ownerInstance = ownerInstance;
     }
 
-    public void SetHP(GameObject hurtBoxAgentInstance,GameObject hurtBoxInstance,AbilityComponent abilityComponent)
+    public void SetHP(GameObject instance, float hp)
     {
-        if(this.ownerInstance != hurtBoxAgentInstance)
+        if(this.ownerInstance != instance)
             return;
         
-        Debug.Log("Collision recieved setting health");
+        Debug.Log("Status health changed, updating health status");
         
-        SetHealth(GetHealth() - abilityComponent.collisionComponent.hpDamage);
+        SetHealth(hp);
     }
 
     public IEnumerator redChunkDelayDecrease(float time)

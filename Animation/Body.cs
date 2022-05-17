@@ -8,6 +8,7 @@ public class Body : MonoBehaviour
     public Transform BlockCore;
     public Transform Back;
     public Transform TargetLock;
+    public GameObject hurtBox;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,8 +21,8 @@ public class Body : MonoBehaviour
         
     }
 
-    public void GetHurtBox()
+    public HurtBox GetHurtBox()
     {
-        
+        return hurtBox.GetComponent<HurtBox>();
     }
 }

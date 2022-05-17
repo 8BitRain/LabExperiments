@@ -22,11 +22,12 @@ public class AnimationController : MonoBehaviour
         
         if(normalizedTime == 0)
         {
+            Debug.Log(this.gameObject.name + " playing animation: " + newState);
             animator.Play(newState);
         }
         else
         {
-            Debug.Log("Playing animation: " + newState + " starting at: " + normalizedTime);
+            Debug.Log(this.gameObject.name + " playing animation: " + newState + " starting at: " + normalizedTime);
             animator.Play(newState, -1, normalizedTime);
         }
 

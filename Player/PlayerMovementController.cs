@@ -356,7 +356,7 @@ public class PlayerMovementController : MonoBehaviour
             } 
             else 
             {
-                if(!_isWallRunning && _isGrounded && !animator.GetBool("Landing") && !animator.GetBool("Attacking") && !animator.GetBool("Gaurding") && !animator.GetBool("Dodging"))
+                if(!_isWallRunning && _isGrounded && !animator.GetBool("Landing") && !animator.GetBool("Attacking") && !animator.GetBool("Gaurding") && !animator.GetBool("Dodging") && !animator.GetBool("Damaged"))
                 {
                     //TODO Ensure run animation does not play
                     animationController.ChangeAnimationState(animator,"Player_idle");
@@ -448,6 +448,11 @@ public class PlayerMovementController : MonoBehaviour
 
     void Gravity()
     {
+        if(animator.GetBool("Damaged"))
+        {
+            return;
+        }
+
         if(_velocity.y < 0)
         {
             //animator.SetBool("Falling", true);

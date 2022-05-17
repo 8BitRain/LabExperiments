@@ -46,6 +46,7 @@ public class AbilityController : MonoBehaviour
     public float dodgeDistance = 10f;
     public float dodgeDuration = .5f;
     public float dodgeTweenTimer = .5f;
+    public float dodgeCooldown = 1f;
 
     [Header("Input Settings")]
     /// <summary>Vector2 action for pressing a face button </summary>
@@ -136,7 +137,7 @@ public class AbilityController : MonoBehaviour
             EventsManager.instance.OnAbilityWindowInactiveUnlockInput(this.gameObject);
         }
 
-        if(gaurdInput && !GetComponent<Animator>().GetBool("Dodging"))
+        if(gaurdInput && !GetComponent<Animator>().GetBool("Dodging") && !GetComponent<Animator>().GetBool("Attacking") && !GetComponent<Animator>().GetBool("Damaged"))
         {
             GetComponent<Animator>().SetBool("Gaurding", true);
             Gaurd();
@@ -147,7 +148,7 @@ public class AbilityController : MonoBehaviour
             Debug.Log("Stop Gaurding");
             GetComponent<Animator>().SetBool("Gaurding", false);
 
-            if(!GetComponent<Animator>().GetBool("Dodging"))
+            if(!GetComponent<Animator>().GetBool("Dodging") && !GetComponent<Animator>().GetBool("Attacking") && !GetComponent<Animator>().GetBool("Damaged"))
             {
                 GetMovementController().DisableApplyGravityLockPlayerInput();
                 GetMovementController().EnableMovement();
@@ -236,7 +237,7 @@ public class AbilityController : MonoBehaviour
         });
 
         //Dodge Cooldown
-        DOVirtual.DelayedCall(1f, () => {
+        DOVirtual.DelayedCall(dodgeCooldown, () => {
             this.dodgeCooldownIsActive = false;
         });
         

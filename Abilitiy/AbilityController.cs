@@ -187,6 +187,8 @@ public class AbilityController : MonoBehaviour
             Destroy(VFXBlockInstance);
         }
 
+        //Disable Hurtbox
+        this.GetComponent<Body>().GetHurtBox().gameObject.SetActive(false);
 
         GetMovementController().DisableApplyGravityLockPlayerInput();
         GetMovementController().DisableMovement();
@@ -218,6 +220,8 @@ public class AbilityController : MonoBehaviour
             GetComponent<Animator>().SetBool("Dodging", false);
             GetMovementController().EnableMovement();
 
+            //Enable HitBox
+            this.GetComponent<Body>().GetHurtBox().gameObject.SetActive(true);
 
         });
 

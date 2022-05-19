@@ -6,18 +6,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-
+using BehaviorDesigner.Runtime;
 
 public class Enemy : MonoBehaviour
 {
     public float seekRange = 40f;
     public float meleeRange = 10f;
-    
+
+    private BehaviorTree behaviorTree;
+
     private AnimationController animationController;
 
     public void Start()
     {
         this.animationController = GetComponent<AnimationController>();
+        this.behaviorTree = GetComponent<BehaviorTree>();
     }
 
     private void OnEnable()
@@ -137,6 +140,9 @@ public class Enemy : MonoBehaviour
             hurtBox.enabled = false;
         }
 
+        //Stop Behavior Tree
+        behaviorTree.enabled = false;
+        GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), "Knockdown");
         DeathFlash();
         Destroy(this.gameObject, 5);
     }

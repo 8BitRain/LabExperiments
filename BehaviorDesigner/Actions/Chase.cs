@@ -25,8 +25,9 @@ public class Chase : Action
         //this.GetComponent<AnimationController>().ChangeAnimationState(animator, chaseAnimation);
         var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
         currentTarget = currentGameObject.GetComponent<Transform>();
-        // Return a task status of success once we've reached the target
-        if (Vector3.SqrMagnitude(transform.position - currentTarget.position) < 10f) {
+        // Return a task status of failure once we've reached the target
+        Debug.Log(this.gameObject.name + ": moving towards target. Current distance is: " +  Vector3.Distance(transform.position, currentTarget.position));
+        if (Vector3.Distance(transform.position, currentTarget.position) <= 10f) {
             animator.SetBool("Chasing", false);
             return TaskStatus.Failure;
         }

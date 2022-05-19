@@ -1,10 +1,18 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
+
 public class Enemy : MonoBehaviour
 {
+    public float seekRange = 40f;
+    public float meleeRange = 10f;
+    
     private AnimationController animationController;
 
     public void Start()
@@ -137,4 +145,16 @@ public class Enemy : MonoBehaviour
     {
         return animationController;
     }
+
+    #if UNITY_EDITOR
+    void OnDrawGizmosSelected()
+    {
+        Vector3 center = transform.position;
+        Handles.color = Color.green;
+        Handles.DrawWireDisc(center, new Vector3(0,1,0), seekRange);
+
+        Handles.color = Color.red;
+        Handles.DrawWireDisc(center, new Vector3(0,1,0), meleeRange);
+    }
+    #endif
 }

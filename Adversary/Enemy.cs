@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour
 {
     public float seekRange = 40f;
     public float meleeRange = 10f;
+    public float zoneAttackRange = 30f;
 
     private BehaviorTree behaviorTree;
 
@@ -161,6 +162,9 @@ public class Enemy : MonoBehaviour
 
         Handles.color = Color.red;
         Handles.DrawWireDisc(center, new Vector3(0,1,0), meleeRange);
+
+        Handles.color = Color.yellow;
+        Handles.DrawWireDisc(center, new Vector3(0,1,0), zoneAttackRange);
     }
     #endif
 }

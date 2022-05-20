@@ -26,16 +26,16 @@ public class Projectile : MonoBehaviour
         //Initialize();
     }
 
-    public void Initialize()
+    public void Fire()
     {
-        Debug.Log("Projectile, " + this.gameObject.name + ":" + "Running initialize" + Time.time);
-        Debug.Log("This projectile's" + projectileComponent.name +"travel boolean is: " + this.projectileComponent.canTravel);
+        Debug.Log("Projectile, " + this.gameObject.name + " :" + " Running initialize" + Time.time);
+        Debug.Log("This projectile, " + projectileComponent.name + ", has a travel boolean of: " + this.projectileComponent.canTravel);
         //Debug.Log("Printing hitbox value: " + hitBox.gameObject.name);
         Destroy(this.gameObject, projectileComponent.keepAliveTime);
 
         if(this.hitBox != null)
         {
-            Debug.Log("PROJECTILE SUMMONER REFERENCE: ", GetProjectileSummonerReference());
+            Debug.Log("PROJECTILE SUMMONER REFERENCE: " + GetProjectileSummonerReference().name);
             EventsManager.instance.OnTriggerHitBox(hitBox.gameObject, GetProjectileSummonerReference(), true, projectileComponent.hitBoxStartDelay, projectileComponent.hitBoxDuration);
             Debug.Log("Projectile: " + this.gameObject.name + "Triggering Hitbox");
         }

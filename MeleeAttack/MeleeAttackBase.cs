@@ -97,7 +97,7 @@ public class MeleeAttackBase : MonoBehaviour
 
         //Instantiate ability
         meleeAttackInstance = Instantiate(attackComponent, GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
-        meleeAttackInstance.transform.SetParent(GetPlayerReference().transform);
+        //meleeAttackInstance.transform.SetParent(GetPlayerReference().transform);
         meleeAttackInstance.transform.LookAt(Camera.main.transform.forward);
         
         //Iterate through ability instances modular components
@@ -317,7 +317,7 @@ public class MeleeAttackBase : MonoBehaviour
             if(modularMeleeAttackComponent.GetProjectile() != null)
             {
                 Projectile modularProjectile = Instantiate(modularMeleeAttackComponent.GetProjectile(), GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
-                modularProjectile.transform.SetParent(GetPlayerReference().transform);
+                //modularProjectile.transform.SetParent(GetPlayerReference().transform);
                 modularProjectile.SetProjectileSummonerReference(GetPlayerReference());
 
                 //This step is crucial. The projectile Summoner Reference is needed to accurately tell the hitbox not to hit its own hurtbox. 
@@ -325,10 +325,21 @@ public class MeleeAttackBase : MonoBehaviour
                 modularProjectile.gameObject.SetActive(false);
                 DOVirtual.DelayedCall(modularProjectile.projectileComponent.startDelay, () =>{
                     modularProjectile.gameObject.SetActive(true);
-                    //modularProjectile.Initialize();
+
+                    //Fire the projectile parent. This is what actually controls travelling.
+                    modularProjectile.Fire();
+
                     //Slightly dangerous. Assumes projectile is a direct child of its container, and the first child.
+                    /*
+                    * What's really happening here is the direct child holds the reference to the hitbox. 
+                    * Q: Should the child hold the hitbox reference? Why can't the parent hold the hitbox references?
+                    * A: Well, what if we want the child component to move? (Could be wrong revisit)
+                    * 
+                    * Q: 
+                    * A: 
+                    */
                     modularProjectile.transform.GetChild(0).GetComponent<Projectile>().SetProjectileSummonerReference(GetPlayerReference());
-                    modularProjectile.transform.GetChild(0).GetComponent<Projectile>().Initialize();
+                    modularProjectile.transform.GetChild(0).GetComponent<Projectile>().Fire();
                 });
 
                 if(modularMeleeAttackComponent.GetProjectile().GetVFX() != null)

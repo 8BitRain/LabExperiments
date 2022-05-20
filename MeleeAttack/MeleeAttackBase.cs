@@ -22,6 +22,7 @@ public class MeleeAttackBase : MonoBehaviour
     [Header("Melee Settings")]
     public bool isMobileMelee = false;
     public bool isHeldMelee = false;
+    public bool isRanged = false;
 
     [Header("Player Settings")]
     [Range(0f, 3.0f)]
@@ -97,7 +98,12 @@ public class MeleeAttackBase : MonoBehaviour
 
         //Instantiate ability
         meleeAttackInstance = Instantiate(attackComponent, GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
-        //meleeAttackInstance.transform.SetParent(GetPlayerReference().transform);
+
+        //For purely physical melee attacks we want to set parent relationship in order for weapon projectile slashes to appear.
+        if(!isRanged)
+        {
+            meleeAttackInstance.transform.SetParent(GetPlayerReference().transform);
+        }
         meleeAttackInstance.transform.LookAt(Camera.main.transform.forward);
         
         //Iterate through ability instances modular components
@@ -313,11 +319,14 @@ public class MeleeAttackBase : MonoBehaviour
         Debug.Log("Fire Modular Projectile");
         if(modularAbilityInstance.TryGetComponent<ModularAttackElement>(out ModularAttackElement modularMeleeAttackComponent))
         {
-            Debug.Log("Firing Projectile: " + modularMeleeAttackComponent.GetProjectile().name);
             if(modularMeleeAttackComponent.GetProjectile() != null)
             {
                 Projectile modularProjectile = Instantiate(modularMeleeAttackComponent.GetProjectile(), GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
-                //modularProjectile.transform.SetParent(GetPlayerReference().transform);
+                
+                if(!isRanged)
+                {
+                    modularProjectile.transform.SetParent(GetPlayerReference().transform);
+                }
                 modularProjectile.SetProjectileSummonerReference(GetPlayerReference());
 
                 //This step is crucial. The projectile Summoner Reference is needed to accurately tell the hitbox not to hit its own hurtbox. 

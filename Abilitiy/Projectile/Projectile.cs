@@ -28,7 +28,8 @@ public class Projectile : MonoBehaviour
 
     public void Initialize()
     {
-        Debug.Log("Running initialize" + Time.time);
+        Debug.Log("Projectile, " + this.gameObject.name + ":" + "Running initialize" + Time.time);
+        Debug.Log("This projectile's" + projectileComponent.name +"travel boolean is: " + this.projectileComponent.canTravel);
         //Debug.Log("Printing hitbox value: " + hitBox.gameObject.name);
         Destroy(this.gameObject, projectileComponent.keepAliveTime);
 

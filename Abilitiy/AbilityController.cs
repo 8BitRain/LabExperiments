@@ -199,7 +199,7 @@ public class AbilityController : MonoBehaviour
         float thumbstickX = GetMovementController().movementInput.x;
         float thumbstickY = GetMovementController().movementInput.y;
         
-        Debug.Log("Movement Input values: " + "X: " + thumbstickX + " Y: " + thumbstickY);
+        //Debug.Log("Movement Input values: " + "X: " + thumbstickX + " Y: " + thumbstickY);
 
 
         float targetAngle = Mathf.Atan2(thumbstickX, thumbstickY) * Mathf.Rad2Deg + GetComponent<CameraController>().GetCameraInstance().eulerAngles.y;

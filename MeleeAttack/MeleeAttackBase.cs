@@ -97,7 +97,7 @@ public class MeleeAttackBase : MonoBehaviour
 
         //Instantiate ability
         meleeAttackInstance = Instantiate(attackComponent, GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
-        meleeAttackInstance.transform.SetParent(GetPlayerReference().transform);
+        //meleeAttackInstance.transform.SetParent(GetPlayerReference().transform);
         meleeAttackInstance.transform.LookAt(Camera.main.transform.forward);
         
         //Iterate through ability instances modular components
@@ -313,14 +313,15 @@ public class MeleeAttackBase : MonoBehaviour
         Debug.Log("Fire Modular Projectile");
         if(modularAbilityInstance.TryGetComponent<ModularAttackElement>(out ModularAttackElement modularMeleeAttackComponent))
         {
+            Debug.Log("Firing Projectile: " + modularMeleeAttackComponent.GetProjectile().name);
             if(modularMeleeAttackComponent.GetProjectile() != null)
             {
                 Projectile modularProjectile = Instantiate(modularMeleeAttackComponent.GetProjectile(), GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
-                modularProjectile.transform.SetParent(GetPlayerReference().transform);
+                //modularProjectile.transform.SetParent(GetPlayerReference().transform);
                 modularProjectile.SetProjectileSummonerReference(GetPlayerReference());
 
-                if(modularProjectile.projectileComponent.startDelay != 0)
-                {
+                //if(modularProjectile.projectileComponent.startDelay != 0)
+                //{
                     modularProjectile.gameObject.SetActive(false);
                     DOVirtual.DelayedCall(modularProjectile.projectileComponent.startDelay, () =>{
                         modularProjectile.gameObject.SetActive(true);
@@ -329,7 +330,7 @@ public class MeleeAttackBase : MonoBehaviour
                         modularProjectile.transform.GetChild(0).GetComponent<Projectile>().SetProjectileSummonerReference(GetPlayerReference());
                         modularProjectile.transform.GetChild(0).GetComponent<Projectile>().Initialize();
                     });
-                }
+                //}
                 if(modularMeleeAttackComponent.GetProjectile().GetVFX() != null)
                 {
                    Instantiate(modularMeleeAttackComponent.GetProjectile().GetVFX(), GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);

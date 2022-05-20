@@ -97,7 +97,7 @@ public class MeleeAttackBase : MonoBehaviour
 
         //Instantiate ability
         meleeAttackInstance = Instantiate(attackComponent, GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
-        //meleeAttackInstance.transform.SetParent(GetPlayerReference().transform);
+        meleeAttackInstance.transform.SetParent(GetPlayerReference().transform);
         meleeAttackInstance.transform.LookAt(Camera.main.transform.forward);
         
         //Iterate through ability instances modular components
@@ -317,20 +317,20 @@ public class MeleeAttackBase : MonoBehaviour
             if(modularMeleeAttackComponent.GetProjectile() != null)
             {
                 Projectile modularProjectile = Instantiate(modularMeleeAttackComponent.GetProjectile(), GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);
-                //modularProjectile.transform.SetParent(GetPlayerReference().transform);
+                modularProjectile.transform.SetParent(GetPlayerReference().transform);
                 modularProjectile.SetProjectileSummonerReference(GetPlayerReference());
 
-                //if(modularProjectile.projectileComponent.startDelay != 0)
-                //{
-                    modularProjectile.gameObject.SetActive(false);
-                    DOVirtual.DelayedCall(modularProjectile.projectileComponent.startDelay, () =>{
-                        modularProjectile.gameObject.SetActive(true);
-                        //modularProjectile.Initialize();
-                        //Slightly dangerous. Assumes projectile is a direct child of its container, and the first child.
-                        modularProjectile.transform.GetChild(0).GetComponent<Projectile>().SetProjectileSummonerReference(GetPlayerReference());
-                        modularProjectile.transform.GetChild(0).GetComponent<Projectile>().Initialize();
-                    });
-                //}
+                //This step is crucial. The projectile Summoner Reference is needed to accurately tell the hitbox not to hit its own hurtbox. 
+                //TODO think of a better way to prevent hitting oneself. 
+                modularProjectile.gameObject.SetActive(false);
+                DOVirtual.DelayedCall(modularProjectile.projectileComponent.startDelay, () =>{
+                    modularProjectile.gameObject.SetActive(true);
+                    //modularProjectile.Initialize();
+                    //Slightly dangerous. Assumes projectile is a direct child of its container, and the first child.
+                    modularProjectile.transform.GetChild(0).GetComponent<Projectile>().SetProjectileSummonerReference(GetPlayerReference());
+                    modularProjectile.transform.GetChild(0).GetComponent<Projectile>().Initialize();
+                });
+
                 if(modularMeleeAttackComponent.GetProjectile().GetVFX() != null)
                 {
                    Instantiate(modularMeleeAttackComponent.GetProjectile().GetVFX(), GetMeleeSpawnPosition().position, GetMeleeSpawnPosition().rotation);

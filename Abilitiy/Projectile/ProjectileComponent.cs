@@ -6,6 +6,9 @@ using UnityEngine;
 [System.Serializable]
 public class ProjectileComponent : ScriptableObject
 {
+    [Header("Information")]
+    [TextArea(3, 10)]
+    public string description;
     [Header("Movement Details")]
     public bool canTravel;
     public float velocity;

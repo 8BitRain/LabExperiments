@@ -174,6 +174,7 @@ public class AbilityController : MonoBehaviour
         if(VFXBlockInstance == null)
         {
             VFXBlockInstance = Instantiate(VFXBlock, VFXBlockSpawn.position, VFXBlockSpawn.rotation);
+            //Debug.Break();
         }
     }
 

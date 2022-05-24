@@ -9,6 +9,10 @@ public class Body : MonoBehaviour
     public Transform Back;
     public Transform TargetLock;
     public GameObject hurtBox;
+
+    public GameObject VFXBlock;
+    public Transform VFXBlockSpawn;
+    private GameObject VFXBlockInstance;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,5 +28,26 @@ public class Body : MonoBehaviour
     public HurtBox GetHurtBox()
     {
         return hurtBox.GetComponent<HurtBox>();
+    }
+
+    public GameObject GetVFXBlock()
+    {
+        return VFXBlockInstance;
+    }
+
+    public void DisplayVFXBlock()
+    {
+        if(this.GetVFXBlock() == null)
+        {
+            this.VFXBlockInstance = Instantiate(VFXBlock, VFXBlockSpawn.position, VFXBlockSpawn.rotation);
+        }
+    }
+
+    public void HideVFXBlock()
+    {
+        if(GetVFXBlock() != null)
+        {
+            Destroy(GetVFXBlock());
+        }
     }
 }

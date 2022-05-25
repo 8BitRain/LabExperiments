@@ -19,6 +19,7 @@ public class StartCombat : Action
         Debug.Log("CurrentAnimationState" + transform.GetComponent<AnimationController>().GetCurrentState());
         transform.LookAt(currentTarget);
         transform.GetComponent<MeleeAttackController>().PerformMelee(attackType);
+        transform.LookAt(currentTarget);
         return TaskStatus.Success;
     }
 }

@@ -40,6 +40,7 @@ public class Body : MonoBehaviour
         if(this.GetVFXBlock() == null)
         {
             this.VFXBlockInstance = Instantiate(VFXBlock, VFXBlockSpawn.position, VFXBlockSpawn.rotation);
+            GetVFXBlock().transform.SetParent(VFXBlockSpawn);
         }
     }
 

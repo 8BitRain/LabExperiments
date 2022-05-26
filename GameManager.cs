@@ -223,7 +223,7 @@ public class GameManager : MonoBehaviour
             {
                 HealthBar enemyHealthBar = enemy.GetComponent<Bladeclubber>().healthBar;
                 RectTransform enemyHealthBarRT = enemyHealthBar.gameObject.GetComponent<RectTransform>();
-                enemyHealthBar.PositionEnemyHealthBar(spawnedPlayers[0].GetComponentInChildren<ThirdPersonMovement>().cam.GetComponent<Camera>(), enemy, spawnedPlayers[0].GetComponentInChildren<ThirdPersonMovement>().transform);
+                //enemyHealthBar.PositionEnemyHealthBar(spawnedPlayers[0].GetComponentInChildren<ThirdPersonMovement>().cam.GetComponent<Camera>(), enemy, spawnedPlayers[0].GetComponentInChildren<ThirdPersonMovement>().transform);
             }
         }
     }

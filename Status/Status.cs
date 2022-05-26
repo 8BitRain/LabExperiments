@@ -8,17 +8,22 @@ public class Status : MonoBehaviour
 
     public float hp = 100;
     public float mp = 100;
+    public float stamina = 100;
 
     public static event Action<GameObject, float> onHealthStatusChange;
+    public static event Action<GameObject, float> onStaminaStatusChange;
 
     private void OnEnable()
     {
         HurtBox.gotCollision += SetHP;
+        HurtBox.gotCollision += SetStamina;
+        //TODO add logic tied to blocking or other stamina related expenditures
     }
 
     private void OnDisable()
     {
         HurtBox.gotCollision -= SetHP;
+        HurtBox.gotCollision -= SetStamina;
     }
     
     void Start()
@@ -65,6 +70,27 @@ public class Status : MonoBehaviour
             hp = hp - abilityComponent.collisionComponent.hpDamage;
             onHealthStatusChange.Invoke(this.gameObject, hp);
         }
+    }
+
+    public void SetStamina(GameObject hurtBoxAgentInstance,GameObject hurtBoxInstance,AbilityComponent abilityComponent)
+    {
+        if(this.gameObject != hurtBoxAgentInstance)
+        {
+            Debug.Log("Set Stamina: Observer Pattern Event Error: " + this.gameObject.name + " is not the same as " + hurtBoxAgentInstance.name);
+            return;
+        }
+        else
+        {
+            Debug.Log("Set Stamina: Observer Pattern Event Success: ");
+        }
+
+        if(this.gameObject.GetComponent<Animator>().GetBool("Gaurding"))
+        {
+            Debug.Log(this.gameObject.name + " blocked: " + abilityComponent.componentName);
+            stamina = stamina - abilityComponent.collisionComponent.hpDamage;
+            onStaminaStatusChange.Invoke(this.gameObject, stamina);
+        }
+
     }
 
 

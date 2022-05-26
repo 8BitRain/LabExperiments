@@ -74,7 +74,7 @@ public class HealthBar : MonoBehaviour
 
 
     //TODO: Remove reference. Relies on old Game Manager logic Update enemy health bar
-    public void PositionEnemyHealthBar(Camera playerCam, Transform enemy, Transform player)
+    /*public void PositionEnemyHealthBar(Camera playerCam, Transform enemy, Transform player)
     {
         RectTransform healthBarRectTransform = this.GetComponent<RectTransform>();
         healthBarRectTransform.position = playerCam.WorldToScreenPoint(new Vector3(enemy.position.x,enemy.GetComponent<Bladeclubber>().Head.position.y,enemy.position.z) + new Vector3(0,3,0));
@@ -93,5 +93,5 @@ public class HealthBar : MonoBehaviour
             healthBarCanvas.enabled = false;
 
         }
-    }
+    }*/
 }

@@ -33,9 +33,14 @@ public class HUDController : MonoBehaviour
         HUDInstance = Instantiate(HUD);
 
         if(TryGetComponent<Status>(out Status status))
+        {
             HUDInstance.GetComponent<HUD>().SetupHealthBar(status.hp, this.gameObject);
+            HUDInstance.GetComponent<HUD>().SetupStaminaBar(status.stamina, this.gameObject);   
+        }
         else
+        {
             Debug.Log("No Status script attached to: " + this.gameObject.name);
+        }
         
     }
 

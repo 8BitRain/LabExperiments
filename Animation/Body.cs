@@ -10,9 +10,15 @@ public class Body : MonoBehaviour
     public Transform TargetLock;
     public GameObject hurtBox;
 
+    [Header("VFX Settings")]
     public GameObject VFXBlock;
     public Transform VFXBlockSpawn;
     private GameObject VFXBlockInstance;
+
+    [Header("UI Settings")]
+    public Transform healthBarSpawn;
+    public Transform staminaBarSpawn;
+    
     // Start is called before the first frame update
     void Start()
     {

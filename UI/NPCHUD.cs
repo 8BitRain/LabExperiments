@@ -69,7 +69,7 @@ public class NPCHUD : MonoBehaviour
             UIComponent.mainCamera = cameraInstance;
             if(TryGetComponent<Body>(out Body bodyComponent))
             {
-                UIComponent.SetTrackingObject(bodyComponent.Head.gameObject);
+                UIComponent.SetTrackingObject(bodyComponent.healthBarSpawn.gameObject);
             }
             else
             {
@@ -105,13 +105,13 @@ public class NPCHUD : MonoBehaviour
 
         
 
-        //UIFaceCamera is a script that is attached to the GameObject that is a child of the HealthBarCanvas    
+        //UIFaceCamera is a script that is attached to the GameObject that is a child of the StaminaBarCanvas    
         if(staminaBarInstance.transform.GetChild(0).TryGetComponent<UIFaceCamera>(out UIFaceCamera UIComponent))
         {
             UIComponent.mainCamera = cameraInstance;
             if(TryGetComponent<Body>(out Body bodyComponent))
             {
-                UIComponent.SetTrackingObject(bodyComponent.Head.gameObject);
+                UIComponent.SetTrackingObject(bodyComponent.staminaBarSpawn.gameObject);
             }
             else
             {

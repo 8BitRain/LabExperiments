@@ -35,10 +35,9 @@ public class StaminaBar : MonoBehaviour
             StopCoroutine(refillCoroutine);
         }
 
-        if(refillCoroutine == null)
-        {
-            refillCoroutine = StartCoroutine(refillStaminaBar(.75f));
-        }
+
+        refillCoroutine = StartCoroutine(refillStaminaBar(.75f));
+        
 
         slider.value = stamina;
 
@@ -90,7 +89,13 @@ public class StaminaBar : MonoBehaviour
     public IEnumerator refillStaminaBar(float time)
     {
         yield return new WaitForSeconds(time);
-        redChunk.DOValue(GetMaxStamina(), .5f);
+        slider.DOValue(slider.maxValue, .5f);
+        //TODO may need to adjust this logic if bar increase doesn't look right
+        redChunk.value = redChunk.maxValue;
+        if(ownerInstance != null)
+        {
+            ownerInstance.GetComponent<Status>().stamina = GetMaxStamina();
+        }
     }
 
     public IEnumerator redChunkDelayDecrease(float time)

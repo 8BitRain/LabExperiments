@@ -9,6 +9,7 @@ public class Status : MonoBehaviour
     public float hp = 100;
     public float mp = 100;
     public float stamina = 100;
+    public float staminaRefillTime = 1.75f;
 
     public static event Action<GameObject, float> onHealthStatusChange;
     public static event Action<GameObject, float> onStaminaStatusChange;
@@ -91,6 +92,16 @@ public class Status : MonoBehaviour
             onStaminaStatusChange.Invoke(this.gameObject, stamina);
         }
 
+    }
+
+    public void SetStamina(GameObject instance, float staminaAmount)
+    {
+        if(this.gameObject != instance)
+        {
+            return;
+        }
+        stamina = stamina = staminaAmount;
+        onStaminaStatusChange.Invoke(this.gameObject, stamina);
     }
 
 

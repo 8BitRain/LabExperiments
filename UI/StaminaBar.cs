@@ -17,6 +17,7 @@ public class StaminaBar : MonoBehaviour
     private GameObject ownerInstance;
 
     private Coroutine refillCoroutine;
+    private Tween refillTween;
 
     private void OnEnable()
     {
@@ -30,20 +31,28 @@ public class StaminaBar : MonoBehaviour
     
     public void SetStamina(float stamina)
     {
+        //Stop the coroutine that Stamina
         if(refillCoroutine != null)
         {
             StopCoroutine(refillCoroutine);
         }
 
+        //End the Stamina Refill tween, embeded in refill courotine, that refills stamina slider.
+        refillTween.Kill();
 
-        refillCoroutine = StartCoroutine(refillStaminaBar(1.75f));
+        if(ownerInstance != null)
+        {
+            refillCoroutine = StartCoroutine(refillStaminaBar(ownerInstance.GetComponent<Status>().staminaRefillTime));
+        }
         
-
         slider.value = stamina;
 
         if(redChunk != null)
         {
-            StartCoroutine(redChunkDelayDecrease(1.5f));
+            if(ownerInstance != null)
+            {
+                StartCoroutine(redChunkDelayDecrease(ownerInstance.GetComponent<Status>().staminaRefillTime - 0.25f));
+            }
         }
     }
 
@@ -89,11 +98,12 @@ public class StaminaBar : MonoBehaviour
     public IEnumerator refillStaminaBar(float time)
     {
         yield return new WaitForSeconds(time);
-        slider.DOValue(slider.maxValue, .5f).OnComplete( () => {
+        refillTween = slider.DOValue(slider.maxValue, .5f).OnComplete( () => {
             //TODO may need to adjust this logic if bar increase doesn't look right
             redChunk.value = redChunk.maxValue;
             if(ownerInstance != null)
             {
+                Debug.Log("Refill Tween value: " + refillTween);
                 ownerInstance.GetComponent<Status>().stamina = GetMaxStamina();
             }
         });

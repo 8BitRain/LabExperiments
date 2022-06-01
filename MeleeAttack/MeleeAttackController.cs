@@ -39,6 +39,8 @@ public class MeleeAttackController : MonoBehaviour
     [Tooltip("Vector2 action for heavy attack Button ")]
     public InputActionReference heavyAttackButtonPressed;
 
+    public static event Action<GameObject, float> onStaminaStatusChange;
+
     void Update()
     {
         if(lightAttackButtonPressed != null && heavyAttackButtonPressed != null)
@@ -74,6 +76,13 @@ public class MeleeAttackController : MonoBehaviour
 
     public void PerformMelee(MeleeAttackType meleeAttackType)
     {
+        if(this.GetComponent<Status>().stamina <= 0)
+        {
+            return;
+        }
+
+        this.GetComponent<Status>().SetStamina(this.gameObject, 10f);
+        
         this.GetComponent<Animator>().SetBool("Attacking", true);
         switch (meleeAttackType)
         {

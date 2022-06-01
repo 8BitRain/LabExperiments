@@ -13,7 +13,7 @@ public class Gaurd : Action
         transform.GetComponent<AnimationController>().ChangeAnimationState(transform.GetComponent<Animator>(),"Gaurd");
         this.GetComponent<Body>().DisplayVFXBlock();
 
-        this.GetComponent<Body>().GetHurtBox().enabled = false;
+        //this.GetComponent<Body>().GetHurtBox().enabled = false;
         return TaskStatus.Success;
     }
 }

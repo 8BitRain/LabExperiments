@@ -12,7 +12,7 @@ public class CancelGaurd : Action
         this.GetComponent<Animator>().SetBool("Gaurding", false);
         this.GetComponent<Body>().HideVFXBlock();
 
-        this.GetComponent<Body>().GetHurtBox().enabled = true;
+        //this.GetComponent<Body>().GetHurtBox().enabled = true;
         return TaskStatus.Success;
     }
 }

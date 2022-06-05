@@ -58,6 +58,12 @@ public class MeleeAttackController : MonoBehaviour
             return;
         }
 
+        if(heavyAttackButtonPressed.action.triggered && heavyAttackInstance == null)
+        {
+            PerformMelee(MeleeAttackType.Heavy);
+            return;
+        }
+
         //Logic for continuing a combo on hit, cancelling hitstop
         if(lightAttackButtonPressed.action.triggered && lightAttackInstance != null && GetPlayerInputCanInterruptCombo())
         {
@@ -67,9 +73,11 @@ public class MeleeAttackController : MonoBehaviour
             return;
         }
 
-        if(heavyAttackButtonPressed.action.triggered && heavyAttackInstance == null)
+        if(heavyAttackButtonPressed.action.triggered && heavyAttackInstance != null && GetPlayerInputCanInterruptCombo())
         {
+            heavyAttackInstance.CancelHitStop();
             PerformMelee(MeleeAttackType.Heavy);
+            SetPlayerInputCanInterruptCombo(false);
             return;
         }
     }

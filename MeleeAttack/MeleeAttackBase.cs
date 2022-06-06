@@ -14,6 +14,7 @@ public class MeleeAttackBase : MonoBehaviour
     private Transform targetInstance;
     private Transform meleeSpawnPosition;
     private CameraSettings cameraSettingsInstance;
+    private PlayerMovementController playerMovementController;
     
     [Header("Attack Components")]
     public GameObject attackComponent;
@@ -66,6 +67,12 @@ public class MeleeAttackBase : MonoBehaviour
 
     public virtual void Melee()
     {
+        //Cache Player Movement Controller if it exists
+        if(GetPlayerReference().TryGetComponent<PlayerMovementController>(out PlayerMovementController movementController))
+        {
+            this.playerMovementController = movementController;
+        }
+
         //If the skill is current in use, return, we don't need to activate teh skill again
         if(fired)
             return;
@@ -196,7 +203,19 @@ public class MeleeAttackBase : MonoBehaviour
         switch (meleeAttackComponent.playerMovementDirection)
         {
             case MeleeAttackComponent.MovementDirection.Forward:
-                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.forward*meleeAttackComponent.playerMovementAmount, meleeAttackComponent.playerMovementTime);
+                if(GetPlayerMovementController() != null)
+                {
+                    //If we are moving, allow the player to still control rotation and direction while performing melee attack
+                    //If we aren't moving, we can allow the melee attack to move according to the direction the player is facing.
+                    if(GetPlayerMovementController().movementInput.magnitude != 0)
+                        GetPlayerMovementController().EnableSteeringAndMovement();
+                    else
+                        GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.forward*meleeAttackComponent.playerMovementAmount, meleeAttackComponent.playerMovementTime);
+                }
+                else
+                {
+                    GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.forward*meleeAttackComponent.playerMovementAmount, meleeAttackComponent.playerMovementTime);
+                }
                 break;
             case MeleeAttackComponent.MovementDirection.Backward:
                 GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position - GetPlayerReference().transform.forward*meleeAttackComponent.playerMovementAmount, meleeAttackComponent.playerMovementTime);
@@ -393,6 +412,12 @@ public class MeleeAttackBase : MonoBehaviour
         //Reset Camera
         /*GetPlayerReference().GetComponent<CameraController>().RouteToCameraDisengage(GetPlayerReference(), cameraSettingsInstance);*/
 
+        //Reset Player Movement
+        if(GetPlayerMovementController() != null)
+        {
+            GetPlayerMovementController().DisableSteeringAndMovement();
+        }
+
         //Unlock player movement
         //Animation Controller Coroutine
         try
@@ -449,6 +474,11 @@ public class MeleeAttackBase : MonoBehaviour
     public GameObject GetPlayerReference()
     {
         return this.playerReference;
+    }
+
+    public PlayerMovementController GetPlayerMovementController()
+    {
+        return this.playerMovementController;
     }
 
     public AnimationController GetAnimationController()

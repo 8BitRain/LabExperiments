@@ -83,6 +83,7 @@ public class PlayerMovementController : MonoBehaviour
     private bool canMove = true;
     private bool canUseRightSideFaceButtonInputs = true;
     private bool canSteer = false;
+    private bool canSteerAndMove = false;
     private bool canPlayerInputMove = true;
     private bool _playerInMovementFrames = false;
     private bool useGravityLockPlayerInput = false;
@@ -137,7 +138,17 @@ public class PlayerMovementController : MonoBehaviour
             }
 
         }
-        //if(canMove && !animator.GetBool("Blocking"))
+
+        // We want the melee attack to still incorporate player movement
+        if(canSteerAndMove)
+        {
+            Vector3 direction = new Vector3(movementInput.x, 0, movementInput.y).normalized;
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + GetComponent<CameraController>().GetCameraInstance().eulerAngles.y;
+            transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+            movementDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+            _controller.Move(movementDirection.normalized * speed * Time.deltaTime);
+        }
+
         if(canMove)
         {
             Vector3 direction = new Vector3(0,0,0);
@@ -414,6 +425,9 @@ public class PlayerMovementController : MonoBehaviour
 
     public void EnableSteering(){canSteer = true;}
     public void DisableSteering(){canSteer = false;}
+    public void EnableSteeringAndMovement(){canSteerAndMove = true;}
+    public void DisableSteeringAndMovement(){canSteerAndMove = false;}
+
     void Slide(Vector3 slopeNormal, RaycastHit slopeHit, Vector3 moveDir)
     {
         /*Debug.Log("Player touched the ground & is sliding down slope");*/

@@ -54,7 +54,11 @@ public class MeleeAttackController : MonoBehaviour
     {
         if(lightAttackButtonPressed.action.triggered && lightAttackInstance == null)
         {
-            PerformMelee(MeleeAttackType.Light);
+            //Dash in
+            if(this.GetComponent<TargetingController>().targets.Length > 0)
+                DashIn(this.GetComponent<TargetingController>().targets[0], MeleeAttackType.Light);
+            else
+                PerformMelee(MeleeAttackType.Light);
             return;
         }
 
@@ -153,5 +157,23 @@ public class MeleeAttackController : MonoBehaviour
     public bool GetIsAIAgent()
     {
         return isAIAgent;
+    }
+
+    public void DashIn(Transform target, MeleeAttackType meleeAttackType)
+    {
+        if(Vector3.Distance(transform.position, target.position) <= 10)
+        {
+            PerformMelee(meleeAttackType);
+        }
+        else
+        {
+            this.GetComponent<Animator>().SetBool("Attacking", true);
+            transform.LookAt(target);
+            this.GetComponent<PlayerMovementController>().DisableMovement();
+            this.GetComponent<AnimationController>().ChangeAnimationState(this.GetComponent<Animator>(), "DashIn");
+            transform.DOMove(target.position + target.forward*10, .5f).OnComplete(() => {
+                PerformMelee(meleeAttackType);
+            });
+        }
     }
 }

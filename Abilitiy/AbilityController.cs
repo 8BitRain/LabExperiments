@@ -176,6 +176,7 @@ public class AbilityController : MonoBehaviour
             VFXBlockInstance = Instantiate(VFXBlock, VFXBlockSpawn.position, VFXBlockSpawn.rotation);
             //Debug.Break();
         }
+        GetComponent<MeleeAttackController>().CancelDashIn();
     }
 
     public void Dodge()
@@ -188,6 +189,8 @@ public class AbilityController : MonoBehaviour
             Destroy(VFXBlockInstance);
         }
 
+        GetComponent<MeleeAttackController>().CancelDashIn();
+        
         //Disable Hurtbox
         this.GetComponent<Body>().GetHurtBox().gameObject.SetActive(false);
 

@@ -24,6 +24,7 @@ public class MeleeAttackController : MonoBehaviour
 
     private Tween comboInputDelay;
     private bool playerInputCanInterruptCombo = false;
+    private Tween dashInTween;
 
     public enum MeleeAttackType
     {
@@ -171,9 +172,18 @@ public class MeleeAttackController : MonoBehaviour
             transform.LookAt(target);
             this.GetComponent<PlayerMovementController>().DisableMovement();
             this.GetComponent<AnimationController>().ChangeAnimationState(this.GetComponent<Animator>(), "DashIn");
-            transform.DOMove(target.position + target.forward*10, .5f).OnComplete(() => {
+            dashInTween = transform.DOMove(target.position + target.forward*10, 1f).OnComplete(() => {
                 PerformMelee(meleeAttackType);
             });
+        }
+    }
+
+    public void CancelDashIn()
+    {
+        if(dashInTween != null)
+        {
+            Debug.Log("Canceling Dash");
+            dashInTween.Kill();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using System;
 using UnityEngine;
+using DG.Tweening;
 
 public class TargetingController : MonoBehaviour
 {
@@ -54,6 +55,16 @@ public class TargetingController : MonoBehaviour
 
     void Update()
     {
+
+        //Check for nearby enemies within a range of 40m.
+        if(!lockedOn)
+        {
+            DOVirtual.DelayedCall(5.0f, () => {
+                FindNearbyTargets();
+            });
+        }
+
+
         //Turn off LockOn
         if(lockOnInput && lockedOn)
         {

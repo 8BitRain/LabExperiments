@@ -60,6 +60,8 @@ public class HurtBox : MonoBehaviour
             return;
 
         CameraShake(summoner, abilityComponent);
+        //Custom Event Assigned to Hurtbox to spawn a hit impact particle effect
+        onRecievedCollision.Invoke();
         gotCollision.Invoke(hurtBoxAgentInstance, hurtBoxInstance, abilityComponent);
     }
 
@@ -86,5 +88,11 @@ public class HurtBox : MonoBehaviour
                 virtualCam.GetComponent<CinemachineScreenShake>().DoShake(abilityComponent.screenShakeComponent);
             }
         }
+    }
+
+    public void SpawnHitImpactVFX(GameObject vfx)
+    {
+        Vector3 spawnPosition = Agent.GetComponent<Body>().Back.position;
+        Instantiate(vfx, spawnPosition, Agent.transform.rotation);
     }
 }

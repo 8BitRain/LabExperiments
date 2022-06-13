@@ -100,7 +100,7 @@ public class Status : MonoBehaviour
         {
             return;
         }
-        stamina = stamina = staminaAmount;
+        stamina = stamina - staminaAmount;
         onStaminaStatusChange.Invoke(this.gameObject, stamina);
     }
 

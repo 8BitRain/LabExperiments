@@ -15,6 +15,7 @@ public class StaminaBar : MonoBehaviour
     private GameManager gameManager;
 
     private GameObject ownerInstance;
+    private Status ownerInstanceStatus;
 
     private Coroutine refillCoroutine;
     private Tween refillTween;
@@ -31,7 +32,7 @@ public class StaminaBar : MonoBehaviour
     
     public void SetStamina(float stamina)
     {
-        //Stop the coroutine that Stamina
+        //Stop the coroutine that refills the stamina bar
         if(refillCoroutine != null)
         {
             StopCoroutine(refillCoroutine);
@@ -82,6 +83,12 @@ public class StaminaBar : MonoBehaviour
     public void SetOwnerInstance(GameObject ownerInstance)
     {
         this.ownerInstance = ownerInstance;
+        this.ownerInstanceStatus = ownerInstance.GetComponent<Status>();
+    }
+
+    public Status GetStatus()
+    {
+        return this.ownerInstanceStatus;
     }
 
     public void SetST(GameObject instance, float st)
@@ -99,16 +106,14 @@ public class StaminaBar : MonoBehaviour
     {
         yield return new WaitForSeconds(delayTime);
         float refillTime = refillTimeConstant - (slider.value/slider.maxValue * refillTimeConstant);
-        refillTween = slider.DOValue(slider.maxValue, refillTime).OnComplete( () => {
-            //TODO may need to adjust this logic if bar increase doesn't look right
-            redChunk.value = redChunk.maxValue;
-            if(ownerInstance != null)
-            {
-                Debug.Log("Refill Tween value: " + refillTween);
-                ownerInstance.GetComponent<Status>().stamina = GetMaxStamina();
-            }
-        });
-
+        
+        while(GetStatus().stamina < GetMaxStamina())
+        {
+            GetStatus().stamina += 1;
+            refillTween = slider.DOValue(GetStatus().stamina, refillTime/GetMaxStamina());
+            redChunk.value += 1;
+            yield return new WaitForSeconds(refillTime/GetMaxStamina());
+        }
     }
 
     public IEnumerator redChunkDelayDecrease(float time)

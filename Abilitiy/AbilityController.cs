@@ -176,6 +176,7 @@ public class AbilityController : MonoBehaviour
             VFXBlockInstance = Instantiate(VFXBlock, VFXBlockSpawn.position, VFXBlockSpawn.rotation);
             //Debug.Break();
         }
+        GetComponent<Status>().SetStamina(this.gameObject, .01f);
         GetComponent<MeleeAttackController>().CancelDashIn();
     }
 

@@ -10,6 +10,7 @@ public class Status : MonoBehaviour
     public float mp = 100;
     public float stamina = 100;
     public float staminaRefillTime = 1.75f;
+    public float staminaRefillDelay = 3.0f;
 
     public static event Action<GameObject, float> onHealthStatusChange;
     public static event Action<GameObject, float> onStaminaStatusChange;

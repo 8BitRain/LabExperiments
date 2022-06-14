@@ -42,7 +42,7 @@ public class StaminaBar : MonoBehaviour
 
         if(ownerInstance != null)
         {
-            refillCoroutine = StartCoroutine(refillStaminaBar(ownerInstance.GetComponent<Status>().staminaRefillTime));
+            refillCoroutine = StartCoroutine(refillStaminaBar(ownerInstance.GetComponent<Status>().staminaRefillDelay, ownerInstance.GetComponent<Status>().staminaRefillTime));
         }
         
         slider.value = stamina;
@@ -51,7 +51,7 @@ public class StaminaBar : MonoBehaviour
         {
             if(ownerInstance != null)
             {
-                StartCoroutine(redChunkDelayDecrease(ownerInstance.GetComponent<Status>().staminaRefillTime - 0.25f));
+                StartCoroutine(redChunkDelayDecrease(ownerInstance.GetComponent<Status>().staminaRefillDelay - 0.25f));
             }
         }
     }
@@ -95,10 +95,11 @@ public class StaminaBar : MonoBehaviour
     }
 
 
-    public IEnumerator refillStaminaBar(float time)
+    public IEnumerator refillStaminaBar(float delayTime, float refillTimeConstant)
     {
-        yield return new WaitForSeconds(time);
-        refillTween = slider.DOValue(slider.maxValue, .5f).OnComplete( () => {
+        yield return new WaitForSeconds(delayTime);
+        float refillTime = refillTimeConstant - (slider.value/slider.maxValue * refillTimeConstant);
+        refillTween = slider.DOValue(slider.maxValue, refillTime).OnComplete( () => {
             //TODO may need to adjust this logic if bar increase doesn't look right
             redChunk.value = redChunk.maxValue;
             if(ownerInstance != null)

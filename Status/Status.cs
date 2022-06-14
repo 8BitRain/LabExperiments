@@ -105,5 +105,10 @@ public class Status : MonoBehaviour
         onStaminaStatusChange.Invoke(this.gameObject, stamina);
     }
 
+    public float GetStamina()
+    {
+        return this.stamina;
+    }
+
 
 }

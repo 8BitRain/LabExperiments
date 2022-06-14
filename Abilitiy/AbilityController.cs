@@ -168,6 +168,9 @@ public class AbilityController : MonoBehaviour
 
     public void Gaurd()
     {
+        if(GetComponent<Status>().GetStamina() <= 0)
+            return;
+        
         GetMovementController().DisableMovement();
         GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Gaurd.ToString());
 
@@ -185,6 +188,11 @@ public class AbilityController : MonoBehaviour
         if(this.dodgeCooldownIsActive)
             return;
         
+        if(GetComponent<Status>().GetStamina() < 5)
+            return;
+
+        GetComponent<Status>().SetStamina(this.gameObject, 5f);
+
         if(this.VFXBlockInstance != null)
         {
             Destroy(VFXBlockInstance);

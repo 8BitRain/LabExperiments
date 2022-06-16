@@ -118,7 +118,7 @@ public class MeleeAttackController : MonoBehaviour
         //If this agent is an AI entity, let's not update combo states for now
         if(GetIsAIAgent())
             return;
-        DOTween.Kill(comboInputDelay);
+        comboInputDelay.Kill();
         if(lightAttackState < lightAttacks.Length - 1)
         {
             lightAttackState++;

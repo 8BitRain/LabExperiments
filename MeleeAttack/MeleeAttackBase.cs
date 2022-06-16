@@ -409,6 +409,12 @@ public class MeleeAttackBase : MonoBehaviour
 
     public void EngageCooldown()
     {
+        /* Debug logic for pausing the game after a certain melee attack is used
+        if(this.gameObject.name.Contains("ReverseSlash"))
+        {
+            Debug.Break();
+        }*/
+
         //Reset Camera
         /*GetPlayerReference().GetComponent<CameraController>().RouteToCameraDisengage(GetPlayerReference(), cameraSettingsInstance);*/
 

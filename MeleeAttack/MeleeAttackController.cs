@@ -141,6 +141,7 @@ public class MeleeAttackController : MonoBehaviour
         meleeAttackBase.SetPlayerAnimationController(this.gameObject.GetComponent<AnimationController>());
         meleeAttackBase.SetPlayerReference(this.gameObject);
         meleeAttackBase.SetMeleeSpawnPoint(this.meleeSpawn);
+        meleeAttackBase.SetAIAgentStatus(GetIsAIAgent());
     }
 
     public bool GetPlayerInputCanInterruptCombo()

@@ -233,7 +233,7 @@ public class AbilityController : MonoBehaviour
             GetComponent<Animator>().SetBool("Dodging", false);
             GetMovementController().EnableMovement();
 
-            //Enable HitBox
+            //Enable HurtBox
             this.GetComponent<Body>().GetHurtBox().gameObject.SetActive(true);
 
         });

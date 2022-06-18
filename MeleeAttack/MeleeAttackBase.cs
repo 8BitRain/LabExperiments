@@ -15,6 +15,7 @@ public class MeleeAttackBase : MonoBehaviour
     private Transform meleeSpawnPosition;
     private CameraSettings cameraSettingsInstance;
     private PlayerMovementController playerMovementController;
+    private bool isAIAgent = false;
     
     [Header("Attack Components")]
     public GameObject attackComponent;
@@ -356,7 +357,6 @@ public class MeleeAttackBase : MonoBehaviour
                 modularProjectile.gameObject.SetActive(false);
                 DOVirtual.DelayedCall(modularProjectile.projectileComponent.startDelay, () =>{
                     modularProjectile.gameObject.SetActive(true);
-
                     //Fire the projectile parent. This is what actually controls travelling.
                     modularProjectile.Fire();
 
@@ -369,6 +369,10 @@ public class MeleeAttackBase : MonoBehaviour
                     * Q: 
                     * A: 
                     */
+                    if(GetAIAgentStatus())
+                    {
+                        modularProjectile.transform.GetChild(0).GetComponent<Projectile>().hitBox.layers[0] = LayerMask.GetMask("PlayerHurtBox");
+                    }
                     modularProjectile.transform.GetChild(0).GetComponent<Projectile>().SetProjectileSummonerReference(GetPlayerReference());
                     modularProjectile.transform.GetChild(0).GetComponent<Projectile>().Fire();
                 });
@@ -389,6 +393,15 @@ public class MeleeAttackBase : MonoBehaviour
             if(hitBox != null)
             {
                 print("Hitbox Triggered");
+                
+                if(GetAIAgentStatus())
+                {
+                    Debug.Log("AI Status: " + GetAIAgentStatus());
+                    //If an AI Agent spawned this meleeAttack, set the layer it can collide with to the PlayerHurtBox
+                    int playerHurtBoxLayer = LayerMask.NameToLayer("PlayerHurtBox");
+                    hitBox.layers[0] = playerHurtBoxLayer;
+                }
+
                 if(!isActive)
                 {
                     Debug.Log("Spell Instance Name: " + modularAbilityInstance.name);
@@ -478,6 +491,18 @@ public class MeleeAttackBase : MonoBehaviour
     public void SetMeleeSpawnPoint(Transform meleeSpawnPosition)
     {
         this.meleeSpawnPosition = meleeSpawnPosition;
+    }
+
+    public void SetAIAgentStatus(bool status)
+    {
+        Debug.Log("Setting AI Status to " + status);
+        isAIAgent = status;
+    }
+
+    public bool GetAIAgentStatus()
+    {
+        Debug.Log("Returning AI Status: " + isAIAgent);
+        return isAIAgent;
     }
 
     public GameObject GetPlayerReference()

@@ -18,6 +18,7 @@ public class AbilityComponent : ScriptableObject
         BackwardDiagonalLeft,
         Right,
         Left,
+        ForwardUp,
         Up,
         Down,
         None

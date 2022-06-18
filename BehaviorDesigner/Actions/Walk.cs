@@ -57,7 +57,7 @@ public class Walk : Action
 
     public void ChooseRandomWalkDirection()
     {
-        int choice = Random.Range(0,3);
+        int choice = Random.Range(2,3);
         switch (choice)
         {
             case 0:

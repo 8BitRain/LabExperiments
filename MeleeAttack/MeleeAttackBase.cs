@@ -241,6 +241,9 @@ public class MeleeAttackBase : MonoBehaviour
                 }*/
                 GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.up*meleeAttackComponent.playerMovementAmount, meleeAttackComponent.playerMovementTime);
                 break;
+            case MeleeAttackComponent.MovementDirection.ForwardUp:
+                GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.up*meleeAttackComponent.playerMovementAmount + GetPlayerReference().transform.forward*meleeAttackComponent.playerMovementAmount, meleeAttackComponent.playerMovementTime);
+                break;
             default:
                 break;
         }

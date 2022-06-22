@@ -13,9 +13,19 @@ public class MeleeAttackController : MonoBehaviour
     public Transform meleeSpawn;
     public bool isAIAgent = false;
 
+    [Header("Melee Settings")]
     public MeleeAttackBase lightAttack;
     public MeleeAttackBase[] lightAttacks;
     public MeleeAttackBase heavyAttack;
+    
+    public enum MeleeAttackType
+    {
+        Light,
+        Heavy
+    }
+
+    [Header("DashIn Settings")]
+    public float dashInTime;
 
     private MeleeAttackBase lightAttackInstance;
     private MeleeAttackBase heavyAttackInstance;
@@ -25,13 +35,12 @@ public class MeleeAttackController : MonoBehaviour
     private Tween comboInputDelay;
     private bool playerInputCanInterruptCombo = false;
     private Tween dashInTween;
+    private bool isDashingIn = false;
 
-    public enum MeleeAttackType
-    {
-        Light,
-        Heavy
-    }
+    private TargetingController targetingController;
 
+
+    [Header("Input Settings")]
     /// <summary>Vector2 action for pressing a face button </summary>
     [Tooltip("Vector2 action for light attack Button ")]
     public InputActionReference lightAttackButtonPressed;
@@ -40,11 +49,21 @@ public class MeleeAttackController : MonoBehaviour
     [Tooltip("Vector2 action for heavy attack Button ")]
     public InputActionReference heavyAttackButtonPressed;
 
+    void Start()
+    {
+        targetingController = GetComponent<TargetingController>();
+    }
+
     void Update()
     {
         if(lightAttackButtonPressed != null && heavyAttackButtonPressed != null)
         {
             GetPlayerInput();
+        }
+
+        if(isDashingIn)
+        {
+            transform.LookAt(targetingController.targets[0]);
         }
 
     }
@@ -171,8 +190,10 @@ public class MeleeAttackController : MonoBehaviour
             transform.LookAt(target);
             this.GetComponent<PlayerMovementController>().DisableMovement();
             this.GetComponent<AnimationController>().ChangeAnimationState(this.GetComponent<Animator>(), "DashIn");
-            dashInTween = transform.DOMove(target.position + target.forward*10, 1f).OnComplete(() => {
+            isDashingIn = true;
+            dashInTween = transform.DOMove(target.position + target.forward*10, dashInTime).OnComplete(() => {
                 PerformMelee(meleeAttackType);
+                isDashingIn = false;
             });
         }
     }
@@ -183,6 +204,7 @@ public class MeleeAttackController : MonoBehaviour
         {
             Debug.Log("Canceling Dash");
             dashInTween.Kill();
+            isDashingIn = false;
         }
     }
 

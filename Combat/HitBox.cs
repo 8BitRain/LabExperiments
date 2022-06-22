@@ -12,13 +12,17 @@ public class VFXEvent : UnityEvent <Transform> {}
 
 public class HitBox : MonoBehaviour
 {
+    [Header("Hit Box Settings")]
     public LayerMask[] layers;
     public AbilityComponent abilityComponent;
     private GameObject Summoner;
     private GameObject entityGameObjectParent;
 
+    [Header("Audio Settings")]
     public AudioComponent audioComponent;
-    public GameEvent screenShakeEvent;
+
+    [Header("Parry Settings")]
+    public ScreenShakeComponent screenShakeComponent;
 
     private bool rumble = true;
 
@@ -64,7 +68,7 @@ public class HitBox : MonoBehaviour
             if(otherHitBox.abilityComponent.collisionComponent.canParryAttack && this.abilityComponent.collisionComponent.canParryAttack)
             {
                 Debug.Log("Parry");
-                EventsManager.instance.OnParry(this.transform, this.abilityComponent.collisionComponent.parrySFX);
+                EventsManager.instance.OnParry(this.transform, GetSummoner(), this.abilityComponent.collisionComponent.parrySFX);
                 //EventsManager summon SFX
                 //EventsManager summon VFX position
                 
@@ -237,6 +241,8 @@ public class HitBox : MonoBehaviour
     {
         return this.Summoner;
     }
+
+
     /*public string GetTargetPosition(GameObject target)
     {
         string x = target.transform.position.x.ToString();

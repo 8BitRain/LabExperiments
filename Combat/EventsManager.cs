@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using Cinemachine;
 using UnityEngine.Events;
 
 public class EventsManager : MonoBehaviour
 {
     public static EventsManager instance;
+    [Header("Parry Settings")]
     public UnityEvent onParry;
+    public ScreenShakeComponent parryScreenShake;
 
     //VFX
     private Transform vfxTransform;
@@ -45,12 +48,28 @@ public class EventsManager : MonoBehaviour
         TriggerHitbox?.Invoke(instance, summoner, isActive, delayStart, duration);
     }
 
-    public void OnParry(Transform vfxTransform, AudioClip parrySFX)
+    public void OnParry(Transform hitBoxInstance, GameObject hitBoxSummoner, AudioClip parrySFX)
     {
-        this.vfxTransform = vfxTransform;
+        this.vfxTransform = hitBoxInstance;
         this.parrySFX = parrySFX;
         this.GetComponent<AudioSource>().clip = this.parrySFX;
         onParry.Invoke();
+        CameraShake(hitBoxSummoner, parryScreenShake);
+    }
+
+    void CameraShake(GameObject summoner, ScreenShakeComponent screenShakeComponent)
+    {
+        if(screenShakeComponent != null)
+        {
+            Debug.Log("Trigger Parry Screenshake");
+            //We check to see if the current instance has a cameraController attached. 
+            if(summoner.TryGetComponent<CameraController>(out CameraController cameraControllerB))
+            {
+                GameObject virtualCam = cameraControllerB.GetCameraInstance().GetComponent<CinemachineBrain>().ActiveVirtualCamera.VirtualCameraGameObject;
+                Debug.Log("Parry VirtualCam name: " + virtualCam.name);
+                virtualCam.GetComponent<CinemachineScreenShake>().DoShake(screenShakeComponent);
+            }
+        }
     }
 
     public void SpawnVFX(GameObject VFX)

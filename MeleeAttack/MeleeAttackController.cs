@@ -185,4 +185,12 @@ public class MeleeAttackController : MonoBehaviour
             dashInTween.Kill();
         }
     }
+
+    public void DestroyAttackInstance()
+    {
+        if(lightAttackInstance != null)
+            Destroy(lightAttackInstance);
+        if(heavyAttackInstance != null)
+            Destroy(heavyAttackInstance);
+    }
 }

@@ -10,13 +10,19 @@ public class GaurdConditional : Conditional
     public SharedGameObject targetGameObject;
 
     private Transform currentTarget;
+    private Status status;
+
+    public override void OnStart()
+    {
+        status = GetComponent<Status>();
+    }
 
     public override TaskStatus OnUpdate()
     {
         var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
         currentTarget = currentGameObject.GetComponent<Transform>();
 
-        if(currentTarget.GetComponent<Animator>().GetBool("Attacking"))
+        if(currentTarget.GetComponent<Animator>().GetBool("Attacking") && status.GetStamina() >= 4)
         {
             return TaskStatus.Success;
         }

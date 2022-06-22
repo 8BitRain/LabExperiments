@@ -57,6 +57,23 @@ public class HitBox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //Parry
+        if(GetSummoner() != null && other.TryGetComponent<HitBox>(out HitBox otherHitBox))
+        {
+            Debug.Log("Colliding with a hitbox, " + "the gameObject causing collision is: " + otherHitBox.transform.parent);
+            if(otherHitBox.abilityComponent.collisionComponent.canParryAttack && this.abilityComponent.collisionComponent.canParryAttack)
+            {
+                Debug.Log("Parry");
+                EventsManager.instance.OnParry(this.transform, this.abilityComponent.collisionComponent.parrySFX);
+                //EventsManager summon SFX
+                //EventsManager summon VFX position
+                
+                otherHitBox.Summoner.GetComponent<MeleeAttackController>().DestroyAttackInstance();
+                this.Summoner.GetComponent<MeleeAttackController>().DestroyAttackInstance();
+            }
+            return;
+        }
+
         //Make sure the summoner that summoned the hitbox doens't have its own hurtbox take a collision from this instance
         if(GetSummoner() != null && other.gameObject.GetComponent<HurtBox>() != null)
         {
@@ -103,6 +120,7 @@ public class HitBox : MonoBehaviour
             //Layer check is unnesceary. Could just directly call TryGetComponent<HurtBox>()
             if(layer == (layer | (1 << other.gameObject.layer)))
             {
+                //Multi hit logic can go here. HasHitBoxCollidedWithTarget could return 0 (false), 1 (true), 2+ a multiple meaning multiple hits
                 if(HasHitBoxCollidedWithTarget(other.gameObject))
                 {
                     print("HitBox: we already collided with target return");

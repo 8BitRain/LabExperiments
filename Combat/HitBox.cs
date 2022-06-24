@@ -23,6 +23,7 @@ public class HitBox : MonoBehaviour
 
     [Header("Parry Settings")]
     public ScreenShakeComponent screenShakeComponent;
+    private bool parried = false;
 
     private bool rumble = true;
 
@@ -74,12 +75,13 @@ public class HitBox : MonoBehaviour
                 
                 otherHitBox.Summoner.GetComponent<MeleeAttackController>().DestroyAttackInstance();
                 this.Summoner.GetComponent<MeleeAttackController>().DestroyAttackInstance();
+                this.parried = true;
             }
             return;
         }
 
         //Make sure the summoner that summoned the hitbox doens't have its own hurtbox take a collision from this instance
-        if(GetSummoner() != null && other.gameObject.GetComponent<HurtBox>() != null)
+        if(GetSummoner() != null && other.gameObject.GetComponent<HurtBox>() != null && !parried)
         {
             Debug.Log("Summoner info: " + GetSummoner().name);
             
@@ -116,50 +118,52 @@ public class HitBox : MonoBehaviour
             }
         }
 
-        
-        print("HitBox belonging to: " + this.transform.parent.name + " OnTrigger Enter");
-        foreach (var layer in layers)
+        if(!parried)
         {
-            //Collision w/ defined layer(s)
-            //Layer check is unnesceary. Could just directly call TryGetComponent<HurtBox>()
-            if(layer == (layer | (1 << other.gameObject.layer)))
+            print("HitBox belonging to: " + this.transform.parent.name + " OnTrigger Enter");
+            foreach (var layer in layers)
             {
-                //Multi hit logic can go here. HasHitBoxCollidedWithTarget could return 0 (false), 1 (true), 2+ a multiple meaning multiple hits
-                if(HasHitBoxCollidedWithTarget(other.gameObject))
+                //Collision w/ defined layer(s)
+                //Layer check is unnesceary. Could just directly call TryGetComponent<HurtBox>()
+                if(layer == (layer | (1 << other.gameObject.layer)))
                 {
-                    print("HitBox: we already collided with target return");
-                    return;
-                }
-                
-
-                Gamepad.current.SetMotorSpeeds(0.25f,0.55f);
-                StartCoroutine(RumbleCountdown(.2f));
-                rumble = false;
-                
-
-                //Play Audio
-                if(audioComponent != null)
-                {
-                    GetComponent<AudioSource>().clip = audioComponent.connected;
-                    GetComponent<AudioSource>().Play();
-                }
-
-                //Scriptable Object collison
-                if(GetSummoner() != null)
-                {
-                    try
+                    //Multi hit logic can go here. HasHitBoxCollidedWithTarget could return 0 (false), 1 (true), 2+ a multiple meaning multiple hits
+                    if(HasHitBoxCollidedWithTarget(other.gameObject))
                     {
-                        //TODO interrogate the abilityComponent attached. Remember its based on the hitbox's abilityComponent reference
-                        //Also pass screenshake component, or attach it to the ability component --<
-                        collision.Invoke(other.gameObject.GetComponent<HurtBox>().Agent, other.gameObject, GetSummoner(), abilityComponent);
+                        print("HitBox: we already collided with target return");
+                        return;
                     }
-                    catch (System.Exception exception)
-                    {
-                        Debug.Log("Attempted to invoke collision but it failed: " + exception);
-                        throw;
-                    }
-                }
 
+
+                    Gamepad.current.SetMotorSpeeds(0.25f,0.55f);
+                    StartCoroutine(RumbleCountdown(.2f));
+                    rumble = false;
+
+
+                    //Play Audio
+                    if(audioComponent != null)
+                    {
+                        GetComponent<AudioSource>().clip = audioComponent.connected;
+                        GetComponent<AudioSource>().Play();
+                    }
+
+                    //Scriptable Object collison
+                    if(GetSummoner() != null)
+                    {
+                        try
+                        {
+                            //TODO interrogate the abilityComponent attached. Remember its based on the hitbox's abilityComponent reference
+                            //Also pass screenshake component, or attach it to the ability component --<
+                            collision.Invoke(other.gameObject.GetComponent<HurtBox>().Agent, other.gameObject, GetSummoner(), abilityComponent);
+                        }
+                        catch (System.Exception exception)
+                        {
+                            Debug.Log("Attempted to invoke collision but it failed: " + exception);
+                            throw;
+                        }
+                    }
+
+                }
             }
         }
     }

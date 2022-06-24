@@ -69,7 +69,7 @@ public class HitBox : MonoBehaviour
             if(otherHitBox.abilityComponent.collisionComponent.canParryAttack && this.abilityComponent.collisionComponent.canParryAttack)
             {
                 Debug.Log("Parry");
-                EventsManager.instance.OnParry(this.transform, GetSummoner(), this.abilityComponent.collisionComponent.parrySFX);
+                EventsManager.instance.OnParry(this.transform, GetSummoner(), otherHitBox.GetSummoner(), this.abilityComponent.collisionComponent.parrySFX);
                 //EventsManager summon SFX
                 //EventsManager summon VFX position
                 

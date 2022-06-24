@@ -32,6 +32,7 @@ public class EventsManager : MonoBehaviour
     public event Action<GameObject> AbilityWindowActiveLockInput;
     public event Action<GameObject> AbilityWindowInactiveUnlockInput;
     public event Action<GameObject, GameObject, bool, float, float> TriggerHitbox;
+    public event Action<GameObject, GameObject> Parried;
 
     public void OnAbilityWindowActiveLockInput(GameObject instance)
     {
@@ -48,13 +49,15 @@ public class EventsManager : MonoBehaviour
         TriggerHitbox?.Invoke(instance, summoner, isActive, delayStart, duration);
     }
 
-    public void OnParry(Transform hitBoxInstance, GameObject hitBoxSummoner, AudioClip parrySFX)
+    public void OnParry(Transform hitBoxInstance, GameObject hitBoxSummonerA, GameObject hitBoxSummonerB, AudioClip parrySFX)
     {
         this.vfxTransform = hitBoxInstance;
         this.parrySFX = parrySFX;
         this.GetComponent<AudioSource>().clip = this.parrySFX;
         onParry.Invoke();
-        CameraShake(hitBoxSummoner, parryScreenShake);
+        CameraShake(hitBoxSummonerA, parryScreenShake);
+        CameraShake(hitBoxSummonerB, parryScreenShake);
+        Parried?.Invoke(hitBoxSummonerA, hitBoxSummonerB);
     }
 
     void CameraShake(GameObject summoner, ScreenShakeComponent screenShakeComponent)

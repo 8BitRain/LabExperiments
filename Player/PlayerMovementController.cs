@@ -92,18 +92,21 @@ public class PlayerMovementController : MonoBehaviour
     {
         EventsManager.instance.AbilityWindowActiveLockInput += LockInputRightSideControllerFaceButtons;
         EventsManager.instance.AbilityWindowInactiveUnlockInput += UnlockInputRightSideControllerFaceButtons;
+        EventsManager.instance.Parried += OnParry;
     }
 
     private void OnDisable()
     {
         EventsManager.instance.AbilityWindowActiveLockInput -= LockInputRightSideControllerFaceButtons;
         EventsManager.instance.AbilityWindowInactiveUnlockInput -= UnlockInputRightSideControllerFaceButtons;
+        EventsManager.instance.Parried -= OnParry;
     }
 
     private void OnDestroy()
     {
         EventsManager.instance.AbilityWindowActiveLockInput -= LockInputRightSideControllerFaceButtons;
         EventsManager.instance.AbilityWindowInactiveUnlockInput -= UnlockInputRightSideControllerFaceButtons;
+        EventsManager.instance.Parried -= OnParry;
     }
 
     void Start()
@@ -472,7 +475,7 @@ public class PlayerMovementController : MonoBehaviour
             //animator.SetBool("Falling", true);
             animator.SetBool("Jumping", false);
             animator.SetBool("Falling", true);
-            if(!animator.GetBool("Damaged") && !animator.GetBool("Attacking") && !animator.GetBool("Gaurding") && !animator.GetBool("Dodging"))
+            if(!animator.GetBool("Damaged") && !animator.GetBool("Attacking") && !animator.GetBool("Gaurding") && !animator.GetBool("Dodging") && !animator.GetBool("Parried"))
             {
                 animationController.ChangeAnimationState(animator,"Player_jump_falling");
             }
@@ -695,5 +698,22 @@ public class PlayerMovementController : MonoBehaviour
         movementComponent.currentSpeed = speed;
         movementComponent.gravity = gravity;
         movementComponent.isGrounded = _isGrounded;
+    }
+
+    public void OnParry(GameObject instanceA, GameObject instanceB)
+    {
+        if(this.gameObject != instanceA && this.gameObject != instanceB)
+            return;
+        
+        DisableMovement();
+        animator.SetBool("Attacking", false);
+        animator.SetBool("Parried", true);
+        //Debug.Break();
+        animationController.ChangeAnimationState(animator, "Parried");
+        TriggerDustTrails(movementDirection);
+        transform.DOMove(transform.position - transform.forward*10, 1f).OnComplete( () => {
+            EnableMovement();
+            animator.SetBool("Parried", false);
+        });
     }
 }

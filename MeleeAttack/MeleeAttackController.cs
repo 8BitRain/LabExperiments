@@ -24,8 +24,13 @@ public class MeleeAttackController : MonoBehaviour
         Heavy
     }
 
+    //TODO add editor logic to hide this menu for AI agents.
     [Header("DashIn Settings")]
     public float dashInTime;
+    public float dashInStoppingDistance;
+    public float dashInAttackRange;
+    public float dashInMinDistance;
+    public float dashInMaxDistance;
 
     private MeleeAttackBase lightAttackInstance;
     private MeleeAttackBase heavyAttackInstance;
@@ -180,10 +185,15 @@ public class MeleeAttackController : MonoBehaviour
 
     public void DashIn(Transform target, MeleeAttackType meleeAttackType)
     {
-        if(Vector3.Distance(transform.position, target.position) <= 10)
+        float distanceToTarget = Vector3.Distance(transform.position, target.position);
+        if(distanceToTarget < dashInMinDistance || distanceToTarget > dashInMaxDistance)
         {
             PerformMelee(meleeAttackType);
         }
+        /*if(Vector3.Distance(transform.position, target.position) <= dashIn)
+        {
+            PerformMelee(meleeAttackType);
+        }*/
         else
         {
             this.GetComponent<Animator>().SetBool("Attacking", true);
@@ -191,7 +201,7 @@ public class MeleeAttackController : MonoBehaviour
             this.GetComponent<PlayerMovementController>().DisableMovement();
             this.GetComponent<AnimationController>().ChangeAnimationState(this.GetComponent<Animator>(), "DashIn");
             isDashingIn = true;
-            dashInTween = transform.DOMove(target.position + target.forward*10, dashInTime).OnComplete(() => {
+            dashInTween = transform.DOMove(target.position + target.forward*dashInStoppingDistance, dashInTime).OnComplete(() => {
                 PerformMelee(meleeAttackType);
                 isDashingIn = false;
             });

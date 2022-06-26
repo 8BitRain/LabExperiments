@@ -11,6 +11,8 @@ public class TakingDamage : Conditional
         //IsTakingDamage(this.transform) ? TaskStatus.Success : TaskStatus.Running;
         if(IsTakingDamage(this.transform))
         {
+            this.transform.GetComponent<MeleeAttackController>().DestroyAttackInstance();
+            Debug.Log(this.transform.name + " is taking damage");
             return TaskStatus.Success;
         }
         else

@@ -177,6 +177,7 @@ public class AbilityController : MonoBehaviour
         if(VFXBlockInstance == null)
         {
             VFXBlockInstance = Instantiate(VFXBlock, VFXBlockSpawn.position, VFXBlockSpawn.rotation);
+            VFXBlockInstance.transform.SetParent(this.transform);
             //Debug.Break();
         }
         GetComponent<Status>().SetStamina(this.gameObject, .01f);

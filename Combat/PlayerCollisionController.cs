@@ -23,6 +23,7 @@ public class PlayerCollisionController : CollisionController
 
         if(playerAnimator.GetBool("Gaurding"))
         {
+            KnockbackLogic(abilityComponent.collisionComponent, .5f);
             return;
         }
 
@@ -102,6 +103,44 @@ public class PlayerCollisionController : CollisionController
                     renderer.material.DOColor(Color.white, "_Tint", .2f);
                 }).SetLoops(6);
             }
+        }
+    }
+
+    //TODO use this when player is gaurding. Attacks should knockback
+    public void KnockbackLogic(CollisionComponent collisionComponent, float multiplier)
+    {
+        switch (collisionComponent.knockbackDirection)
+        {
+            case CollisionComponent.KnockBackDirection.Forward:
+                
+                if(TryGetComponent<Rigidbody>(out Rigidbody rigidbodyInstance1))
+                {
+                    rigidbodyInstance1.AddForce(transform.forward*collisionComponent.knockbackAmount/40 * multiplier);
+                }
+                else
+                {
+                    transform.DOMove(transform.position + transform.forward*collisionComponent.knockbackAmount*multiplier, collisionComponent.knockbackTime);
+                }
+                break;
+            case CollisionComponent.KnockBackDirection.Backward:
+                if(TryGetComponent<Rigidbody>(out Rigidbody rigidbodyInstance2))
+                {
+                    rigidbodyInstance2.AddForce(transform.forward*collisionComponent.knockbackAmount/40 * multiplier);
+                }
+                else
+                {
+                    transform.DOMove(transform.position - transform.forward*collisionComponent.knockbackAmount*multiplier, collisionComponent.knockbackTime);
+                }
+                break;
+            case CollisionComponent.KnockBackDirection.Lateral:
+                transform.DOMove(transform.position + transform.right*collisionComponent.knockbackAmount*multiplier, collisionComponent.knockbackTime);
+                break;
+            case CollisionComponent.KnockBackDirection.Up:
+                //TODO: Add Rigidbody based force movement
+                transform.DOMove(transform.position + transform.up*collisionComponent.knockbackAmount*multiplier, collisionComponent.knockbackTime);
+                break;
+            default:
+                break;
         }
     }
 }

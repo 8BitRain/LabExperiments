@@ -18,6 +18,7 @@ public class Retreat : Action
     private float distanceFromTarget;
     private Vector3 retreatVector;
     private Tween retreatTween;
+    private Tweener retreatTweener;
     private bool movementComplete = false;
 
     public override void OnStart()
@@ -25,54 +26,61 @@ public class Retreat : Action
         animator = this.GetComponent<Animator>();
         this.GetComponent<AnimationController>().ChangeAnimationState(animator, retreatAnimation);
         animator.SetBool("Retreating", true);
-        Debug.Log("Retreating");
-
-        //retreatVector = new Vector3(Random.Range(7,15), 0, (stoppingDistance - distanceFromTarget) + 5);
+        
 
         var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
         currentTarget = currentGameObject.GetComponent<Transform>();
         distanceFromTarget = Vector3.Distance(transform.position, currentTarget.position);
-
-        /* Finding a vector based on vibes*/
-        //retreatVector = new Vector3(currentTarget.position.x, 0, currentTarget.position.z + (stoppingDistance - distanceFromTarget) + 5);
-
-        /* Finding a vector given an angle and direction vector*/
-        //retreatVector = new Vector3(distanceFromTarget* Mathf.Cos(180), 0, distanceFromTarget*Mathf.Cos(0));
 
         /* Determining a vector based on opposite direction from player */
         //Turn around first
         transform.LookAt(-transform.forward + transform.position);
         retreatVector = transform.forward * Mathf.Abs((stoppingDistance - distanceFromTarget) + 5) + transform.position;
 
-        /* Look at vector we are retreating to*/
-        //transform.LookAt(retreatVector);
-        //transform.LookAt(currentTarget.position + retreatVector - transform.forward);
+        Debug.Log("Retreat Logic: Starting Retreat" + " retreat vector is: " + "(" + retreatVector.x + "," + retreatVector.y + "," + retreatVector.z + ")");
     }
 
     public override TaskStatus OnUpdate()
     {
-        var currentGameObject = GetDefaultGameObject(targetGameObject.Value);
-        currentTarget = currentGameObject.GetComponent<Transform>();
-        
         distanceFromTarget = Vector3.Distance(transform.position, currentTarget.position);
-        // Return a task status of failure once we've reached the target
-        //TODO ensure 10.0f is replaced with a variable that represents withinSightDistance
+        
+        //Return a task status of sucess once we've reached the target
+        //TODO ensure stoppingDistance references a global variable, specifically the variable that represents withinSightDistance
         if (distanceFromTarget >= stoppingDistance || movementComplete) {
             animator.SetBool("Retreating", false);
-            return TaskStatus.Failure;
+            Debug.Log("Retreat Logic: Reached target destination");
+            retreatTween = null;
+            return TaskStatus.Success;
         }
-        // We haven't reached the furthest range from the target yet so keep moving away from it
-        //transform.position = Vector3.MoveTowards(transform.position, retreatVector, speed * Time.deltaTime);
-        retreatVector = transform.forward * Mathf.Abs((stoppingDistance - distanceFromTarget) + 5) + transform.position;
+        else
+        {
+            //Update retreatVector;
+            retreatVector = transform.forward * Mathf.Abs((stoppingDistance - distanceFromTarget) + 5) + transform.position;
+
+            //Update retreatTween start and end positions
+            if(retreatTween != null)
+            {
+                Tweener retreatTweener = (Tweener)retreatTween;
+                retreatTweener.ChangeValues(transform.position, retreatVector);
+            }
+
+        }
+        
         if(retreatTween == null)
         {
+            Debug.Log("Retreat Logic: Retreat tween is null so we can set a new tween");
             retreatTween = transform.DOMove(retreatVector, 1f).OnComplete(() => {
-                //We delete the tween once we've completed. This can cause looping issues with the AI unit returning to the start position of the tween, because the tween is killed.
-                retreatTween = null;
+                Debug.Log("Retreat Logic: Retreat Tween is complete");
+            }).OnKill(() => {
+                Debug.Log("Retreat Logic: Retreat Tween is killed");
             });
         }
-        //transform.LookAt(retreatVector);
         
         return TaskStatus.Running;
+    }
+
+    public override void OnEnd()
+    {
+        Debug.Log("Retreat Logic: Loop ended");
     }
 }

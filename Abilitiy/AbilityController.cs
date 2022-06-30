@@ -160,7 +160,7 @@ public class AbilityController : MonoBehaviour
             }
         }
 
-        if(gaurdInput && GetMovementController().movementInput.magnitude != 0)
+        if(gaurdInput && GetMovementController().movementInput.magnitude != 0 && !GetComponent<Animator>().GetBool("Damaged"))
         { 
             Dodge();
         }
@@ -191,7 +191,7 @@ public class AbilityController : MonoBehaviour
         
         if(GetComponent<Status>().GetStamina() < 5)
             return;
-
+        
         transform.DOKill();
         GetComponent<Status>().SetStamina(this.gameObject, 5f);
 

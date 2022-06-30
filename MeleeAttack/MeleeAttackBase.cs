@@ -547,14 +547,15 @@ public class MeleeAttackBase : MonoBehaviour
         //MeleeAttack connected, let's allow the player to press the melee button again to trigger another melee attack
         GetPlayerReference().GetComponent<MeleeAttackController>().SetPlayerInputCanInterruptCombo(true);
 
-
-
-        
         //Hitstop
-        Debug.Log("HitStop: Attempting hitstop. Reading hitstop value: " + meleeAttackInstance.GetComponent<ModularAttackElement>().GetMeleeAttackComponent().animationComponent.applyHitStop);
-        if(meleeAttackInstance.GetComponent<ModularAttackElement>().GetMeleeAttackComponent().animationComponent.applyHitStop)
+        float hitStopDuration = 0;
+        if(meleeAttackInstance.TryGetComponent<ModularAttackElement>(out ModularAttackElement modularAttackElement))
         {
-            StartHitStop();
+            if(modularAttackElement.GetMeleeAttackComponent().animationComponent.applyHitStop)
+            {
+                hitStopDuration = modularAttackElement.GetMeleeAttackComponent().animationComponent.hitStopDuration;
+                StartHitStop();
+            }
         }
 
         this.targetInstance = targetInstance.transform;
@@ -567,15 +568,18 @@ public class MeleeAttackBase : MonoBehaviour
         {
             float recoilAmount = meleeAttackComponent.collisionComponent.recoilAmount;
             float recoilDuration = meleeAttackComponent.collisionComponent.recoilDuration;
+
+            //Kill all tweens currently playing
+            GetPlayerReference().transform.DOKill();
             switch (meleeAttackComponent.collisionComponent.recoilDirection)
             {
                 case CollisionComponent.RecoilDirection.Forward:
                     GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + (GetPlayerReference().transform.forward * recoilAmount), recoilDuration);
                     break;
                 case CollisionComponent.RecoilDirection.Backward:
-                    //Kill all tweens currently playing
-                    GetPlayerReference().transform.DOKill();
-                    GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + (-GetPlayerReference().transform.forward * recoilAmount), recoilDuration);
+                    DOVirtual.DelayedCall(hitStopDuration, () => {
+                        GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + (-GetPlayerReference().transform.forward * recoilAmount), recoilDuration);
+                    });
                     break;
                 default:
                     break;

@@ -196,6 +196,8 @@ public class MeleeAttackController : MonoBehaviour
         }*/
         else
         {
+            //End all other instances of tweening on this transform, this prevents 
+            transform.DOKill();
             this.GetComponent<Animator>().SetBool("Attacking", true);
             transform.LookAt(target);
             this.GetComponent<PlayerMovementController>().DisableMovement();

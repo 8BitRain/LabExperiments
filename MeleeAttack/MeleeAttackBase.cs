@@ -201,6 +201,7 @@ public class MeleeAttackBase : MonoBehaviour
         
         Vector3 diagonalVector = new Vector3(0,0,0);
         //Controls how the player travels
+        GetPlayerReference().transform.DOKill();
         switch (meleeAttackComponent.playerMovementDirection)
         {
             case MeleeAttackComponent.MovementDirection.Forward:

@@ -192,6 +192,7 @@ public class AbilityController : MonoBehaviour
         if(GetComponent<Status>().GetStamina() < 5)
             return;
 
+        transform.DOKill();
         GetComponent<Status>().SetStamina(this.gameObject, 5f);
 
         if(this.VFXBlockInstance != null)

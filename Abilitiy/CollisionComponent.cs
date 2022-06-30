@@ -16,6 +16,16 @@ public class CollisionComponent : ScriptableObject
         None
     }
 
+    public enum RecoilDirection
+    {
+        Forward,
+        Backward,
+        Lateral,
+        Up,
+        Down,
+        None
+    }
+
     [Header("CollisionDetails")]
     public KnockBackDirection knockbackDirection;
     public float knockbackAmount;
@@ -25,5 +35,12 @@ public class CollisionComponent : ScriptableObject
     public float squashAndStretchTime;
     public float hpDamage;
     public bool canParryAttack = false;
+
+    [Header("RecoilDetails")]
+    public RecoilDirection recoilDirection;
+    public float recoilAmount;
+    public float recoilDuration;
+
+    [Header("SFXDetails")]
     public AudioClip parrySFX;
 }

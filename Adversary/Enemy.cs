@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     public float seekRange = 40f;
     public float meleeRange = 10f;
     public float zoneAttackRange = 30f;
+    private Animator animator;
 
     private BehaviorTree behaviorTree;
 
@@ -22,6 +23,7 @@ public class Enemy : MonoBehaviour
     {
         this.animationController = GetComponent<AnimationController>();
         this.behaviorTree = GetComponent<BehaviorTree>();
+        this.animator = GetComponent<Animator>();
     }
 
     private void OnEnable()
@@ -41,10 +43,10 @@ public class Enemy : MonoBehaviour
         Debug.Log(gameObject.name + "is processing collision");
 
         //Set Damaged State
-        transform.GetComponent<Animator>().SetBool("Wakeup", false);
+        GetAnimator().SetBool("Wakeup", false);
         //Setting to false then true to trigger a state re-run in behavior tree
-        transform.GetComponent<Animator>().SetBool("Damaged", false);
-        transform.GetComponent<Animator>().SetBool("Damaged", true);
+        GetAnimator().SetBool("Damaged", false);
+        GetAnimator().SetBool("Damaged", true);
 
         //Flash Red color when hit
         DamageFlash();
@@ -95,15 +97,15 @@ public class Enemy : MonoBehaviour
         int animChance = Random.Range(0,9);
         if(animChance <= 2)
         {
-            GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DamageAnimations.AnimationState.TakeHit_R1.ToString());
+            GetAnimationController().ChangeAnimationState(GetAnimator(), DamageAnimations.AnimationState.TakeHit_R1.ToString());
         }
         if(animChance >= 3 && animChance< 6)
         {
-            GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DamageAnimations.AnimationState.TakeHit_L1.ToString());
+            GetAnimationController().ChangeAnimationState(GetAnimator(), DamageAnimations.AnimationState.TakeHit_L1.ToString());
         }
         if(animChance >= 6)
         {
-            GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DamageAnimations.AnimationState.TakeHit_F2.ToString());
+            GetAnimationController().ChangeAnimationState(GetAnimator(), DamageAnimations.AnimationState.TakeHit_F2.ToString());
         }
     }
     public void DamageFlash()
@@ -143,7 +145,7 @@ public class Enemy : MonoBehaviour
 
         //Stop Behavior Tree
         behaviorTree.enabled = false;
-        GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), "Knockdown");
+        GetAnimationController().ChangeAnimationState(GetAnimator(), "Knockdown");
         DeathFlash();
         Destroy(this.gameObject, 5);
     }
@@ -151,6 +153,11 @@ public class Enemy : MonoBehaviour
     public AnimationController GetAnimationController()
     {
         return animationController;
+    }
+
+    public Animator GetAnimator()
+    {
+        return this.animator;
     }
 
     #if UNITY_EDITOR

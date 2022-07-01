@@ -26,7 +26,12 @@ public class WoodenDummy : Enemy
         _velocity.y = 0f;
         if(!_isGrounded)
         {
+            GetAnimator().SetBool("Grounded", false);
             Gravity();
+        }
+        else
+        {
+            GetAnimator().SetBool("Grounded", true);
         }
 
         //Lock Rotation

@@ -26,7 +26,7 @@ public class MeleeAttackController : MonoBehaviour
 
     //TODO add editor logic to hide this menu for AI agents.
     [Header("DashIn Settings")]
-    public float dashInTime;
+    public float dashInTimeConstant;
     public float dashInStoppingDistance;
     public float dashInAttackRange;
     public float dashInMinDistance;
@@ -203,7 +203,9 @@ public class MeleeAttackController : MonoBehaviour
             this.GetComponent<PlayerMovementController>().DisableMovement();
             this.GetComponent<AnimationController>().ChangeAnimationState(this.GetComponent<Animator>(), "DashIn");
             isDashingIn = true;
-            dashInTween = transform.DOMove(target.position + target.forward*dashInStoppingDistance, dashInTime).OnComplete(() => {
+
+            float dashInTime = (distanceToTarget/dashInMaxDistance * dashInTimeConstant);
+            dashInTween = transform.DOMove(target.position + target.forward*dashInStoppingDistance, dashInTime).SetEase(Ease.InSine).OnComplete(() => {
                 PerformMelee(meleeAttackType);
                 isDashingIn = false;
             });

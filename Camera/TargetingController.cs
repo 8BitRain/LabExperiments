@@ -75,21 +75,7 @@ public class TargetingController : MonoBehaviour
                 gameManager.disableWidescreenBars(playerScriptReference.GetPlayerID());
             }*/
 
-            //Disable Target Arrow
-            onDisableTargetArrow.Invoke(this.gameObject);
-
-            lockedOn = false;
-            //playerScriptReference.DisengageDynamicTargetLock();
-            onDisableLockOnCamera.Invoke(this.gameObject);
-
-            lockOnInput = false;
-
-            //Set currentTarget value to sentinel value & Reset targets array
-            currentTarget = -1;
-            targets = new Transform[0];
-
-            print("Lock off");
-
+            TargetLockOff();
         }
 
         //LockOn to Target
@@ -193,6 +179,24 @@ public class TargetingController : MonoBehaviour
                 onUpdateTargetArrowPosition.Invoke(this.gameObject, targetToLockHead.gameObject, GetComponent<CameraController>().GetCameraInstance().GetComponent<Camera>());
             }
         }
+    }
+
+    public void TargetLockOff()
+    {
+        //Disable Target Arrow
+        onDisableTargetArrow.Invoke(this.gameObject);
+
+        lockedOn = false;
+        //playerScriptReference.DisengageDynamicTargetLock();
+        onDisableLockOnCamera.Invoke(this.gameObject);
+
+        lockOnInput = false;
+
+        //Set currentTarget value to sentinel value & Reset targets array
+        currentTarget = -1;
+        targets = new Transform[0];
+
+        print("Lock off");
     }
 
     public GameObject GetCurrentTarget()

@@ -122,6 +122,10 @@ public class MeleeAttackController : MonoBehaviour
         switch (meleeAttackType)
         {
             case MeleeAttackType.Light:
+                if(!isAIAgent)
+                {
+                    targetingController.FreeFlowTargetLock();
+                }
                 lightAttackInstance = Instantiate(lightAttacks[lightAttackState]);
                 InitializeAbility(lightAttackInstance);
                 lightAttackInstance.Melee();

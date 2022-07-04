@@ -58,8 +58,10 @@ public class TargetingController : MonoBehaviour
     void Update()
     {
 
-        //Check for nearby enemies within a range of 40m.
-        if(!lockedOn)
+        //Check for nearby enemies within a range of 30m.
+        //TODO instead of calling this here, we really want this logic triggered anytime a player is about to perform a melee attack. We could  create a function
+        //for this logic here, then call it in the MeleeAttackController!
+        /*if(!lockedOn)
         {
             if(ambientTargetLock == null)
             {
@@ -68,7 +70,7 @@ public class TargetingController : MonoBehaviour
                     ambientTargetLock = null;
                 });
             }
-        }
+        }*/
 
 
         //Turn off LockOn
@@ -206,11 +208,20 @@ public class TargetingController : MonoBehaviour
         print("Lock off");
     }
 
+    public void FreeFlowTargetLock()
+    {
+        if(this.lockedOn == false)
+            FindNearbyTargets();
+    }
+
     //Resets the ability to lock on to ambient targets. Used for freeflow combat.
     public void ResetAmbientTargetLock()
-    {
-        ambientTargetLock.Kill();
-        ambientTargetLock = null;
+    { 
+        if(ambientTargetLock != null)
+        {
+            ambientTargetLock.Kill();
+            ambientTargetLock = null;
+        }
     }
 
     public GameObject GetCurrentTarget()

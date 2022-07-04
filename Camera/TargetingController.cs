@@ -35,6 +35,8 @@ public class TargetingController : MonoBehaviour
     private Transform targetToLock;
     private int currentTarget = 0;
 
+    private Tween ambientTargetLock;
+
     //Events
     public static event Action<GameObject, GameObject, Camera> onUpdateTargetArrowPosition;
     public static event Action<GameObject> onEnableTargetArrow;
@@ -59,9 +61,13 @@ public class TargetingController : MonoBehaviour
         //Check for nearby enemies within a range of 40m.
         if(!lockedOn)
         {
-            DOVirtual.DelayedCall(5.0f, () => {
-                FindNearbyTargets();
-            });
+            if(ambientTargetLock == null)
+            {
+                ambientTargetLock = DOVirtual.DelayedCall(5.0f, () => {
+                    FindNearbyTargets();
+                    ambientTargetLock = null;
+                });
+            }
         }
 
 
@@ -81,6 +87,7 @@ public class TargetingController : MonoBehaviour
         //LockOn to Target
         if(lockOnInput && !lockedOn)
         {
+            ResetAmbientTargetLock();
             //Look for surrounding enemies
             bool targetsFound = FindNearbyTargets();
             if(targetsFound)
@@ -199,6 +206,13 @@ public class TargetingController : MonoBehaviour
         print("Lock off");
     }
 
+    //Resets the ability to lock on to ambient targets. Used for freeflow combat.
+    public void ResetAmbientTargetLock()
+    {
+        ambientTargetLock.Kill();
+        ambientTargetLock = null;
+    }
+
     public GameObject GetCurrentTarget()
     {
         if(currentTarget == -1)
@@ -217,7 +231,7 @@ public class TargetingController : MonoBehaviour
 
     public bool FindNearbyTargets()
     {
-        
+        Debug.Log("Find nearby targets");
         Vector3 position = Player.transform.position + this.GetComponent<CharacterController>().center;
         RaycastHit[] targetHit = Physics.SphereCastAll(position, 30f, transform.forward, 30f, Target);
 

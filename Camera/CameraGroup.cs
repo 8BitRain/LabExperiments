@@ -246,7 +246,8 @@ public class CameraGroup : MonoBehaviour
         switch (frameShotStyle)
         {
             case FrameShotStyle.NONE:
-                lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Follow = source.GetComponent<CameraController>().thirdPersonCameraTargetBack;
+                //lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Follow = source.GetComponent<CameraController>().thirdPersonCameraTargetBack;
+                lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Follow = source.GetComponent<Body>().TargetLock;
                 break;
             case FrameShotStyle.WIDESHOT:
                 lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Follow = target;

@@ -207,6 +207,11 @@ public class TargetingController : MonoBehaviour
 
         print("Lock off");
     }
+    
+    public bool GetTargetLockStatus()
+    {
+        return this.lockedOn;
+    }
 
     public void FreeFlowTargetLock()
     {

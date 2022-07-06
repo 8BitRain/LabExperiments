@@ -116,6 +116,12 @@ public class MeleeAttackController : MonoBehaviour
             return;
         }
 
+        if(!GetIsAIAgent())
+        {
+            if(targetingController.GetTargetLockStatus())
+                transform.LookAt(targetingController.targets[0]);
+                //transform.LookAt(new Vector3(targetingController.targets[0].transform.position.x, 0, targetingController.targets[0].transform.position.z));
+        }
         this.GetComponent<Status>().SetStamina(this.gameObject, 10f);
         
         this.GetComponent<Animator>().SetBool("Attacking", true);
@@ -124,7 +130,8 @@ public class MeleeAttackController : MonoBehaviour
             case MeleeAttackType.Light:
                 if(!isAIAgent)
                 {
-                    targetingController.FreeFlowTargetLock();
+                    if(!targetingController.GetTargetLockStatus())
+                        targetingController.FreeFlowTargetLock();
                 }
                 lightAttackInstance = Instantiate(lightAttacks[lightAttackState]);
                 InitializeAbility(lightAttackInstance);

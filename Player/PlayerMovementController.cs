@@ -570,6 +570,7 @@ public class PlayerMovementController : MonoBehaviour
         if(direction == "right")
         { 
             Debug.Log("StartWallRun: " + "Wall is to the Right.");
+            animationController.ChangeAnimationState(animator, "WallRunRight");
             //TODO: Replace with more generic name
             //animatorOverrideController["eston_rig|WallRunLeft"] = wallRunningAnimationClip[0];
         }
@@ -577,6 +578,7 @@ public class PlayerMovementController : MonoBehaviour
         if(direction == "left")
         {
             Debug.Log("StartWallRun: " + "Wall is to the Left.");
+            animationController.ChangeAnimationState(animator, "WallRunLeft");
             //TODO: Replace with more generic name
             //animatorOverrideController["eston_rig|WallRunLeft"] = wallRunningAnimationClip[1];
         }

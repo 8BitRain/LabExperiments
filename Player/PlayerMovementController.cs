@@ -340,6 +340,7 @@ public class PlayerMovementController : MonoBehaviour
                 }
                 if(_isWallRunning && !_isGrounded){
                     print("WALLJUMP");
+                    animator.SetBool("Jumping", true);
                     animationController.ChangeAnimationState(animator,"Player_jump");
                     isWallLeft = false;
                     isWallRight = false;
@@ -472,12 +473,11 @@ public class PlayerMovementController : MonoBehaviour
 
         if(_velocity.y < 0)
         {
-            //animator.SetBool("Falling", true);
             animator.SetBool("Jumping", false);
-            animator.SetBool("Falling", true);
-            if(!animator.GetBool("Damaged") && !animator.GetBool("Attacking") && !animator.GetBool("Gaurding") && !animator.GetBool("Dodging") && !animator.GetBool("Parried"))
+            if(!animator.GetBool("Damaged") && !animator.GetBool("Attacking") && !animator.GetBool("Gaurding") && !animator.GetBool("Dodging") && !animator.GetBool("Parried") && !animator.GetBool("WallRunning"))
             {
                 animationController.ChangeAnimationState(animator,"Player_jump_falling");
+                animator.SetBool("Falling", true);
             }
         }
         if(applyGravity)
@@ -561,7 +561,8 @@ public class PlayerMovementController : MonoBehaviour
 
     void StartWallRun(string direction, Vector3 directionVector)
     {
-        //animator.SetBool("WallRunning", true);
+        animator.SetBool("WallRunning", true);
+        animator.SetBool("Falling", false);
         animator.SetBool("Jumping", false);
         //animator.SetBool("Sprinting", false);
 
@@ -596,7 +597,7 @@ public class PlayerMovementController : MonoBehaviour
 
     void ExitWallRun()
     {
-        //animator.SetBool("WallRunning", false);
+        animator.SetBool("WallRunning", false);
         _isWallRunning = false;
     }
 

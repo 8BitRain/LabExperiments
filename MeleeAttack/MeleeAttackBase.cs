@@ -463,6 +463,7 @@ public class MeleeAttackBase : MonoBehaviour
         }
         
         cooldownTriggered = true;
+        GetPlayerReference().GetComponent<Animator>().SetBool("Attacking", false);
         Destroy(this.gameObject);
     }
 

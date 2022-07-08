@@ -167,6 +167,8 @@ public class MeleeAttackController : MonoBehaviour
         else
         {
             lightAttackState = 0;
+            //Trying to fix bug where attacking is not set to false after the last meleeAttack
+            //this.GetComponent<Animator>().SetBool("Attacking", false);
         }
         Debug.Log("Light Attack State" + lightAttackState);
     }

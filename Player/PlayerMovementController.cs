@@ -364,7 +364,7 @@ public class PlayerMovementController : MonoBehaviour
 
             if(movementInput.x != 0 || movementInput.y != 0)
             {
-                if(!_isWallRunning && !animator.GetBool("Jumping") && !animator.GetBool("Falling") && !animator.GetBool("Landing"))
+                if(!_isWallRunning && !animator.GetBool("Jumping") && !animator.GetBool("Falling") && !animator.GetBool("Landing") && !animator.GetBool("Attacking"))
                 {
                     animationController.ChangeAnimationState(animator,"Player_run");
                 }

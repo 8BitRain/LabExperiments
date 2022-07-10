@@ -24,7 +24,7 @@ public class PlayAnimation : Action
             transform.GetComponent<AnimationController>().ChangeAnimationState(transform.GetComponent<Animator>(),animationName);
             DOVirtual.DelayedCall(animationTime, () => {
                 endAnimation = true;
-            });
+            }, false);
         }
 
         if(endAnimation)

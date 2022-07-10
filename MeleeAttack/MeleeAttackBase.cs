@@ -588,7 +588,7 @@ public class MeleeAttackBase : MonoBehaviour
                 case CollisionComponent.RecoilDirection.Backward:
                     DOVirtual.DelayedCall(hitStopDuration, () => {
                         GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + (-GetPlayerReference().transform.forward * recoilAmount), recoilDuration);
-                    });
+                    }, false);
                     break;
                 default:
                     break;

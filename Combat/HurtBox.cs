@@ -59,6 +59,13 @@ public class HurtBox : MonoBehaviour
         if(this.gameObject != hurtBoxInstance)
             return;
 
+        if(Agent.GetComponent<Animator>().GetBool("Dodging"))
+        {
+            Debug.Log("Slow Time: Trigger slow time");
+            EventsManager.instance.OnSlowTime(Agent);
+            return;
+        }
+
         CameraShake(summoner, abilityComponent);
         //Custom Event Assigned to Hurtbox to spawn a hit impact particle effect
         onRecievedCollision.Invoke();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using Cinemachine;
+using DG.Tweening;
 using UnityEngine.Events;
 
 public class EventsManager : MonoBehaviour
@@ -58,6 +59,18 @@ public class EventsManager : MonoBehaviour
         CameraShake(hitBoxSummonerA, parryScreenShake);
         CameraShake(hitBoxSummonerB, parryScreenShake);
         Parried?.Invoke(hitBoxSummonerA, hitBoxSummonerB);
+    }
+
+    public void OnSlowTime(GameObject instance)
+    {
+        Debug.Log("SlowTime: Attack Dodged");
+        //ensure the instance is sped up
+        //Set Speed Multiplier is a function that takes the variable speedMultiplier from the relevant player controller  That could happen here
+        //instance.GetComponent(Body).SetSpeedMultiplier()
+        Time.timeScale = .1f;
+        DOVirtual.DelayedCall(2f, () => {
+            Time.timeScale = 1;
+        });
     }
 
     void CameraShake(GameObject summoner, ScreenShakeComponent screenShakeComponent)

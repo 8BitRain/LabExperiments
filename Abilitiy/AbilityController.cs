@@ -203,7 +203,7 @@ public class AbilityController : MonoBehaviour
         GetComponent<MeleeAttackController>().CancelDashIn();
         
         //Disable Hurtbox
-        this.GetComponent<Body>().GetHurtBox().gameObject.SetActive(false);
+        //this.GetComponent<Body>().GetHurtBox().gameObject.SetActive(false);
 
         GetMovementController().DisableApplyGravityLockPlayerInput();
         GetMovementController().DisableMovement();
@@ -226,7 +226,7 @@ public class AbilityController : MonoBehaviour
         DOVirtual.DelayedCall(.1f, () => {
             GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Dodge_F.ToString());
             GetMovementController().transform.DOMove(GetMovementController().transform.position + movementDirection*dodgeDistance, dodgeTweenTimer);
-        });
+        }, false);
 
         this.dodgeCooldownIsActive = true;
         
@@ -238,12 +238,12 @@ public class AbilityController : MonoBehaviour
             //Enable HurtBox
             this.GetComponent<Body>().GetHurtBox().gameObject.SetActive(true);
 
-        });
+        }, false);
 
         //Dodge Cooldown
         DOVirtual.DelayedCall(dodgeCooldown, () => {
             this.dodgeCooldownIsActive = false;
-        });
+        }, false);
         
 
 

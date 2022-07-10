@@ -213,8 +213,9 @@ public class PlayerMovementController : MonoBehaviour
                         //speedLines.SetActive(false);
                         //TODO: Ensure we are not sprinting
                         //animator.SetBool("Sprinting", false);
-
-                        if(speed > 30)
+                        
+                        //Adding witch time animation state check to prevent unwnanted speed lines during witch time
+                        if(speed > 30 && !animator.GetBool("WitchTime"))
                         {
                            if(speedLinesInstance == null)
                            {
@@ -490,6 +491,11 @@ public class PlayerMovementController : MonoBehaviour
 
     public void Accelerate()
     {
+        if(animator.GetBool("WitchTime"))
+        {
+            return;
+        }
+
         if(dashInput)
         {
             speed += acceleration * Time.deltaTime;
@@ -498,6 +504,11 @@ public class PlayerMovementController : MonoBehaviour
 
     public void Decelerate()
     {
+        if(animator.GetBool("WitchTime"))
+        {
+            return;
+        }
+
         if(speed > defaultSpeed)
         {
             //animationController.ChangeAnimationState(animator, "Esc_Slide_Left");
@@ -664,6 +675,11 @@ public class PlayerMovementController : MonoBehaviour
     //Increase number of speedLine particles as player speed increases
     public void UpdateSpeedLinesVFXEmission()
     {
+        if(animator.GetBool("WitchTime"))
+        {
+            return;
+        }
+        
         if(speedLinesInstance != null)
         {
             if(speed < 30)

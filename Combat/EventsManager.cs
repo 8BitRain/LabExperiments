@@ -64,26 +64,35 @@ public class EventsManager : MonoBehaviour
     public void OnSlowTime(GameObject instance)
     {
         Debug.Log("SlowTime: Attack Dodged");
-        //ensure the instance is sped up
-        //Set Speed Multiplier is a function that takes the variable speedMultiplier from the relevant player controller  That could happen here
-        //instance.GetComponent(Body).SetSpeedMultiplier()
         Time.timeScale = .075f;
-        //Ensure dodger (assumed to be player) has thier movement speed and animation speed adjusted.
-        //instance.GetComponent<Animator>().speed = (.75f*60);
         PlayerMovementController movementController = instance.GetComponent<PlayerMovementController>();
+        AbilityController abilityController = instance.GetComponent<AbilityController>();
+        Animator animator = instance.GetComponent<Animator>();
+
         float speed = movementController.speed;
+        //Speed up animation and movement speed to account for time slowed. 
         DOVirtual.DelayedCall(1f, () => {
             Time.timeScale = .1f;
             instance.GetComponent<Animator>().speed = (.1f*60);
             movementController.speed = speed * (.1f*60);
 
-            //Manually override dodge status
-            //GetComponent<Animator>().SetBool("Dodging", false);
+            //End the dodge movement tween so we can move the player in witch time
+            if(abilityController.dodgeMovementTween != null)
+            {
+                abilityController.dodgeMovementTween.Kill();
+            }
+            //Manually override dodge status and enable movement
+            animator.SetBool("Dodging", false);
+            animator.SetBool("WitchTime", true);
+
             movementController.EnableMovement();
+
+            //Enable normal animation and movement speed
             DOVirtual.DelayedCall(1.5f, () => {
                 instance.GetComponent<Animator>().speed = 1;
                 movementController.speed = speed;
                 Time.timeScale = 1f;
+                animator.SetBool("WitchTime", false);
             });
         });
     }

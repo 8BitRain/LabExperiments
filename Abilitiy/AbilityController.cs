@@ -47,6 +47,7 @@ public class AbilityController : MonoBehaviour
     public float dodgeDuration = .5f;
     public float dodgeTweenTimer = .5f;
     public float dodgeCooldown = 1f;
+    public Tween dodgeMovementTween = null;
 
     [Header("Input Settings")]
     /// <summary>Vector2 action for pressing a face button </summary>
@@ -225,7 +226,7 @@ public class AbilityController : MonoBehaviour
         //if block is held down the block animation and run animation can clip
         DOVirtual.DelayedCall(.1f, () => {
             GetAnimationController().ChangeAnimationState(this.GetComponent<Animator>(), DefenseAnimations.AnimationState.Dodge_F.ToString());
-            GetMovementController().transform.DOMove(GetMovementController().transform.position + movementDirection*dodgeDistance, dodgeTweenTimer);
+            this.dodgeMovementTween = GetMovementController().transform.DOMove(GetMovementController().transform.position + movementDirection*dodgeDistance, dodgeTweenTimer);
         }, false);
 
         this.dodgeCooldownIsActive = true;

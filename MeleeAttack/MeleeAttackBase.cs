@@ -210,9 +210,15 @@ public class MeleeAttackBase : MonoBehaviour
                     //If we are moving, allow the player to still control rotation and direction while performing melee attack
                     //If we aren't moving, we can allow the melee attack to move according to the direction the player is facing.
                     if(GetPlayerMovementController().movementInput.magnitude != 0)
+                    {
                         GetPlayerMovementController().EnableSteeringAndMovement();
+                    }
                     else
+                    {
                         GetPlayerReference().transform.DOMove(GetPlayerReference().transform.position + GetPlayerReference().transform.forward*meleeAttackComponent.playerMovementAmount, meleeAttackComponent.playerMovementTime);
+                        //GetPlayerMovementController().EnableSteering();
+                        //If we enable steering we need to have the movementInput magnitude effect the move. Probably update the transform above's final endpoint to faction the direction the stick is facing.
+                    }
                 }
                 else
                 {
@@ -439,6 +445,7 @@ public class MeleeAttackBase : MonoBehaviour
         if(GetPlayerMovementController() != null)
         {
             GetPlayerMovementController().DisableSteeringAndMovement();
+            GetPlayerMovementController().DisableSteering();
         }
 
         //Unlock player movement

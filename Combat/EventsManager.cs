@@ -67,9 +67,24 @@ public class EventsManager : MonoBehaviour
         //ensure the instance is sped up
         //Set Speed Multiplier is a function that takes the variable speedMultiplier from the relevant player controller  That could happen here
         //instance.GetComponent(Body).SetSpeedMultiplier()
-        Time.timeScale = .1f;
-        DOVirtual.DelayedCall(2f, () => {
-            Time.timeScale = 1;
+        Time.timeScale = .075f;
+        //Ensure dodger (assumed to be player) has thier movement speed and animation speed adjusted.
+        //instance.GetComponent<Animator>().speed = (.75f*60);
+        PlayerMovementController movementController = instance.GetComponent<PlayerMovementController>();
+        float speed = movementController.speed;
+        DOVirtual.DelayedCall(1f, () => {
+            Time.timeScale = .1f;
+            instance.GetComponent<Animator>().speed = (.1f*60);
+            movementController.speed = speed * (.1f*60);
+
+            //Manually override dodge status
+            //GetComponent<Animator>().SetBool("Dodging", false);
+            movementController.EnableMovement();
+            DOVirtual.DelayedCall(1.5f, () => {
+                instance.GetComponent<Animator>().speed = 1;
+                movementController.speed = speed;
+                Time.timeScale = 1f;
+            });
         });
     }
 

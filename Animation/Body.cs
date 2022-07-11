@@ -10,6 +10,8 @@ public class Body : MonoBehaviour
     public Transform TargetLock;
     public GameObject hurtBox;
 
+    private Animator animator;
+
     [Header("VFX Settings")]
     public GameObject VFXBlock;
     public Transform VFXBlockSpawn;
@@ -18,17 +20,43 @@ public class Body : MonoBehaviour
     [Header("UI Settings")]
     public Transform healthBarSpawn;
     public Transform staminaBarSpawn;
+
+    [Header("Weapon Settings")]
+    public Transform[] Weapons;
     
     // Start is called before the first frame update
     void Start()
     {
-        
+        this.animator = this.GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(animator.GetBool("Attacking"))
+        {
+            EnableWeaponTrails();
+        }
+        else
+        {
+            DisableWeaponTrails();
+        }
+    }
+
+    public void EnableWeaponTrails()
+    {
+        foreach (Transform weapon in Weapons)
+        {
+            weapon.gameObject.GetComponentInChildren<TrailRenderer>().enabled = true;
+        }
+    }
+
+    public void DisableWeaponTrails()
+    {
+        foreach (Transform weapon in Weapons)
+        {
+            weapon.gameObject.GetComponentInChildren<TrailRenderer>().enabled = false;
+        }
     }
 
     public HurtBox GetHurtBox()

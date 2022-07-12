@@ -79,6 +79,26 @@ public class TargetingController : MonoBehaviour
             {
                 TargetLockOff();
             }
+
+            if(targets[0].TryGetComponent<Status>(out Status status))
+            {
+                if(status.hp <= 0)
+                {
+                    //We can either switch to the next target nearby or exit target lock
+                    Debug.Log("TargetLock: Current target defeated. Lock off or switch target");
+                    //Remove first target
+                    targets = RemoveAt(targets, 0);
+
+                    if(targets.Length > 0)
+                    {
+                        currentTarget = 0;
+                    }
+                    else
+                    {
+                        TargetLockOff();
+                    }
+                }
+            }
         }
 
         //Turn off LockOn
@@ -215,6 +235,19 @@ public class TargetingController : MonoBehaviour
 
         print("Lock off");
     }
+
+    //Remove value from array
+    public Transform[] RemoveAt<Transform>(Transform[] source, int index)
+    {
+        Transform[] dest = new Transform[source.Length - 1];
+        if( index > 0 )
+            Array.Copy(source, 0, dest, 0, index);
+
+        if( index < source.Length - 1 )
+            Array.Copy(source, index + 1, dest, index, source.Length - index - 1);
+
+        return dest;
+    }
     
     public bool GetTargetLockStatus()
     {
@@ -274,6 +307,26 @@ public class TargetingController : MonoBehaviour
             foreach(RaycastHit target in targetHit)
             {
                 print(target.transform.name + " : " + target.distance);
+
+                //Check if target has a status object
+                if(target.transform.gameObject.TryGetComponent<Status>(out Status status))
+                {
+                    //Only add target to target list if their hp is above 100. This prevents targeting defeated AI units
+                    if(status.hp <= 0)
+                    {
+                        iter++;
+                    }
+                    else
+                    {
+                        targets[iter] = target.transform;
+                        iter++;
+                    }
+                }
+                else
+                {
+                    targets[iter] = target.transform;
+                    iter++;
+                }
                 //Problem with rigidbodies read here https://forum.unity.com/threads/raycast-hit-rigidbody-object-instead-of-collider.544297/
                 /*if(target.rigidbody != null)
                 {
@@ -285,10 +338,18 @@ public class TargetingController : MonoBehaviour
                     targets[iter] = target.transform;
                 }*/
                 //print(target.GetType().ToString());
-                targets[iter] = target.transform;
-                iter++;
             }
-        } 
+        }
+
+        if(targets.Length > 0)
+        {
+            if(targets[0] == null)
+            {
+                Debug.Log("TargetController: There are no targets");
+                targets = new Transform[0];
+                return false;
+            }
+        }
 
         return foundTargets;
     }

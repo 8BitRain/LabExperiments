@@ -72,6 +72,14 @@ public class TargetingController : MonoBehaviour
             }
         }*/
 
+        //Enemy is defeated while locked on
+        if(lockedOn)
+        {
+            if(targets[0] == null)
+            {
+                TargetLockOff();
+            }
+        }
 
         //Turn off LockOn
         if(lockOnInput && lockedOn)

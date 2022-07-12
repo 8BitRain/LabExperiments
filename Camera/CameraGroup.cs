@@ -185,8 +185,11 @@ public class CameraGroup : MonoBehaviour
         CinemachineTargetGroup targetGroup = lockOnCamera.GetComponentInChildren<CinemachineTargetGroup>();
         foreach (var targetElement in targetGroup.m_Targets)
         {
+            if(targetElement.target != null)
+            {
             print("DisengageDynamicTargetLock: " + "Removing: " + targetElement.target.name);
-            targetGroup.RemoveMember(targetElement.target.transform);
+                targetGroup.RemoveMember(targetElement.target.transform);
+            }
         }
 
         lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_Priority = 10;

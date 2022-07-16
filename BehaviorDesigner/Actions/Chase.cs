@@ -21,6 +21,7 @@ public class Chase : Action
         this.GetComponent<AnimationController>().ChangeAnimationState(animator, chaseAnimation);
         animator.SetBool("Chasing", true);
         navMeshAgent = this.GetComponent<NavMeshAgent>();
+        //navMeshAgent.isStopped = false;
     }
 
     public override TaskStatus OnUpdate()

@@ -16,7 +16,11 @@ public class Fall : Action
         this.GetComponent<AnimationController>().ChangeAnimationState(animator, fallAnimation);
         animator.SetBool("Falling", true);
         navMeshAgent = this.GetComponent<NavMeshAgent>();
-        navMeshAgent.enabled = false;
+        if(!navMeshAgent.isOnOffMeshLink)
+        {
+            Debug.Log("Not on mesh Off Link");
+            navMeshAgent.enabled = false;
+        }
     }
 
     public override TaskStatus OnUpdate()

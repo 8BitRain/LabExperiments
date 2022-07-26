@@ -15,6 +15,8 @@ public class Enemy : MonoBehaviour
     public float zoneAttackRange = 30f;
     private Animator animator;
 
+    protected Vector3 _velocity;
+
     private BehaviorTree behaviorTree;
 
     private AnimationController animationController;
@@ -148,6 +150,16 @@ public class Enemy : MonoBehaviour
         GetAnimationController().ChangeAnimationState(GetAnimator(), "Knockdown");
         DeathFlash();
         Destroy(this.gameObject, 5);
+    }
+
+    public Vector3 GetVelocity()
+    {
+        return _velocity;
+    }
+
+    public void SetVelocity(Vector3 velocity)
+    {
+        _velocity = velocity;
     }
 
     public AnimationController GetAnimationController()

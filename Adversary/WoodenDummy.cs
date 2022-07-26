@@ -14,7 +14,6 @@ public class WoodenDummy : Enemy
     public Transform _groundChecker;
     public LayerMask Ground;
     public float JumpHeight = 2f;
-    private Vector3 _velocity;
     public float GroundDistance = 0.2f;
 
 
@@ -32,6 +31,7 @@ public class WoodenDummy : Enemy
         else
         {
             GetAnimator().SetBool("Grounded", true);
+            GetAnimator().SetBool("Jumping", false);
         }
 
         //Lock Rotation

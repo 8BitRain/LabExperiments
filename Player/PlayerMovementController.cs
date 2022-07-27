@@ -330,8 +330,9 @@ public class PlayerMovementController : MonoBehaviour
                     animationController.ChangeAnimationState(animator,"Player_jump");
                     //reset y_velocity to prevent super bouncing
                     _velocity.y = 0; 
+                    print("Player yVelocity before jump: " + _velocity.y);
                     _velocity.y += Mathf.Sqrt(JumpHeight * -2f * gravity);
-
+                    print("Player yVelocity before jump: " + _velocity.y);
                     animator.SetBool("Jumping", true);
                     //play jump vfx
                     GameObject jumpVFXClone;
@@ -679,7 +680,7 @@ public class PlayerMovementController : MonoBehaviour
         {
             return;
         }
-        
+
         if(speedLinesInstance != null)
         {
             if(speed < 30)

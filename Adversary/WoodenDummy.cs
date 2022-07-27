@@ -22,18 +22,23 @@ public class WoodenDummy : Enemy
         RaycastHit groundedRaycast;
         _isGrounded = Physics.Raycast(_groundChecker.position, Vector3.down, out groundedRaycast, GroundDistance, Ground);
         Debug.DrawRay(_groundChecker.position, Vector3.down * GroundDistance, Color.red);
-        _velocity.y = 0f;
         if(!_isGrounded)
         {
             GetAnimator().SetBool("Grounded", false);
-            Gravity();
         }
         else
         {
-            GetAnimator().SetBool("Grounded", true);
-            GetAnimator().SetBool("Jumping", false);
+            if(!GetAnimator().GetBool("Jumping"))
+            {
+                _velocity.y = 0f;
+                GetAnimator().SetBool("Grounded", true);
+            }
+            //_velocity.y = 0f;
+            //GetAnimator().SetBool("Jumping", false);
         }
 
+        Gravity();
+        
         //Lock Rotation
         //transform.DORotate(new Vector3(0,transform.eulerAngles.y,0),0);
         transform.rotation = Quaternion.Euler(0,transform.eulerAngles.y,0);
@@ -44,9 +49,15 @@ public class WoodenDummy : Enemy
         if(applyGravity)
         {
             _velocity.y += gravity * Time.deltaTime;
+            Debug.Log("AI Gravity affecting yVelocity: " + _velocity.y);
             //Getting a better jumping arc will probably be factored here
             transform.Translate(_velocity);
             //Debug.Log("Applying gravity" + _velocity.y);
+        }
+
+        if(_velocity.y < 0)
+        {
+            GetAnimator().SetBool("Jumping", false);
         }
     }
 }

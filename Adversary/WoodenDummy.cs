@@ -15,6 +15,7 @@ public class WoodenDummy : Enemy
     public LayerMask Ground;
     public float JumpHeight = 2f;
     public float GroundDistance = 0.2f;
+    private float groundedRayCastCount = 0;
 
 
     public void Update()
@@ -24,17 +25,17 @@ public class WoodenDummy : Enemy
         Debug.DrawRay(_groundChecker.position, Vector3.down * GroundDistance, Color.red);
         if(!_isGrounded)
         {
+            GroundDistance = 5;
             GetAnimator().SetBool("Grounded", false);
         }
         else
         {
             if(!GetAnimator().GetBool("Jumping"))
             {
+                GroundDistance = .74f;
                 _velocity.y = 0f;
                 GetAnimator().SetBool("Grounded", true);
             }
-            //_velocity.y = 0f;
-            //GetAnimator().SetBool("Jumping", false);
         }
 
         Gravity();

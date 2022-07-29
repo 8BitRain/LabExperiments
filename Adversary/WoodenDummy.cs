@@ -20,29 +20,33 @@ public class WoodenDummy : Enemy
 
     public void Update()
     {
-        RaycastHit groundedRaycast;
-        _isGrounded = Physics.Raycast(_groundChecker.position, Vector3.down, out groundedRaycast, GroundDistance, Ground);
-        Debug.DrawRay(_groundChecker.position, Vector3.down * GroundDistance, Color.red);
+        if(!GetAnimator().GetBool("Jumping"))
+        {
+            RaycastHit groundedRaycast;
+            _isGrounded = Physics.Raycast(_groundChecker.position, Vector3.down, out groundedRaycast, GroundDistance, Ground);
+            Debug.DrawRay(_groundChecker.position, Vector3.down * GroundDistance, Color.red);
+        }
+
+
         if(!_isGrounded)
         {
-            GroundDistance = 5;
             GetAnimator().SetBool("Grounded", false);
+            Gravity();
         }
         else
         {
             if(!GetAnimator().GetBool("Jumping"))
             {
-                GroundDistance = .74f;
                 _velocity.y = 0f;
                 GetAnimator().SetBool("Grounded", true);
             }
         }
 
-        Gravity();
-        
         //Lock Rotation
         //transform.DORotate(new Vector3(0,transform.eulerAngles.y,0),0);
         transform.rotation = Quaternion.Euler(0,transform.eulerAngles.y,0);
+
+        //Current Direciton we are facing
     }
 
     public void Gravity()

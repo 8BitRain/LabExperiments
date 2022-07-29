@@ -11,6 +11,7 @@ public class Jump : Action
     public string jumpAnimation;
     private Vector3 _velocity;
     private Enemy AIReference;
+    public float jumpForwardDistance = .05f;
 
     public override void OnStart()
     {
@@ -26,12 +27,16 @@ public class Jump : Action
         }
         AIReference = this.GetComponent<Enemy>();
 
+        WoodenDummy tackyAIReference = this.GetComponent<WoodenDummy>();
+        tackyAIReference._isGrounded = false;
+
         //reset y_velocity to prevent super bouncing
         _velocity = AIReference.GetVelocity();
-        AIReference.SetVelocity(new Vector3(_velocity.x, 0, _velocity.y));
+        AIReference.SetVelocity(new Vector3(_velocity.x, 0, _velocity.z));
         _velocity.y = 0; 
         //_velocity.y += Mathf.Sqrt(JumpHeight * -2f * gravity);
         _velocity.y += Mathf.Sqrt(1f * -2f * -4.9f);
+        _velocity.z += jumpForwardDistance;
         AIReference.SetVelocity(new Vector3(_velocity.x, _velocity.y, _velocity.z));
 
     }
@@ -42,6 +47,10 @@ public class Jump : Action
         bool isGrounded = animator.GetBool("Grounded");
         if(AIReference.GetVelocity().y < 0)
         {
+            /* Enabling creates a double jump effect
+            _velocity.z = 0;
+            AIReference.SetVelocity(new Vector3(_velocity.x, _velocity.y, _velocity.z));
+            */
             animator.SetBool("Jumping", false);
             //navMeshAgent.enabled = true;
             Debug.Log("We are now falling. End Jump action");

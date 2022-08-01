@@ -13,6 +13,8 @@ public class Enemy : MonoBehaviour
     public float seekRange = 40f;
     public float meleeRange = 10f;
     public float zoneAttackRange = 30f;
+    public float escapeRange = 15f;
+
     private Animator animator;
 
     protected Vector3 _velocity;
@@ -178,6 +180,21 @@ public class Enemy : MonoBehaviour
         if(behaviorTree.GetVariable("SeekRange") != null)
         {
             behaviorTree.GetVariable("SeekRange").SetValue(this.seekRange);
+        }
+
+        if(behaviorTree.GetVariable("MeleeRange") != null)
+        {
+            behaviorTree.GetVariable("MeleeRange").SetValue(this.meleeRange);
+        }
+
+        if(behaviorTree.GetVariable("ZoneAttackRange") != null)
+        {
+            behaviorTree.GetVariable("ZoneAttackRange").SetValue(this.zoneAttackRange);
+        }
+
+        if(behaviorTree.GetVariable("EscapeRange") != null)
+        {
+            behaviorTree.GetVariable("EscapeRange").SetValue(this.escapeRange);
         }
     }
 

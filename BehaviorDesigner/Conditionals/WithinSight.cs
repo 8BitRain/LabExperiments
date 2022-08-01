@@ -10,8 +10,10 @@ public class WithinSight : Conditional
    public string targetTag;
    // Set the target variable when a target has been found so the subsequent tasks know which object is the target
    public SharedGameObject targetGameObject;
+  
 
    public float range;
+   public SharedFloat seekRange;
 
    // A cache of all of the possible targets
    private Transform[] possibleTargets;

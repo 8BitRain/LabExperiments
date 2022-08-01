@@ -7,7 +7,7 @@ using UnityEngine.AI;
 //Return whether current agent is on an off link
 public class OffNavMeshLinkStatus : Conditional
 {
-    public NavMeshAgent navMeshAgent;
+    private NavMeshAgent navMeshAgent;
 
     public override void OnStart()
     {

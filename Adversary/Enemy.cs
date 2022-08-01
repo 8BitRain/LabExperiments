@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour
         this.animationController = GetComponent<AnimationController>();
         this.behaviorTree = GetComponent<BehaviorTree>();
         this.animator = GetComponent<Animator>();
+        BehaviorTreeInitialization();
     }
 
     private void OnEnable()
@@ -170,6 +171,14 @@ public class Enemy : MonoBehaviour
     public Animator GetAnimator()
     {
         return this.animator;
+    }
+
+    public void BehaviorTreeInitialization()
+    {
+        if(behaviorTree.GetVariable("SeekRange") != null)
+        {
+            behaviorTree.GetVariable("SeekRange").SetValue(this.seekRange);
+        }
     }
 
     #if UNITY_EDITOR

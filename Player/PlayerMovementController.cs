@@ -249,6 +249,12 @@ public class PlayerMovementController : MonoBehaviour
 
             if(direction.magnitude >= .1f && moveCharacter)
             {
+                
+                if(_isGrounded && !animator.GetBool("Landing"))
+                {
+                    animator.SetBool("Running", true);                    
+                }
+
                 //Acceleration
                 if(speed < topSpeed)
                 {
@@ -314,6 +320,10 @@ public class PlayerMovementController : MonoBehaviour
                     _controller.Move(wallVector * speed * Time.deltaTime); 
                 }          
             }
+            else
+            {
+                animator.SetBool("Running", false);
+            }
 
             if(direction.magnitude <= 0)
             {
@@ -324,6 +334,7 @@ public class PlayerMovementController : MonoBehaviour
             }
 
             if (jumpInput && canUseRightSideFaceButtonInputs){
+                animator.SetBool("Running", false);
                 if(_isGrounded && !_isWallRunning){
                     
                     print("jump");

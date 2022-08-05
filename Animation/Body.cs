@@ -47,6 +47,7 @@ public class Body : MonoBehaviour
 
         if(this.runningSFX != null && animator.GetBool("Running") || this.runningSFX != null && animator.GetBool("Chasing"))
         {
+            Debug.Log(this.gameObject.name + " playing audio");
             if(!this.runningSFX.isPlaying)
             {
                 this.runningSFX.Play();

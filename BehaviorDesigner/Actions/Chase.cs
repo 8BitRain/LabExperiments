@@ -35,7 +35,7 @@ public class Chase : Action
         {
             // Return a task status of failure once we've reached the target
             if (Vector3.Distance(transform.position, currentTarget.position) <= 10f) {
-                animator.SetBool("Chasing", false);
+                //animator.SetBool("Chasing", false);
                 return TaskStatus.Failure;
             }
 
@@ -50,7 +50,7 @@ public class Chase : Action
             bool reachedDestination = navMeshAgent.SetDestination(currentTarget.position);
             if(reachedDestination)
             {
-                animator.SetBool("Chasing", false);
+                //animator.SetBool("Chasing", false);
             }
             return reachedDestination ? TaskStatus.Running : TaskStatus.Failure;
         }

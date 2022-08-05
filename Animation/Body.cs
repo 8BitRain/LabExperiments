@@ -17,6 +17,9 @@ public class Body : MonoBehaviour
     public Transform VFXBlockSpawn;
     private GameObject VFXBlockInstance;
 
+    [Header("SFX Settings")]
+    public AudioSource runningSFX;
+
     [Header("UI Settings")]
     public Transform healthBarSpawn;
     public Transform staminaBarSpawn;
@@ -40,6 +43,21 @@ public class Body : MonoBehaviour
         else
         {
             DisableWeaponTrails();
+        }
+
+        if(this.runningSFX != null && animator.GetBool("Running") || this.runningSFX != null && animator.GetBool("Chasing"))
+        {
+            if(!this.runningSFX.isPlaying)
+            {
+                this.runningSFX.Play();
+            }
+        }
+        else
+        {
+            if(this.runningSFX != null && this.runningSFX.isPlaying)
+            {
+                this.runningSFX.Stop();
+            }
         }
     }
 

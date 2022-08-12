@@ -10,7 +10,45 @@ public class MenuController : MonoBehaviour
     private bool menuOpen = false;
     public RectTransform menu;
 
+    public enum MenuElementType
+    {
+        TEXT,
+        BLUR_EFFECT
+    }
+
+    public MenuElementType menuElementType;
+
     public InputActionReference startInput;
+    public GameObject playerReference;
+
+    private Camera camera;
+    private Canvas menuCanvas;
+
+    void Start()
+    {
+        if(playerReference != null)
+        {
+            camera = playerReference.GetComponent<CameraController>().GetCameraInstance().GetComponent<Camera>();
+            Debug.Log("Camera is: " + camera.name);
+        }
+
+
+        switch (menuElementType)
+        {
+            case MenuElementType.TEXT:
+                menuCanvas = menu.GetComponentInChildren<Canvas>();
+                menuCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                break;
+            case MenuElementType.BLUR_EFFECT:
+                menuCanvas = menu.GetComponentInChildren<Canvas>();
+                menuCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+                menuCanvas.worldCamera = camera;
+                menuCanvas.planeDistance = 1f;
+                break;
+            default:
+                break;
+        }
+    }
 
     void Update()
     {

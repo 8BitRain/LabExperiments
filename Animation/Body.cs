@@ -19,6 +19,7 @@ public class Body : MonoBehaviour
 
     [Header("SFX Settings")]
     public AudioSource runningSFX;
+    public AudioSource fallingSFX;
 
     [Header("UI Settings")]
     public Transform healthBarSpawn;
@@ -58,6 +59,26 @@ public class Body : MonoBehaviour
             if(this.runningSFX != null && this.runningSFX.isPlaying)
             {
                 this.runningSFX.Stop();
+            }
+        }
+
+        FallingSFXListener();
+    }
+    
+    public void FallingSFXListener()
+    {
+        if(this.fallingSFX != null && animator.GetBool("Falling"))
+        {
+            if(!this.fallingSFX.isPlaying)
+            {
+                this.fallingSFX.Play();
+            }
+        }
+        else
+        {
+             if(this.fallingSFX != null && fallingSFX.isPlaying)
+            {
+                this.fallingSFX.Stop();
             }
         }
     }

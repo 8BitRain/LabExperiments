@@ -21,6 +21,7 @@ public class Body : MonoBehaviour
     public AudioSource runningSFX;
     public AudioSource fallingSFX;
     public AudioSource jumpingSFX;
+    public AudioSource landSFX;
 
     [Header("UI Settings")]
     public Transform healthBarSpawn;
@@ -65,6 +66,7 @@ public class Body : MonoBehaviour
 
         FallingSFXListener();
         JumpingSFXListener();
+        LandSFXListener();
     }
     
     public void FallingSFXListener()
@@ -99,6 +101,24 @@ public class Body : MonoBehaviour
              if(this.jumpingSFX != null && jumpingSFX.isPlaying)
             {
                 this.jumpingSFX.Stop();
+            }
+        }
+    }
+
+    public void LandSFXListener()
+    {
+        if(this.landSFX != null && animator.GetBool("Landing"))
+        {
+            if(!this.landSFX.isPlaying)
+            {
+                this.landSFX.Play();
+            }
+        }
+        else
+        {
+             if(this.landSFX != null && landSFX.isPlaying)
+            {
+                this.landSFX.Stop();
             }
         }
     }

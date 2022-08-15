@@ -21,6 +21,7 @@ public class Body : MonoBehaviour
     public AudioSource runningSFX;
     public AudioSource fallingSFX;
     public AudioSource jumpingSFX;
+    public AudioSource voxSFX01;
     public AudioSource landSFX;
 
     [Header("UI Settings")]
@@ -67,6 +68,7 @@ public class Body : MonoBehaviour
         FallingSFXListener();
         JumpingSFXListener();
         LandSFXListener();
+        VoxListener();
     }
     
     public void FallingSFXListener()
@@ -119,6 +121,24 @@ public class Body : MonoBehaviour
              if(this.landSFX != null && landSFX.isPlaying)
             {
                 this.landSFX.Stop();
+            }
+        }
+    }
+
+    public void VoxListener()
+    {
+        if(this.voxSFX01 != null && animator.GetBool("Jumping"))
+        {
+            if(!this.voxSFX01.isPlaying)
+            {
+                this.voxSFX01.Play();
+            }
+        }
+        else
+        {
+             if(this.voxSFX01 != null && voxSFX01.isPlaying)
+            {
+                this.voxSFX01.Stop();
             }
         }
     }

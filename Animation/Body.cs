@@ -25,6 +25,9 @@ public class Body : MonoBehaviour
     public AudioSource voxSFX01;
     public AudioSource landSFX;
 
+    [Header("Ragdoll Settings")]
+    public GameObject ragdoll; 
+
     private bool resetJumpingSFX = false;
     [Header("UI Settings")]
     public Transform healthBarSpawn;
@@ -188,6 +191,14 @@ public class Body : MonoBehaviour
         if(GetVFXBlock() != null)
         {
             Destroy(GetVFXBlock());
+        }
+    }
+
+    public void InitiateRagdoll()
+    {
+        if(ragdoll != null)
+        {
+            Instantiate(ragdoll);
         }
     }
 }

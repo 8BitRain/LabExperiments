@@ -20,6 +20,7 @@ public class Enemy : MonoBehaviour
     protected Vector3 _velocity;
 
     private BehaviorTree behaviorTree;
+    private Body body;
 
     private AnimationController animationController;
 
@@ -28,6 +29,7 @@ public class Enemy : MonoBehaviour
         this.animationController = GetComponent<AnimationController>();
         this.behaviorTree = GetComponent<BehaviorTree>();
         this.animator = GetComponent<Animator>();
+        this.body = GetComponent<Body>();
         BehaviorTreeInitialization();
     }
 
@@ -152,7 +154,8 @@ public class Enemy : MonoBehaviour
         behaviorTree.enabled = false;
         GetAnimationController().ChangeAnimationState(GetAnimator(), "Knockdown");
         DeathFlash();
-        Destroy(this.gameObject, 5);
+        body.InitiateRagdoll();
+        Destroy(this.gameObject);
     }
 
     public Vector3 GetVelocity()

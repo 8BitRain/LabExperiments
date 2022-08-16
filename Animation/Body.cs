@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Body : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class Body : MonoBehaviour
     public AudioSource voxSFX01;
     public AudioSource landSFX;
 
+    private bool resetJumpingSFX = false;
     [Header("UI Settings")]
     public Transform healthBarSpawn;
     public Transform staminaBarSpawn;
@@ -78,6 +80,8 @@ public class Body : MonoBehaviour
             if(!this.fallingSFX.isPlaying)
             {
                 this.fallingSFX.Play();
+                this.fallingSFX.volume = 0;
+                fallingSFX.DOFade(1, 2.5f);
             }
         }
         else
@@ -91,19 +95,20 @@ public class Body : MonoBehaviour
 
     public void JumpingSFXListener()
     {
-        if(this.jumpingSFX != null && animator.GetBool("Jumping"))
+        if(this.jumpingSFX != null && animator.GetBool("Jumping") && !resetJumpingSFX)
         {
             if(!this.jumpingSFX.isPlaying)
             {
+                Debug.Log("SFX: " + "play jumping sfx");
                 this.jumpingSFX.Play();
+                resetJumpingSFX = true;
             }
         }
-        else
+
+        //Added to ensure sfx only plays once
+        if(resetJumpingSFX && !animator.GetBool("Jumping"))
         {
-             if(this.jumpingSFX != null && jumpingSFX.isPlaying)
-            {
-                this.jumpingSFX.Stop();
-            }
+            this.resetJumpingSFX = false;
         }
     }
 

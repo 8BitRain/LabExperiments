@@ -9,6 +9,7 @@ using UnityEngine;
 public class HurtBox : MonoBehaviour
 {
     public GameObject Agent;
+    private Transform lastCollisionPoint;
     //Events
     public static event Action<GameObject, GameObject, float, float> recievedCollision;
     public static event Action<GameObject, GameObject, AbilityComponent> gotCollision;
@@ -66,6 +67,7 @@ public class HurtBox : MonoBehaviour
             return;
         }
 
+        lastCollisionPoint = summoner.transform;
         CameraShake(summoner, abilityComponent);
         //Custom Event Assigned to Hurtbox to spawn a hit impact particle effect
         onRecievedCollision.Invoke();
@@ -95,6 +97,15 @@ public class HurtBox : MonoBehaviour
                 virtualCam.GetComponent<CinemachineScreenShake>().DoShake(abilityComponent.screenShakeComponent);
             }
         }
+    }
+
+    public Transform GetLastCollision()
+    {
+        if(lastCollisionPoint != null)
+        {   
+            return lastCollisionPoint;
+        }   
+        return null;
     }
 
     public void SpawnHitImpactVFX(GameObject vfx)

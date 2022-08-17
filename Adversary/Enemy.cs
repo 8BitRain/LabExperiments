@@ -16,12 +16,12 @@ public class Enemy : MonoBehaviour
     public float escapeRange = 15f;
 
     private Animator animator;
+    private Transform lastCollisionPoint;
 
     protected Vector3 _velocity;
 
     private BehaviorTree behaviorTree;
     private Body body;
-    private GameObject lastCollisionPoint;
 
     private AnimationController animationController;
 
@@ -50,7 +50,7 @@ public class Enemy : MonoBehaviour
             return;
         Debug.Log(gameObject.name + "is processing collision");
 
-        lastCollisionPoint = collisionPoint;
+        lastCollisionPoint = collisionPoint.GetComponent<HurtBox>().GetLastCollision();
 
         //Set Damaged State
         GetAnimator().SetBool("Wakeup", false);
@@ -157,7 +157,7 @@ public class Enemy : MonoBehaviour
         behaviorTree.enabled = false;
         GetAnimationController().ChangeAnimationState(GetAnimator(), "Knockdown");
         DeathFlash();
-        body.InitiateRagdoll();
+        body.InitiateRagdoll(lastCollisionPoint);
         Destroy(this.gameObject);
     }
 

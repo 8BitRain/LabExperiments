@@ -194,11 +194,12 @@ public class Body : MonoBehaviour
         }
     }
 
-    public void InitiateRagdoll()
+    public void InitiateRagdoll(Transform collisionPoint)
     {
         if(ragdoll != null)
         {
-            Instantiate(ragdoll);
+            Ragdoll ragdollInstance = Instantiate(ragdoll, collisionPoint.position, collisionPoint.rotation).GetComponent<Ragdoll>();
+            ragdollInstance.Initialize(collisionPoint);
         }
     }
 }

@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
 
     private BehaviorTree behaviorTree;
     private Body body;
+    private GameObject lastCollisionPoint;
 
     private AnimationController animationController;
 
@@ -48,6 +49,8 @@ public class Enemy : MonoBehaviour
         if(instance != this.gameObject)
             return;
         Debug.Log(gameObject.name + "is processing collision");
+
+        lastCollisionPoint = collisionPoint;
 
         //Set Damaged State
         GetAnimator().SetBool("Wakeup", false);

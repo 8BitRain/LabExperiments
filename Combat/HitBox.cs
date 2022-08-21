@@ -205,13 +205,26 @@ public class HitBox : MonoBehaviour
 
     public void ActivateHitBox()
     {
-        this.GetComponent<BoxCollider>().enabled = true;
-        
+        if(this.GetComponent<BoxCollider>() != null)
+        {
+            this.GetComponent<BoxCollider>().enabled = true; 
+        }
+        else if(this.GetComponent<MeshCollider>() != null)
+        {
+            this.GetComponent<MeshCollider>().enabled = true;
+        }
     }
 
     public void DeactivateHitBox()
     {
-        this.GetComponent<BoxCollider>().enabled = false;
+        if(this.GetComponent<BoxCollider>() != null)
+        {
+            this.GetComponent<BoxCollider>().enabled = false; 
+        }
+        else if(this.GetComponent<MeshCollider>() != null)
+        {
+            this.GetComponent<MeshCollider>().enabled = false;
+        }
         ClearTargetCollisions();
     }
 
@@ -268,6 +281,16 @@ public class HitBox : MonoBehaviour
             if(this.GetComponent<BoxCollider>().enabled)
             {
                 Gizmos.DrawWireCube(this.GetComponent<BoxCollider>().center, this.GetComponent<BoxCollider>().size);
+            }
+        }
+        else
+        {
+            if(this.GetComponent<MeshCollider>() != null)
+            {
+                if(this.GetComponent<MeshCollider>().enabled)
+                {
+                    Gizmos.DrawWireMesh(this.GetComponent<MeshCollider>().sharedMesh, -1);
+                }
             }
         }
     }

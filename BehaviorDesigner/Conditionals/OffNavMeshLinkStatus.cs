@@ -19,7 +19,7 @@ public class OffNavMeshLinkStatus : Conditional
 
     public override TaskStatus OnUpdate()
     {
-        if(navMeshAgent.isOnOffMeshLink)
+        if(navMeshAgent != null && navMeshAgent.isOnOffMeshLink)
         {
             Debug.Log("Agent is on an offMeshLink");
             return TaskStatus.Success;

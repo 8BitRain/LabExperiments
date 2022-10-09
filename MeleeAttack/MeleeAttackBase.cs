@@ -112,7 +112,25 @@ public class MeleeAttackBase : MonoBehaviour
         {
             meleeAttackInstance.transform.SetParent(GetPlayerReference().transform);
         }
-        meleeAttackInstance.transform.LookAt(Camera.main.transform.forward);
+
+        //Aim with reticle, or default to standard aim if not AI unit
+        if(!GetAIAgentStatus())
+        {
+            if(GetPlayerReference().GetComponent<MeleeAttackController>().reticle != null)
+            {
+                Debug.Log("Look at reticle");
+                //FPSReticle reticle = GetPlayerReference().GetComponent<MeleeAttackController>().reticle;
+                //meleeAttackInstance.transform.LookAt(Camera.main.ScreenToWorldPoint(reticle.GetWorldPosition()));
+            }
+            else
+            {
+                meleeAttackInstance.transform.LookAt(Camera.main.transform.forward);
+            }
+        }
+        else
+        {
+            meleeAttackInstance.transform.LookAt(Camera.main.transform.forward);
+        }
         
         //Iterate through ability instances modular components
         this.meleeCoroutine = StartCoroutine(PlayModularComponents());
@@ -364,6 +382,11 @@ public class MeleeAttackBase : MonoBehaviour
                 modularProjectile.gameObject.SetActive(false);
                 DOVirtual.DelayedCall(modularProjectile.projectileComponent.startDelay, () =>{
                     modularProjectile.gameObject.SetActive(true);
+                    if(!GetAIAgentStatus() && GetPlayerReference().GetComponent<MeleeAttackController>().reticle != null)
+                    {
+                        Vector3 lookAtPos = GetPlayerMovementController().GetComponent<MeleeAttackController>().reticle.GetWorldPosition();
+                        modularProjectile.transform.LookAt(new Vector3(lookAtPos.z, (lookAtPos.y/2), -1 * lookAtPos.x/2));
+                    }
                     //Fire the projectile parent. This is what actually controls travelling.
                     modularProjectile.Fire();
 

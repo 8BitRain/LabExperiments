@@ -16,7 +16,7 @@ public class Fall : Action
         this.GetComponent<AnimationController>().ChangeAnimationState(animator, fallAnimation);
         animator.SetBool("Falling", true);
         navMeshAgent = this.GetComponent<NavMeshAgent>();
-        if(!navMeshAgent.isOnOffMeshLink)
+        if(navMeshAgent != null && !navMeshAgent.isOnOffMeshLink)
         {
             Debug.Log("Not on mesh Off Link");
             navMeshAgent.enabled = false;
@@ -29,7 +29,10 @@ public class Fall : Action
         if(isGrounded)
         {
             animator.SetBool("Falling", false);
-            navMeshAgent.enabled = true;
+            if(navMeshAgent != null)
+            {
+                navMeshAgent.enabled = true;
+            }
             return TaskStatus.Success;
         }
         else

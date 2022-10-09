@@ -12,6 +12,8 @@ public class MeleeAttackController : MonoBehaviour
     public Transform Agent;
     public Transform meleeSpawn;
     public bool isAIAgent = false;
+    [Header("Reticle Settings")]
+    public FPSReticle reticle;
 
     [Header("Melee Settings")]
     public MeleeAttackBase lightAttack;
@@ -111,9 +113,13 @@ public class MeleeAttackController : MonoBehaviour
 
     public void PerformMelee(MeleeAttackType meleeAttackType)
     {
-        if(this.GetComponent<Status>().stamina <= 0)
+        //TODO: NUEDEAD GAME INVESTIGATE STAMINA
+        if(this.GetComponent<Status>() != null)
         {
-            return;
+            if(this.GetComponent<Status>().stamina <= 0)
+            {
+                return;
+            }
         }
 
         if(!GetIsAIAgent())
@@ -122,7 +128,12 @@ public class MeleeAttackController : MonoBehaviour
                 transform.LookAt(targetingController.targets[0]);
                 //transform.LookAt(new Vector3(targetingController.targets[0].transform.position.x, 0, targetingController.targets[0].transform.position.z));
         }
-        this.GetComponent<Status>().SetStamina(this.gameObject, 10f);
+
+        //TODO: NUEDEAD GAME INVESTIGATE STAMINA
+        if(this.GetComponent<Status>() != null)
+        {
+            this.GetComponent<Status>().SetStamina(this.gameObject, 10f);
+        }
         
         this.GetComponent<Animator>().SetBool("Attacking", true);
         switch (meleeAttackType)

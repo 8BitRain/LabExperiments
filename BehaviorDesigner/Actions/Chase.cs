@@ -15,6 +15,8 @@ public class Chase : Action
     private NavMeshAgent navMeshAgent;
     public string chaseAnimation;
 
+    public bool lockYPosition = false;
+
     public override void OnStart()
     {
         animator = this.GetComponent<Animator>();
@@ -40,7 +42,16 @@ public class Chase : Action
             }
 
             // We haven't reached the target yet so keep moving towards it
-            transform.position = Vector3.MoveTowards(transform.position, currentTarget.position, speed * Time.deltaTime);
+            if(lockYPosition == true)
+            {
+                Vector3 targetPos = new Vector3(currentTarget.position.x,transform.position.y,currentTarget.position.z);
+                transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+
+            }
+            else
+            {
+                transform.position = Vector3.MoveTowards(transform.position, currentTarget.position, speed * Time.deltaTime);
+            }
 
             return TaskStatus.Running;
         }

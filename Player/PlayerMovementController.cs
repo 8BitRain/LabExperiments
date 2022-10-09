@@ -88,24 +88,35 @@ public class PlayerMovementController : MonoBehaviour
     private bool _playerInMovementFrames = false;
     private bool useGravityLockPlayerInput = false;
 
+    public bool useAbilityWindow = true;
+
     private void OnEnable()
     {
-        EventsManager.instance.AbilityWindowActiveLockInput += LockInputRightSideControllerFaceButtons;
-        EventsManager.instance.AbilityWindowInactiveUnlockInput += UnlockInputRightSideControllerFaceButtons;
+        if(useAbilityWindow)
+        {
+            EventsManager.instance.AbilityWindowActiveLockInput += LockInputRightSideControllerFaceButtons;
+            EventsManager.instance.AbilityWindowInactiveUnlockInput += UnlockInputRightSideControllerFaceButtons;
+        }
         EventsManager.instance.Parried += OnParry;
     }
 
     private void OnDisable()
     {
-        EventsManager.instance.AbilityWindowActiveLockInput -= LockInputRightSideControllerFaceButtons;
-        EventsManager.instance.AbilityWindowInactiveUnlockInput -= UnlockInputRightSideControllerFaceButtons;
+        if(useAbilityWindow)
+        {
+            EventsManager.instance.AbilityWindowActiveLockInput -= LockInputRightSideControllerFaceButtons;
+            EventsManager.instance.AbilityWindowInactiveUnlockInput -= UnlockInputRightSideControllerFaceButtons;
+        }
         EventsManager.instance.Parried -= OnParry;
     }
 
     private void OnDestroy()
     {
-        EventsManager.instance.AbilityWindowActiveLockInput -= LockInputRightSideControllerFaceButtons;
-        EventsManager.instance.AbilityWindowInactiveUnlockInput -= UnlockInputRightSideControllerFaceButtons;
+        if(useAbilityWindow)
+        {
+            EventsManager.instance.AbilityWindowActiveLockInput -= LockInputRightSideControllerFaceButtons;
+            EventsManager.instance.AbilityWindowInactiveUnlockInput -= UnlockInputRightSideControllerFaceButtons;
+        }
         EventsManager.instance.Parried -= OnParry;
     }
 

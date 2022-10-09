@@ -207,10 +207,13 @@ public class HitBox : MonoBehaviour
     {
         if(this.GetComponent<BoxCollider>() != null)
         {
+            Debug.Log("Activating Box collider on " + this.transform.parent.name + " Hitbox");
             this.GetComponent<BoxCollider>().enabled = true; 
         }
-        else if(this.GetComponent<MeshCollider>() != null)
+        
+        if(this.GetComponent<MeshCollider>() != null)
         {
+            Debug.Log("Activating Mesh Collider collider on " + this.transform.parent.name + " Hitbox");
             this.GetComponent<MeshCollider>().enabled = true;
         }
     }

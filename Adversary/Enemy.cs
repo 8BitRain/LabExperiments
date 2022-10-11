@@ -159,6 +159,8 @@ public class Enemy : MonoBehaviour
         GetAnimationController().ChangeAnimationState(GetAnimator(), "Knockdown");
         DeathFlash();
         body.InitiateRagdoll(lastCollisionPoint);
+        //Update AI Controller and remove instance from spawned AI units
+        EventsManager.instance.OnUpdateAIController(this.gameObject);
         Destroy(this.gameObject);
     }
 

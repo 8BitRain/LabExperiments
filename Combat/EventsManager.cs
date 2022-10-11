@@ -12,7 +12,9 @@ public class EventsManager : MonoBehaviour
     [Header("Parry Settings")]
     public UnityEvent onParry;
     public ScreenShakeComponent parryScreenShake;
-
+    //AI
+    [Header("AI Settings")]
+    public AIDirector AIDirector;
     //VFX
     private Transform vfxTransform;
 
@@ -115,5 +117,10 @@ public class EventsManager : MonoBehaviour
     public void SpawnVFX(GameObject VFX)
     {
         GameObject spawnedVFX = Instantiate(VFX, this.vfxTransform.position, this.vfxTransform.rotation);
+    }
+
+    public void OnUpdateAIController(GameObject AIUnit)
+    {
+        AIDirector.spawnedWave.Remove(AIUnit);
     }
 }

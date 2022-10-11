@@ -42,7 +42,7 @@ public class AIDirector : MonoBehaviour
                 //Access the AIEnemyDictionary to spawn the correct AI unit based 
                 //on the information supplied by wave
                 Debug.Log("Load " + AIEnemyDictionary[wave.AIUnits[i].AIUnitEntity]);
-                Vector3 spawnOffset = new Vector3(0, 20, Random.Range(0,40)) + spawnOrigin.position;
+                Vector3 spawnOffset = new Vector3(0, 20, Random.Range(-40,40)) + spawnOrigin.position;
                 GameObject AIUnit = Instantiate(AIEnemyDictionary[wave.AIUnits[i].AIUnitEntity], spawnOffset, spawnOrigin.rotation).gameObject;
                 AIUnit.transform.SetParent(AIGroup);
 

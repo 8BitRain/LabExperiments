@@ -10,6 +10,7 @@ using BehaviorDesigner.Runtime;
 
 public class Enemy : MonoBehaviour
 {
+    public AIUnit.AIUnitType AIUnitType;
     public float seekRange = 40f;
     public float meleeRange = 10f;
     public float zoneAttackRange = 30f;

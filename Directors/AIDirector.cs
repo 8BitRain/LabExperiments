@@ -49,6 +49,7 @@ public class AIDirector : MonoBehaviour
                 AIUnit.GetComponent<BehaviorTree>().SetVariableValue("TargetGameObject", Player);
                 
                 spawnedWave.Add(AIUnit);
+                Player.GetComponent<CameraController>().LoadAIHealthBars();
             }
         }
         return spawnedWave;

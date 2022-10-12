@@ -68,13 +68,18 @@ public class CameraController : MonoBehaviour
         cameraInstance.tag = "MainCamera";
 
         Debug.Log(cameraInstance);
-        onCameraLoaded?.Invoke(cameraInstance);
+        //onCameraLoaded?.Invoke(cameraInstance);
     }
 
     // Update is called once per frame
     void Update()
     {
         //UpdateDynamicTargetLockCam();
+    }
+
+    public void LoadAIHealthBars()
+    {
+        onCameraLoaded?.Invoke(cameraInstance);
     }
 
     public void ShowDutchedLetterBox(GameObject instance)

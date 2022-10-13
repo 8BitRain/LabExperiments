@@ -59,10 +59,20 @@ public class MeleeAttackBase : MonoBehaviour
 
     void OnDestroy()
     {
+        StopAllCoroutines();
         if(!cooldownTriggered)
         {
-            EngageCooldown();
+            try
+            {
+                EngageCooldown(); 
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError("There was a problem Engaging Cooldown >_<: " + e);
+            }
         }
+
+        //OnEnded coroutines were causing load level issues
         Destroy(meleeAttackInstance.gameObject);
     }
 

@@ -20,6 +20,8 @@ public class LabGameManager : MonoBehaviour
     {
         if(playerSpawnEvent != null)
         {
+            Debug.Log("CINEMATIC INTRO FOR 5 SECONDS");
+            StopAllCoroutines();
             StartCoroutine(PlayerSpawnLogic(5f)); 
         }
     }
@@ -27,8 +29,11 @@ public class LabGameManager : MonoBehaviour
 
     public IEnumerator PlayerSpawnLogic(float time)
     {
-        yield return new WaitForSeconds(time);
+        Debug.Log("CINEMATIC COROUTINE START COMPLETE, Load Player");
+        yield return new WaitForSecondsRealtime(time);
+        Debug.Log("CINEMATIC INTRO COMPLETE, Load Player");
         playerSpawnEvent.Invoke();
+        yield break;
     }    
 
 }

@@ -13,6 +13,11 @@ public class AnimationController : MonoBehaviour
         
     }
 
+    void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
+
     public void ChangeAnimationState(Animator animator, string newState, float normalizedTime = 0)
     {
         if(currentState == newState)
@@ -63,7 +68,14 @@ public class AnimationController : MonoBehaviour
 
     public void PlayerAnimationLock(float duration, PlayerMovementController player, bool isMobileSkill)
     {
-        StartCoroutine(PlayerAnimationLockCoroutine(duration, player, isMobileSkill));
+        try
+        {
+            StartCoroutine(PlayerAnimationLockCoroutine(duration, player, isMobileSkill));
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("There was an error locking this objects animation >_<: " + e);
+        }
     }
 
     public IEnumerator PlayerAnimationLockCoroutine(float duration, PlayerMovementController player, bool isMobileSkill)

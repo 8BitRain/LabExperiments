@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using Cinemachine;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 
 public class EventsManager : MonoBehaviour
@@ -12,9 +13,17 @@ public class EventsManager : MonoBehaviour
     [Header("Parry Settings")]
     public UnityEvent onParry;
     public ScreenShakeComponent parryScreenShake;
+    [Header("Player Defated Settings")]
+    public UnityEvent onPlayerDefeated;
     //AI
     [Header("AI Settings")]
     public AIDirector AIDirector;
+
+    [Header("UI Settings")]
+    public Canvas ContinueGameScreen;
+
+    [Header("Game Data")]
+    public GameData gameData;
     //VFX
     private Transform vfxTransform;
 
@@ -28,8 +37,11 @@ public class EventsManager : MonoBehaviour
             instance = this;
         else
         {
+            Debug.Log("Destroying EventsManager instance");
             Destroy(this);
         }
+
+        UpdateGameData();
     }
 
     public event Action<GameObject> AbilityWindowActiveLockInput;
@@ -122,5 +134,22 @@ public class EventsManager : MonoBehaviour
     public void OnUpdateAIController(GameObject AIUnit)
     {
         AIDirector.spawnedWave.Remove(AIUnit);
+    }
+
+    public void LoadContinueScreen()
+    {
+        SceneManager.LoadScene("Continue");
+    }
+
+    public void UpdateGameData()
+    {
+        try
+        {
+            gameData.currentScene = SceneManager.GetActiveScene().name;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("There was an issue updating game data >_<. Here's why....\n" + e);
+        }
     }
 }

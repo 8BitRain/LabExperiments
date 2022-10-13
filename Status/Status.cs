@@ -45,6 +45,7 @@ public class Status : MonoBehaviour
             else
             {
                 //TODO add logic for player character. 
+                EventsManager.instance.onPlayerDefeated.Invoke();
             }
         }
     }

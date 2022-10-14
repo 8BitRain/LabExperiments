@@ -69,7 +69,14 @@ public class EventsManager : MonoBehaviour
         this.vfxTransform = hitBoxInstance;
         this.parrySFX = parrySFX;
         this.GetComponent<AudioSource>().clip = this.parrySFX;
-        onParry.Invoke();
+        try
+        {
+            onParry.Invoke();
+        }
+        catch (System.Exception)
+        {
+        
+        }
         CameraShake(hitBoxSummonerA, parryScreenShake);
         CameraShake(hitBoxSummonerB, parryScreenShake);
         Parried?.Invoke(hitBoxSummonerA, hitBoxSummonerB);
@@ -138,6 +145,12 @@ public class EventsManager : MonoBehaviour
 
     public void LoadContinueScreen()
     {
+        StartCoroutine(LoadDelay());
+    }
+
+    public IEnumerator LoadDelay()
+    {
+        yield return new WaitForSecondsRealtime(2);
         SceneManager.LoadScene("Continue");
     }
 

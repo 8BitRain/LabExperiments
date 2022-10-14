@@ -60,7 +60,7 @@ public class MeleeAttackBase : MonoBehaviour
     void OnDestroy()
     {
         StopAllCoroutines();
-        if(!cooldownTriggered)
+        if(!cooldownTriggered && !GetAIAgentStatus())
         {
             try
             {

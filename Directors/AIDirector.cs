@@ -54,4 +54,14 @@ public class AIDirector : MonoBehaviour
         }
         return spawnedWave;
     }
+
+    public void DestroyAllActiveAIUnits()
+    {
+        foreach (GameObject aiUnit in spawnedWave)
+        {
+            Destroy(aiUnit);
+        }
+
+        spawnedWave.Clear();
+    }
 }

@@ -12,7 +12,7 @@ public class SpawnWave : Action
     public override void OnStart()
     {
         AIDirector = transform.GetComponent<AIDirector>();
-        spawnedWave.Value = AIDirector.SpawnAIUnits(AIDirector.Waves[0]);
+        spawnedWave.Value = AIDirector.SpawnAIUnits(AIDirector.Waves[Random.Range(0, AIDirector.Waves.Length - 1)]);
 
     }
     public override TaskStatus OnUpdate()

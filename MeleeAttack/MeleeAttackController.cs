@@ -148,6 +148,7 @@ public class MeleeAttackController : MonoBehaviour
                 InitializeAbility(lightAttackInstance);
                 lightAttackInstance.Melee();
                 UpdateLightAttackState();
+                DealDamageToSelf(lightAttackInstance);
                 return;
             case MeleeAttackType.Heavy:
                 heavyAttackInstance = Instantiate(heavyAttack);
@@ -243,6 +244,31 @@ public class MeleeAttackController : MonoBehaviour
             Debug.Log("Canceling Dash");
             dashInTween.Kill();
             isDashingIn = false;
+        }
+    }
+
+    public void DealDamageToSelf(MeleeAttackBase meleeAttackBase)
+    {
+        //TODO for a move to do damage to oneself, we want to make sure the animation and all other logic play before destruction of
+        //the game object
+        //So what we can do is wait for the animation time + lifetime of spawned attack?
+        if(meleeAttackBase.GetMeleeAttackComponent() != null)
+        {
+            if(meleeAttackBase.GetMeleeAttackComponent().collisionComponent.damageSelf == true)
+            {
+                if(this.GetComponent<Status>() != null)
+                {
+                    //TODO remove references to animationCompleteWaitTime
+                    DOVirtual.DelayedCall(meleeAttackBase.GetMeleeAttackComponent().animationComponent.animationEndDelay, () => {
+                        Debug.Log(this.gameObject.name + ":Self Destruct!");
+                        this.GetComponent<Status>().SetHP(this.gameObject, null, meleeAttackBase.GetMeleeAttackComponent());
+                    });
+                }
+            }
+        }
+        else
+        {
+            Debug.LogError(this.gameObject.name + ": attempted to Self Destruct but could not");
         }
     }
 

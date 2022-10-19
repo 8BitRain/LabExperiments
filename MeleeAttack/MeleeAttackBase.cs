@@ -627,6 +627,7 @@ public class MeleeAttackBase : MonoBehaviour
                     break;
             }
         }
+
     }
 
     public void StartHitStop()
@@ -657,5 +658,10 @@ public class MeleeAttackBase : MonoBehaviour
     {
         GetAnimationController().CancelHitStop();
         Destroy(this.gameObject);
+    }
+
+    public MeleeAttackComponent GetMeleeAttackComponent()
+    {
+        return this.meleeAttackInstance.GetComponent<IMeleeAttackComponent>().GetMeleeAttackComponent();
     }
 }

@@ -19,6 +19,8 @@ public class MeleeAttackBase : MonoBehaviour
     
     [Header("Attack Components")]
     public GameObject attackComponent;
+
+
     
 
     [Header("Melee Settings")]
@@ -64,6 +66,8 @@ public class MeleeAttackBase : MonoBehaviour
         {
             try
             {
+                //Update animation weights if they exist
+                UpdateAnimationLayerWeights(GetMeleeAttackComponent(), true);
                 EngageCooldown(); 
             }
             catch (System.Exception e)
@@ -305,6 +309,7 @@ public class MeleeAttackBase : MonoBehaviour
         //Does player have an animation component?
         if(meleeAttackComponent.animationComponent != null)
         {
+            
             string animation = meleeAttackComponent.animationComponent.animation.ToString();
             Debug.Log("Play Animation: " + animation);
             //Reset animation state first
@@ -312,6 +317,9 @@ public class MeleeAttackBase : MonoBehaviour
 
             //Play Animation
             GetAnimationController().ChangeAnimationState(GetPlayerReference().GetComponent<Animator>(),animation);
+
+            //Update Animation Layer Weights (if applicable)
+            UpdateAnimationLayerWeights(meleeAttackComponent);
         }
 
         //TODO check if player can turn while using this skill
@@ -348,6 +356,24 @@ public class MeleeAttackBase : MonoBehaviour
             summonClone.UpdateSummonAnimation(cloneInstance, GetPlayerReference().GetComponent<Animator>(), GetAnimationController());
         }
     
+    }
+    
+    public void UpdateAnimationLayerWeights(MeleeAttackComponent meleeAttackComponent, bool resetWeights = false)
+    {
+        float[] layerWieghts = meleeAttackComponent.animationComponent.layerWeights;
+        //ASSUMPTION We skip the assumed layer first layer 0
+        for (int i = 0; i < layerWieghts.Length; i++)
+        {
+            if(resetWeights == false)
+            {
+                GetAnimationController().SetAnimatorWeight(GetPlayerReference().GetComponent<Animator>(), i + 1, layerWieghts[0]);
+            }
+            else
+            {
+                //Debug.Log("Resetting animation layer weight, )
+                GetAnimationController().SetAnimatorWeight(GetPlayerReference().GetComponent<Animator>(), i + 1, 0);
+            }
+        }
     }
 
     public void SummonVFX(GameObject modularAbilityInstance)

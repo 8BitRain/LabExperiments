@@ -14,4 +14,7 @@ public class AnimationComponent : ScriptableObject
     [Header("HitStop")]
     public bool applyHitStop = false;
     public float hitStopDuration = 0;
+
+    [Header("LayerWeights")]
+    public float[] layerWeights;
 }

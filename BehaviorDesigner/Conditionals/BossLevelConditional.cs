@@ -3,7 +3,7 @@ using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using DG.Tweening;
 
-public class BossLevelconditional : Conditional
+public class BossLevelConditional : Conditional
 {
 
     

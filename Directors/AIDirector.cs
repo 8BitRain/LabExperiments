@@ -9,8 +9,13 @@ public class AIDirector : MonoBehaviour
     public Wave[] BossWaves;
     public Enemy[] AIEnemies;
 
-    //public int standardWaveCount = 0;
+    public Enemy[] BossAI;
 
+    [Header("Wave Generator Amount")]
+    public int standardWaveCount = 0;
+    private int standardWaveIndex = 0;
+
+    [Header("Wave Generator Spawn")]
     public Transform AIGroup;
 
     public Transform spawnOrigin;
@@ -21,6 +26,7 @@ public class AIDirector : MonoBehaviour
 
 
     private Dictionary<AIUnit.AIUnitType, Enemy> AIEnemyDictionary = new Dictionary<AIUnit.AIUnitType, Enemy>();
+    private Dictionary<AIUnit.AIUnitType, Enemy> BossAIEnemyDictionary = new Dictionary<AIUnit.AIUnitType, Enemy>();
     // Start is called before the first frame update
     void Start()
     {
@@ -28,7 +34,12 @@ public class AIDirector : MonoBehaviour
         {
             AIEnemyDictionary.Add(enemy.AIUnitType, enemy);
         }
-        SpawnAIUnits(Waves[0]);
+
+        foreach(Enemy enemy in BossAI)
+        {
+            BossAIEnemyDictionary.Add(enemy.AIUnitType, enemy);
+        }
+        //SpawnAIUnits(Waves[0]);
     }
 
     // Update is called once per frame
@@ -56,8 +67,35 @@ public class AIDirector : MonoBehaviour
                 Player.GetComponent<CameraController>().LoadAIHealthBars();
             }
         }
+        //IncrementWaveIndex
+        standardWaveIndex++;
         return spawnedWave;
     }
+
+    public List<GameObject> SpawnBossAIUnits(Wave wave)
+    {
+        //Loop through the wave and spawn the AI unity from the Wave
+        for (int i = 0; i < wave.AIUnits.Length; i++)
+        {
+            for(int j = 0; j < wave.AIUnits[i].multiple; j++)
+            {
+                //Access the AIEnemyDictionary to spawn the correct AI unit based 
+                //on the information supplied by wave
+                Debug.Log("Load " + BossAIEnemyDictionary[wave.AIUnits[i].AIUnitEntity]);
+                Vector3 spawnOffset = new Vector3(0, 20, Random.Range(spawnRange.x,spawnRange.y)) + spawnOrigin.position;
+                GameObject AIUnit = Instantiate(BossAIEnemyDictionary[wave.AIUnits[i].AIUnitEntity], spawnOffset, spawnOrigin.rotation).gameObject;
+                AIUnit.transform.SetParent(AIGroup);
+                AIUnit.GetComponent<BehaviorTree>().SetVariableValue("TargetGameObject", Player);
+                
+                spawnedWave.Add(AIUnit);
+                Player.GetComponent<CameraController>().LoadAIHealthBars();
+            }
+        }
+        standardWaveIndex++;
+        return spawnedWave;
+    }
+
+
 
     public void DestroyAllActiveAIUnits()
     {
@@ -69,8 +107,13 @@ public class AIDirector : MonoBehaviour
         spawnedWave.Clear();
     }
 
-    /*public int GetWaveCount()
+    public int GetStandardWaveCount()
     {
-        return wave
-    }*/
+        return standardWaveCount;
+    }
+
+    public int GetStandardWaveIndex()
+    {
+        return standardWaveIndex;
+    }
 }

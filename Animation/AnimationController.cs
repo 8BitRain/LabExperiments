@@ -104,6 +104,7 @@ public class AnimationController : MonoBehaviour
         animator.SetLayerWeight(index, value);
     }
 
+
     public void HitStop(float duration, float stoppedAnimationTime, string animationStateBeforeReset)
     {
         this.hitStopCoroutine = StartCoroutine(HitStopDelay(duration, stoppedAnimationTime, animationStateBeforeReset));

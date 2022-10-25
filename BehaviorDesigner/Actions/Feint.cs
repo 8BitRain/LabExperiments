@@ -11,7 +11,9 @@ public class Feint : Action
         Backward,
         Left,
         Right,
-        Stationary
+        Stationary,
+
+        Random
     }
 
     public FeintDirection feintDirection;
@@ -20,6 +22,8 @@ public class Feint : Action
     public string animationName;
 
     public float movementDistance;
+
+    public float time = 1;
     private Transform currentTarget;
 
     public override TaskStatus OnUpdate()
@@ -33,18 +37,21 @@ public class Feint : Action
         switch (feintDirection)
         {
             case FeintDirection.Forward:
-                transform.DOMove(transform.position + transform.forward * movementDistance, 1);
+                transform.DOMove(transform.position + transform.forward * movementDistance, time);
                 break;
             case FeintDirection.Backward:
-                transform.DOMove(transform.position + -transform.forward * movementDistance, 1);
+                transform.DOMove(transform.position + -transform.forward * movementDistance, time);
                 break;
             case FeintDirection.Left:
-                transform.DOMove(transform.position + -transform.right * movementDistance, 1);
+                transform.DOMove(transform.position + -transform.right * movementDistance, time);
                 break;
             case FeintDirection.Right:
-                transform.DOMove(transform.position + transform.right * movementDistance, 1);
+                transform.DOMove(transform.position + transform.right * movementDistance, time);
                 break;
             case FeintDirection.Stationary:
+                break;
+            case FeintDirection.Random:
+                chooseDirection();
                 break;
             default:
                 break;
@@ -52,5 +59,19 @@ public class Feint : Action
 
         transform.GetComponent<AnimationController>().ChangeAnimationState(transform.GetComponent<Animator>(),animationName);
         return TaskStatus.Success;
+    }
+
+    public void chooseDirection()
+    {
+        int randomNum = Random.Range(0, 100);
+        
+        if(randomNum%2 == 0)
+        {
+            transform.DOMove(transform.position + -transform.right * movementDistance, 1);
+        }
+        else
+        {
+            transform.DOMove(transform.position + transform.right * movementDistance, 1);
+        }
     }
 }

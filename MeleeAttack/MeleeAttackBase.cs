@@ -61,13 +61,13 @@ public class MeleeAttackBase : MonoBehaviour
 
     void OnDestroy()
     {
+        //Update animation weights if they exist
+        //UpdateAnimationLayerWeights(GetMeleeAttackComponent(), true);
         StopAllCoroutines();
         if(!cooldownTriggered && !GetAIAgentStatus())
         {
             try
             {
-                //Update animation weights if they exist
-                UpdateAnimationLayerWeights(GetMeleeAttackComponent(), true);
                 EngageCooldown(); 
             }
             catch (System.Exception e)
@@ -318,8 +318,8 @@ public class MeleeAttackBase : MonoBehaviour
             //Play Animation
             GetAnimationController().ChangeAnimationState(GetPlayerReference().GetComponent<Animator>(),animation);
 
-            //Update Animation Layer Weights (if applicable)
-            UpdateAnimationLayerWeights(meleeAttackComponent);
+            //Update Animation Layer Weights (if applicable)moving to Behavior Designer logic
+            //UpdateAnimationLayerWeights(meleeAttackComponent);
         }
 
         //TODO check if player can turn while using this skill
@@ -370,7 +370,7 @@ public class MeleeAttackBase : MonoBehaviour
             }
             else
             {
-                //Debug.Log("Resetting animation layer weight, )
+                Debug.Log("Resetting animation layer weight, " + GetPlayerReference().GetComponent<Animator>().GetLayerName(i + 1));
                 GetAnimationController().SetAnimatorWeight(GetPlayerReference().GetComponent<Animator>(), i + 1, 0);
             }
         }

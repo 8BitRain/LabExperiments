@@ -6,7 +6,10 @@ public class AIDirector : MonoBehaviour
 {
     [Header("Wave Generator")]
     public Wave[] Waves;
+    public Wave[] BossWaves;
     public Enemy[] AIEnemies;
+
+    //public int standardWaveCount = 0;
 
     public Transform AIGroup;
 
@@ -65,4 +68,9 @@ public class AIDirector : MonoBehaviour
 
         spawnedWave.Clear();
     }
+
+    /*public int GetWaveCount()
+    {
+        return wave
+    }*/
 }

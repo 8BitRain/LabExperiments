@@ -8,7 +8,6 @@ public class PlayAnimation : Action
     private Transform currentTarget;
     public string animationName;
     public float animationTime;
-
     private bool endAnimation = false;
     public override void OnStart()
     {
@@ -25,6 +24,8 @@ public class PlayAnimation : Action
             DOVirtual.DelayedCall(animationTime, () => {
                 endAnimation = true;
             }, false);
+
+            //If we can play a seperate animation layer, lets select the index, set the speed 
         }
 
         if(endAnimation)

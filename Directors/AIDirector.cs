@@ -15,6 +15,8 @@ public class AIDirector : MonoBehaviour
     public int standardWaveCount = 0;
     private int standardWaveIndex = 0;
 
+    private bool bossWaveSpawned = false;
+
     [Header("Wave Generator Spawn")]
     public Transform AIGroup;
 
@@ -92,6 +94,7 @@ public class AIDirector : MonoBehaviour
             }
         }
         standardWaveIndex++;
+        bossWaveSpawned = true;
         return spawnedWave;
     }
 
@@ -115,5 +118,10 @@ public class AIDirector : MonoBehaviour
     public int GetStandardWaveIndex()
     {
         return standardWaveIndex;
+    }
+
+    public bool HasBossWaveSpawned()
+    {
+        return bossWaveSpawned;
     }
 }

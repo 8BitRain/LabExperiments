@@ -7,6 +7,9 @@ public class LevelAssetGenerator : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject[] levelAssets;
+    public GameObject bossArea;
+
+    public AIDirector AIDirector;
     void Start()
     {
         
@@ -22,6 +25,12 @@ public class LevelAssetGenerator : MonoBehaviour
     {
         int randomNumMax = levelAssets.Length;
         GameObject generatedLevelAsset = Instantiate(levelAssets[Random.Range(0, randomNumMax)]);
+        return generatedLevelAsset;
+    }
+
+    public GameObject GenerateBossLevelAsset()
+    {
+        GameObject generatedLevelAsset = Instantiate(bossArea);
         return generatedLevelAsset;
     }
 }

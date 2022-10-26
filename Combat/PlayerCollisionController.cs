@@ -16,7 +16,7 @@ public class PlayerCollisionController : CollisionController
         playerAnimator = this.GetComponent<Animator>();
     }
 
-    public override void CollisionLogic(GameObject instance, GameObject collisionPoint, AbilityComponent abilityComponent)
+    public override void CollisionLogic(GameObject instance, GameObject collisionPoint, GameObject damageDealer, AbilityComponent abilityComponent)
     {
         if(instance != this.gameObject)
             return;

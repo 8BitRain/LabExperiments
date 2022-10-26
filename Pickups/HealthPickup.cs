@@ -5,15 +5,15 @@ using UnityEngine;
 public class HealthPickup : MonoBehaviour
 {
     public GameObject healthPickupVFX;
-    public AudioClip healthPickupSFX;
+    public AudioSource healthPickupSFX;
     private void OnEnable()
     {
-        HealthOrb.onPickupHealth += CollisionLogic;
+        HealthOrb.onPickupHealth += PickupHealth;
     }
 
     private void OnDisable()
     {
-        HurtBox.gotCollision -= CollisionLogic;
+        HealthOrb.onPickupHealth -= PickupHealth;
     }
     // Start is called before the first frame update
     void Start()
@@ -27,8 +27,14 @@ public class HealthPickup : MonoBehaviour
         
     }
 
-    public void PickupHealth()
+    public void PickupHealth(GameObject instance, float health)
     {
-        Instantiate(health)
+        Status status = this.GetComponent<Status>();
+        status.HPPickup(health);
+        Transform spawnPos = this.GetComponent<Body>().Head;
+        Vector3 spawnPos2 = transform.TransformPoint(this.GetComponent<BoxCollider>().center - new Vector3(0, 10, 0));
+        //Instantiate(healthPickupVFX, spawnPos.position, spawnPos.rotation);
+        Instantiate(healthPickupVFX, spawnPos2, Quaternion.identity);
+        healthPickupSFX.Play();
     }
 }

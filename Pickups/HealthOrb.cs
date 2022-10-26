@@ -21,12 +21,15 @@ public class HealthOrb : MonoBehaviour
     {
         if(recievingEntity == null)
         {
+            Debug.Log("Recieving Entity is null");
             return;
         }
 
         if(other.gameObject == recievingEntity)
         {
+            Debug.Log("health pickup collided with " + recievingEntity.name);
             onPickupHealth.Invoke(recievingEntity, powerup.healthIncrease);
+            Destroy(this.gameObject);
         }
     }
 
@@ -38,6 +41,8 @@ public class HealthOrb : MonoBehaviour
     public void FlyToRecievingEntity()
     {
         transform.LookAt(recievingEntity.transform);
-        transform.DOMove(transform.position + transform.forward*speed, 1.0f);
+        transform.DOMove(transform.position + transform.up*speed, 1.0f).OnComplete( () => {
+            transform.DOMove(recievingEntity.transform.position, .5f);
+        });
     }
 }

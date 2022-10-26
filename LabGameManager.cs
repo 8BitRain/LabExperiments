@@ -14,11 +14,13 @@ public class LabGameManager : MonoBehaviour
     public Transform[] spawnedPlayers;
 
     [Header("Spawn Player Event Logic")]
+    public bool lockSpawnEvent = false;
     public UnityEvent playerSpawnEvent;
+
 
     public void Start()
     {
-        if(playerSpawnEvent != null)
+        if(playerSpawnEvent != null && lockSpawnEvent != true)
         {
             Debug.Log("CINEMATIC INTRO FOR 5 SECONDS");
             StopAllCoroutines();

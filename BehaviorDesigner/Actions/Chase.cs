@@ -15,6 +15,8 @@ public class Chase : Action
     private NavMeshAgent navMeshAgent;
     public string chaseAnimation;
 
+    public float stoppingDistance = 10;
+
     public bool lockYPosition = false;
 
     public override void OnStart()
@@ -36,7 +38,7 @@ public class Chase : Action
         if(navMeshAgent == null)
         {
             // Return a task status of failure once we've reached the target
-            if (Vector3.Distance(transform.position, currentTarget.position) <= 10f) {
+            if (Vector3.Distance(transform.position, currentTarget.position) <= stoppingDistance) {
                 //animator.SetBool("Chasing", false);
                 return TaskStatus.Failure;
             }

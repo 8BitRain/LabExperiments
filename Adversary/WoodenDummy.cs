@@ -31,6 +31,14 @@ public class WoodenDummy : Enemy
         if(!_isGrounded)
         {
             GetAnimator().SetBool("Grounded", false);
+            if(GetAnimator().GetBool("Attacking") == false)
+            {
+                applyGravity = true;
+            }
+            else
+            {
+                applyGravity = false;
+            }
             Gravity();
         }
         else
@@ -38,7 +46,9 @@ public class WoodenDummy : Enemy
             if(!GetAnimator().GetBool("Jumping"))
             {
                 _velocity.y = 0f;
+                _velocity.x = 0f;
                 GetAnimator().SetBool("Grounded", true);
+                applyGravity = false;
             }
         }
 

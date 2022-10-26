@@ -325,6 +325,7 @@ public class MeleeAttackBase : MonoBehaviour
         //TODO check if player can turn while using this skill
         if(targetInstance != null && meleeAttackComponent.lookAtTarget)
         {
+            Debug.Log("APPLYING LOOK AT LOGIC");
             if(meleeAttackComponent.lookAtTargetLockY)
             {
                 GetPlayerReference().transform

@@ -8,6 +8,8 @@ public class StartCombat : Action
     // The transform that the object is moving towards
     public SharedGameObject targetGameObject;
     public MeleeAttackController.MeleeAttackType attackType;
+
+    public bool targetHead = false;
     private NavMeshAgent navMeshAgent;
 
     private Transform currentTarget;
@@ -27,9 +29,21 @@ public class StartCombat : Action
 
         //Return a task status of success once combat action has been performed
         Debug.Log("CurrentAnimationState" + transform.GetComponent<AnimationController>().GetCurrentState());
-        transform.LookAt(currentTarget);
+        TargetLock(targetHead);
         transform.GetComponent<MeleeAttackController>().PerformMelee(attackType);
-        transform.LookAt(currentTarget);
+        TargetLock(targetHead);
         return TaskStatus.Success;
+    }
+
+    public void TargetLock(bool lookAtHead)
+    {
+        if(lookAtHead && currentTarget.GetComponent<Body>().Head != null)
+        {
+            transform.LookAt(currentTarget.GetComponent<Body>().Head);
+        }
+        else
+        {
+            transform.LookAt(currentTarget);
+        }
     }
 }

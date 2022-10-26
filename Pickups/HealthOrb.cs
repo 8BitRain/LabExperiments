@@ -7,13 +7,13 @@ public class HealthOrb : MonoBehaviour
 {
     public Powerup powerup;
     public float speed;
-    private GameObject recievingEntity;
+    public GameObject recievingEntity;
 
-    public event Action<GameObject, float> onPickupHealth;
+    public static event Action<GameObject, float> onPickupHealth;
     // Start is called before the first frame update
     void Start()
     {
-        
+        FlyToRecievingEntity();
     }
 
 

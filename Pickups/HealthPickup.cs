@@ -4,6 +4,17 @@ using UnityEngine;
 
 public class HealthPickup : MonoBehaviour
 {
+    public GameObject healthPickupVFX;
+    public AudioClip healthPickupSFX;
+    private void OnEnable()
+    {
+        HealthOrb.onPickupHealth += CollisionLogic;
+    }
+
+    private void OnDisable()
+    {
+        HurtBox.gotCollision -= CollisionLogic;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +25,10 @@ public class HealthPickup : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void PickupHealth()
+    {
+        Instantiate(health)
     }
 }

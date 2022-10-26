@@ -261,7 +261,7 @@ public class MeleeAttackController : MonoBehaviour
                     //TODO remove references to animationCompleteWaitTime
                     DOVirtual.DelayedCall(meleeAttackBase.GetMeleeAttackComponent().animationComponent.animationEndDelay, () => {
                         Debug.Log(this.gameObject.name + ":Self Destruct!");
-                        this.GetComponent<Status>().SetHP(this.gameObject, null, meleeAttackBase.GetMeleeAttackComponent());
+                        this.GetComponent<Status>().SetHP(this.gameObject, null, null, meleeAttackBase.GetMeleeAttackComponent());
                     });
                 }
             }

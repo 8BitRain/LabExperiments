@@ -13,7 +13,8 @@ public class HealthOrb : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        FlyToRecievingEntity();
+        //Logic for testing
+        //FlyToRecievingEntity();
     }
 
 

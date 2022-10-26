@@ -68,7 +68,8 @@ public class CameraController : MonoBehaviour
         cameraInstance.tag = "MainCamera";
 
         Debug.Log(cameraInstance);
-        //onCameraLoaded?.Invoke(cameraInstance);
+        //Turn this off when using an AI Director
+        onCameraLoaded?.Invoke(cameraInstance);
     }
 
     // Update is called once per frame

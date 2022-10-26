@@ -7,6 +7,7 @@ public class Status : MonoBehaviour
 {
 
     public float hp = 100;
+    public float maxHP = 100;
     public float mp = 100;
     public float stamina = 100;
     public float staminaRefillTime = 1.75f;
@@ -30,7 +31,7 @@ public class Status : MonoBehaviour
     
     void Start()
     {
-
+        maxHP = hp;
     }
 
     void Update()
@@ -75,6 +76,20 @@ public class Status : MonoBehaviour
         }
     }
 
+    public void HPPickup(float healthIncrease)
+    {
+        //Use full amount of health increase
+        if(hp + healthIncrease <= maxHP)
+        {
+            hp = hp + healthIncrease;
+        }
+        //Only heal to max health
+        else
+        {
+            hp = maxHP;
+        }
+    }
+
     public void SetStamina(GameObject hurtBoxAgentInstance,GameObject hurtBoxInstance,AbilityComponent abilityComponent)
     {
         if(this.gameObject != hurtBoxAgentInstance)
@@ -109,6 +124,11 @@ public class Status : MonoBehaviour
     public float GetStamina()
     {
         return this.stamina;
+    }
+
+    public float GetHP()
+    {
+        return this.hp;
     }
 
 

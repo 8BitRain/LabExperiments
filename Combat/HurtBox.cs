@@ -12,7 +12,7 @@ public class HurtBox : MonoBehaviour
     private Transform lastCollisionPoint;
     //Events
     public static event Action<GameObject, GameObject, float, float> recievedCollision;
-    public static event Action<GameObject, GameObject, AbilityComponent> gotCollision;
+    public static event Action<GameObject, GameObject, GameObject, AbilityComponent> gotCollision;
     [SerializeField] private UnityEvent onRecievedCollision;
 
     private void OnEnable()
@@ -55,7 +55,7 @@ public class HurtBox : MonoBehaviour
         
     }
 
-    void ApplyCollision(GameObject hurtBoxAgentInstance, GameObject hurtBoxInstance, GameObject summoner, AbilityComponent abilityComponent)
+    void ApplyCollision(GameObject hurtBoxAgentInstance, GameObject hurtBoxInstance, GameObject damageDealer, AbilityComponent abilityComponent)
     {
         if(this.gameObject != hurtBoxInstance)
             return;
@@ -67,11 +67,11 @@ public class HurtBox : MonoBehaviour
             return;
         }
 
-        lastCollisionPoint = summoner.transform;
-        CameraShake(summoner, abilityComponent);
+        lastCollisionPoint = damageDealer.transform;
+        CameraShake(damageDealer, abilityComponent);
         //Custom Event Assigned to Hurtbox to spawn a hit impact particle effect
         onRecievedCollision.Invoke();
-        gotCollision.Invoke(hurtBoxAgentInstance, hurtBoxInstance, abilityComponent);
+        gotCollision.Invoke(hurtBoxAgentInstance, hurtBoxInstance, damageDealer, abilityComponent);
     }
 
     //Modular camera shake to help

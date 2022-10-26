@@ -51,7 +51,7 @@ public class Status : MonoBehaviour
         }
     }
 
-    public void SetHP(GameObject hurtBoxAgentInstance,GameObject hurtBoxInstance,AbilityComponent abilityComponent)
+    public void SetHP(GameObject hurtBoxAgentInstance,GameObject hurtBoxInstance, GameObject damageDealer,AbilityComponent abilityComponent)
     {
         if(this.gameObject != hurtBoxAgentInstance)
         {
@@ -90,7 +90,7 @@ public class Status : MonoBehaviour
         }
     }
 
-    public void SetStamina(GameObject hurtBoxAgentInstance,GameObject hurtBoxInstance,AbilityComponent abilityComponent)
+    public void SetStamina(GameObject hurtBoxAgentInstance,GameObject hurtBoxInstance, GameObject damageDealer, AbilityComponent abilityComponent)
     {
         if(this.gameObject != hurtBoxAgentInstance)
         {

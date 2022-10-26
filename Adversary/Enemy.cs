@@ -45,7 +45,7 @@ public class Enemy : MonoBehaviour
         HurtBox.gotCollision -= CollisionLogic;
     }
 
-    void CollisionLogic(GameObject instance, GameObject collisionPoint, AbilityComponent abilityComponent)
+    void CollisionLogic(GameObject instance, GameObject collisionPoint, GameObject damageDealer, AbilityComponent abilityComponent)
     {
         if(instance != this.gameObject)
             return;

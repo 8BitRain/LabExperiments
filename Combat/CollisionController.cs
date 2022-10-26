@@ -17,7 +17,7 @@ public class CollisionController : MonoBehaviour
         HurtBox.gotCollision -= CollisionLogic;
     }
 
-    public virtual void CollisionLogic(GameObject instance, GameObject collisionPoint, AbilityComponent abilityComponent)
+    public virtual void CollisionLogic(GameObject instance, GameObject collisionPoint, GameObject damageDealer, AbilityComponent abilityComponent)
     {
         if(instance != this.gameObject)
             return;

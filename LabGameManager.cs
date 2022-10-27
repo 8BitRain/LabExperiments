@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -16,7 +17,6 @@ public class LabGameManager : MonoBehaviour
     [Header("Spawn Player Event Logic")]
     public bool lockSpawnEvent = false;
     public UnityEvent playerSpawnEvent;
-
 
     public void Start()
     {
@@ -35,7 +35,11 @@ public class LabGameManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(time);
         Debug.Log("CINEMATIC INTRO COMPLETE, Load Player");
         playerSpawnEvent.Invoke();
+        if(spawnedPlayers[0].GetComponent<Status>().startStaminaEmpty)
+        {
+            spawnedPlayers[0].GetComponent<Status>().SetStamina(spawnedPlayers[0].gameObject, 1);
+        }
         yield break;
-    }    
+    }
 
 }

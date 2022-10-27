@@ -35,7 +35,11 @@ public class HUDController : MonoBehaviour
         if(TryGetComponent<Status>(out Status status))
         {
             HUDInstance.GetComponent<HUD>().SetupHealthBar(status.hp, this.gameObject);
-            HUDInstance.GetComponent<HUD>().SetupStaminaBar(status.stamina, this.gameObject);   
+            HUDInstance.GetComponent<HUD>().SetupStaminaBar(status.stamina, status.startStaminaEmpty, this.gameObject);
+            if(status.startStaminaEmpty)
+            {
+                status.stamina = 0;
+            }   
         }
         else
         {

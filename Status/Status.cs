@@ -10,6 +10,7 @@ public class Status : MonoBehaviour
     public float maxHP = 100;
     public float mp = 100;
     public float stamina = 100;
+    public bool startStaminaEmpty = false;
     public float staminaRefillTime = 1.75f;
     public float staminaRefillDelay = 3.0f;
 

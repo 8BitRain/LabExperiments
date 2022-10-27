@@ -46,12 +46,23 @@ public class HUD : MonoBehaviour
         Debug.Log("Setting maxhealth and health to: " + maxHealth);
     }
 
-    public void SetupStaminaBar(float maxStamina, GameObject ownerInstance)
+    public void SetupStaminaBar(float maxStamina, bool startStaminaEmpty, GameObject ownerInstance)
     {
-        staminaBar.SetMaxStamina(maxStamina);
-        staminaBar.SetStamina(maxStamina);
-        staminaBar.SetOwnerInstance(ownerInstance);
-        Debug.Log("Setting maxStamina and stamina to: " + maxStamina);
+        if(!startStaminaEmpty)
+        {
+            staminaBar.SetMaxStamina(maxStamina);
+            staminaBar.SetStamina(maxStamina);
+            staminaBar.SetOwnerInstance(ownerInstance);
+            Debug.Log("Setting maxStamina and stamina to: " + maxStamina);
+        }
+        else
+        {
+            staminaBar.SetMaxStamina(maxStamina);
+            staminaBar.SetStamina(0);
+            staminaBar.redChunk.value = 0;
+            staminaBar.SetOwnerInstance(ownerInstance);
+            Debug.Log("Setting maxStamina and stamina to: " + maxStamina);
+        }
     }
 
     public void ActivateDutchedLetterBox()

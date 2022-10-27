@@ -80,10 +80,27 @@ public class MeleeAttackController : MonoBehaviour
         if(lightAttackButtonPressed.action.triggered && lightAttackInstance == null)
         {
             //Dash in
+            if(this.GetComponent<TargetingController>().targets == null)
+            {
+                return;
+            }
+
             if(this.GetComponent<TargetingController>().targets.Length > 0)
-                DashIn(this.GetComponent<TargetingController>().targets[0], MeleeAttackType.Light);
+            {
+                try
+                {
+                    DashIn(this.GetComponent<TargetingController>().targets[0], MeleeAttackType.Light);
+                }
+                catch (System.Exception e)
+                {
+                    PerformMelee(MeleeAttackType.Light);
+                    Debug.LogError("Caught an error where DashIn did something naughty >_<...: " + e);
+                }
+            }
             else
+            {
                 PerformMelee(MeleeAttackType.Light);
+            }
             return;
         }
 

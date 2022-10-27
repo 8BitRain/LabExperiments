@@ -82,11 +82,13 @@ public class Status : MonoBehaviour
         if(hp + healthIncrease <= maxHP)
         {
             hp = hp + healthIncrease;
+            onHealthStatusChange.Invoke(this.gameObject, hp);
         }
         //Only heal to max health
         else
         {
             hp = maxHP;
+            onHealthStatusChange.Invoke(this.gameObject, hp);
         }
     }
 

@@ -28,6 +28,8 @@ public class MeleeAttackBase : MonoBehaviour
     public bool isHeldMelee = false;
     public bool isRanged = false;
 
+    public bool hidePlayerForDuration = false;
+
     [Header("Player Settings")]
     [Range(0f, 3.0f)]
     public float animationCompleteWaitTime;
@@ -64,6 +66,11 @@ public class MeleeAttackBase : MonoBehaviour
         //Update animation weights if they exist
         //UpdateAnimationLayerWeights(GetMeleeAttackComponent(), true);
         StopAllCoroutines();
+        //Fade out characther if necessary
+        if(hidePlayerForDuration)
+        {
+            GetPlayerReference().GetComponent<MaterialController>().DoFadeInInstant();
+        }
         if(!cooldownTriggered && !GetAIAgentStatus())
         {
             try
@@ -148,6 +155,12 @@ public class MeleeAttackBase : MonoBehaviour
         
         //Iterate through ability instances modular components
         this.meleeCoroutine = StartCoroutine(PlayModularComponents());
+
+        //Fade out characther if necessary
+        if(hidePlayerForDuration)
+        {
+            GetPlayerReference().GetComponent<MaterialController>().FadeOut();
+        }
 
         fired = true;
     }

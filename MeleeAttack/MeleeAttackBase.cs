@@ -128,7 +128,7 @@ public class MeleeAttackBase : MonoBehaviour
         }
 
         //Aim with reticle, or default to standard aim if not AI unit
-        if(!GetAIAgentStatus())
+        if(!GetAIAgentStatus() && isRanged)
         {
             if(GetPlayerReference().GetComponent<MeleeAttackController>().reticle != null)
             {
@@ -419,7 +419,7 @@ public class MeleeAttackBase : MonoBehaviour
                 modularProjectile.gameObject.SetActive(false);
                 DOVirtual.DelayedCall(modularProjectile.projectileComponent.startDelay, () =>{
                     modularProjectile.gameObject.SetActive(true);
-                    if(!GetAIAgentStatus() && GetPlayerReference().GetComponent<MeleeAttackController>().reticle != null)
+                    if(!GetAIAgentStatus() && GetPlayerReference().GetComponent<MeleeAttackController>().reticle != null && isRanged)
                     {
                         Vector3 lookAtPos = GetPlayerMovementController().GetComponent<MeleeAttackController>().reticle.GetWorldPosition();
                         modularProjectile.transform.LookAt(new Vector3(lookAtPos.z, (lookAtPos.y/2), -1 * lookAtPos.x/2));

@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
 
     private Animator animator;
     private Transform lastCollisionPoint;
+    private GameObject lastDamageDealer;
 
     protected Vector3 _velocity;
 
@@ -52,6 +53,7 @@ public class Enemy : MonoBehaviour
         Debug.Log(gameObject.name + "is processing collision");
 
         lastCollisionPoint = collisionPoint.GetComponent<HurtBox>().GetLastCollision();
+        lastDamageDealer = damageDealer;
 
         //Set Damaged State
         GetAnimator().SetBool("Wakeup", false);
@@ -163,7 +165,11 @@ public class Enemy : MonoBehaviour
         //Spawn loot
         if(TryGetComponent<Loot>(out Loot loot))
         {
-            //loot.SpawnHealthOrb(this.gameObject, this.transform.position);
+            Debug.Log("LastDamageDealer: " + lastDamageDealer);
+            if(lastDamageDealer != null)
+            {
+                loot.SpawnHealthOrb(lastDamageDealer, this.transform.position);
+            }
         }
 
         //Update AI Controller and remove instance from spawned AI units

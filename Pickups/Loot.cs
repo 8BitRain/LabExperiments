@@ -17,8 +17,9 @@ public class Loot : MonoBehaviour
         
     }
 
-    public void SpawnHealthOrb(Vector3 position)
+    public void SpawnHealthOrb(GameObject recievingEntity, Vector3 position)
     {
-        Instantiate(healthOrb, position, Quaternion.identity);
+        HealthOrb healthOrbInstance = Instantiate(healthOrb, position, Quaternion.identity);
+        healthOrbInstance.SetRecievingEntity(recievingEntity);
     }
 }

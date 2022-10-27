@@ -37,6 +37,7 @@ public class HealthOrb : MonoBehaviour
     public void SetRecievingEntity(GameObject entity)
     {
         recievingEntity = entity;
+        FlyToRecievingEntity();
     }
 
     public void FlyToRecievingEntity()

@@ -34,6 +34,7 @@ public class CollisionComponent : ScriptableObject
     public float squashAndStretchAmount;
     public float squashAndStretchTime;
     public float hpDamage;
+    public float staminaCost = 10;
     public bool damageSelf = false;
     public bool canParryAttack = false;
 

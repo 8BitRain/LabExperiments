@@ -32,6 +32,7 @@ public class StaminaBar : MonoBehaviour
     
     public void SetStamina(float stamina)
     {
+
         //Stop the coroutine that refills the stamina bar
         if(refillCoroutine != null)
         {

@@ -130,14 +130,51 @@ public class MeleeAttackController : MonoBehaviour
 
     public void PerformMelee(MeleeAttackType meleeAttackType)
     {
+        Status playerStatus = this.GetComponent<Status>();
         //TODO: NUEDEAD GAME INVESTIGATE STAMINA
-        if(this.GetComponent<Status>() != null)
+        switch (meleeAttackType)
         {
-            if(this.GetComponent<Status>().stamina <= 0)
+            case MeleeAttackType.Light:
+                CollisionComponent lightCollision = lightAttack.attackComponent.GetComponent<ModularAttackElement>().meleeAttackComponent.collisionComponent;
+                if(playerStatus.stamina - lightCollision.staminaCost >= 0)
+                {
+                    if(this.GetComponent<Status>() != null && lightCollision.staminaCost != 0)
+                    {
+                        this.GetComponent<Status>().SetStamina(this.gameObject, 
+                        lightCollision.staminaCost);
+                    }
+                    break;
+                }
+                else
+                {
+                    return;
+                }
+            case MeleeAttackType.Heavy:
+                CollisionComponent heavyCollision = heavyAttack.attackComponent.GetComponent<ModularAttackElement>().meleeAttackComponent.collisionComponent;
+                if(playerStatus.stamina - heavyCollision.staminaCost >= 0)
+                {
+                    if(this.GetComponent<Status>() != null && heavyCollision.staminaCost != 0)
+                    {
+                        this.GetComponent<Status>().SetStamina(this.gameObject, 
+                        heavyCollision.staminaCost);
+                    }
+                    break;
+                }
+                else
+                {
+                    return;
+                }
+            default:
+                return;
+        }
+
+        /*if(this.GetComponent<Status>() != null)
+        {
+            if(this.GetComponent<Status>().stamina <= 0 && this)
             {
                 return;
             }
-        }
+        }*/
 
         if(!GetIsAIAgent())
         {
@@ -147,10 +184,10 @@ public class MeleeAttackController : MonoBehaviour
         }
 
         //TODO: NUEDEAD GAME INVESTIGATE STAMINA
-        if(this.GetComponent<Status>() != null)
+        /*if(this.GetComponent<Status>() != null)
         {
-            this.GetComponent<Status>().SetStamina(this.gameObject, 10f);
-        }
+            this.GetComponent<Status>().SetStamina(this.gameObject, 10f );
+        }*/
         
         this.GetComponent<Animator>().SetBool("Attacking", true);
         switch (meleeAttackType)

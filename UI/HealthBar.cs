@@ -26,11 +26,18 @@ public class HealthBar : MonoBehaviour
     
     public void SetHealth(float health)
     {
-        slider.value = health;
-
-        if(redChunk != null)
+        if(slider.value < health)
         {
-            StartCoroutine(redChunkDelayDecrease(1.5f));
+            StartCoroutine(healthIncrease(.1f, health));
+        }
+
+        if(slider.value > health)
+        {
+            slider.value = health;
+            if(redChunk != null)
+            {
+                StartCoroutine(redChunkDelayDecrease(1.5f));
+            }
         }
     }
 
@@ -70,6 +77,12 @@ public class HealthBar : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         redChunk.DOValue(slider.value, .5f);
+    }
+
+    public IEnumerator healthIncrease(float time, float health)
+    {
+        yield return new WaitForSeconds(time);
+        slider.DOValue(health, .5f);
     }
 
 

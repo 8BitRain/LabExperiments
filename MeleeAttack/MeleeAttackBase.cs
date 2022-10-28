@@ -142,6 +142,8 @@ public class MeleeAttackBase : MonoBehaviour
                 Debug.Log("Look at reticle");
                 //FPSReticle reticle = GetPlayerReference().GetComponent<MeleeAttackController>().reticle;
                 //meleeAttackInstance.transform.LookAt(Camera.main.ScreenToWorldPoint(reticle.GetWorldPosition()));
+                //GetMeleeSpawnPosition().transform.LookAt(Camera.main.transform.forward);
+                //meleeAttackInstance.transform.LookAt(Camera.main.transform.forward);
             }
             else
             {
@@ -434,8 +436,8 @@ public class MeleeAttackBase : MonoBehaviour
                     modularProjectile.gameObject.SetActive(true);
                     if(!GetAIAgentStatus() && GetPlayerReference().GetComponent<MeleeAttackController>().reticle != null && isRanged)
                     {
-                        Vector3 lookAtPos = GetPlayerMovementController().GetComponent<MeleeAttackController>().reticle.GetWorldPosition();
-                        modularProjectile.transform.LookAt(new Vector3(lookAtPos.z, (lookAtPos.y/2), -1 * lookAtPos.x/2));
+                        //Vector3 lookAtPos = GetPlayerMovementController().GetComponent<MeleeAttackController>().reticle.GetWorldPosition();
+                        //modularProjectile.transform.LookAt(new Vector3(lookAtPos.z, (lookAtPos.y/2), -1 * lookAtPos.x/2));
                     }
                     //Fire the projectile parent. This is what actually controls travelling.
                     modularProjectile.Fire();

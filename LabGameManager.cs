@@ -35,11 +35,17 @@ public class LabGameManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(time);
         Debug.Log("CINEMATIC INTRO COMPLETE, Load Player");
         playerSpawnEvent.Invoke();
+        yield return new WaitForSecondsRealtime(.5f);
+        TriggerPlayerStaminaRegen();
+        yield break;
+    }
+
+    public void TriggerPlayerStaminaRegen()
+    {
         if(spawnedPlayers[0].GetComponent<Status>().startStaminaEmpty)
         {
             spawnedPlayers[0].GetComponent<Status>().SetStamina(spawnedPlayers[0].gameObject, 1);
         }
-        yield break;
     }
 
 }

@@ -16,6 +16,11 @@ public class Enemy : MonoBehaviour
     public float zoneAttackRange = 30f;
     public float escapeRange = 15f;
 
+    public int pointsValue = 1000;
+    private int lifeTimeModifier = 150;
+
+    public float creationTime = 0;
+
     private Animator animator;
     private Transform lastCollisionPoint;
     private GameObject lastDamageDealer;
@@ -27,6 +32,10 @@ public class Enemy : MonoBehaviour
 
     private AnimationController animationController;
 
+    public void Awake()
+    {
+        creationTime = Time.time;
+    }
     public void Start()
     {
         this.animationController = GetComponent<AnimationController>();
@@ -174,6 +183,9 @@ public class Enemy : MonoBehaviour
 
         //Update AI Controller and remove instance from spawned AI units
         EventsManager.instance.OnUpdateAIController(this.gameObject);
+
+        //Update score
+        ScoreManager.instance.UpdateScore(pointsValue - (GetLifetime()/2));
         Destroy(this.gameObject);
     }
 
@@ -195,6 +207,12 @@ public class Enemy : MonoBehaviour
     public Animator GetAnimator()
     {
         return this.animator;
+    }
+
+    public int GetLifetime()
+    {
+        
+        return Mathf.CeilToInt(Time.time - creationTime);
     }
 
     public void BehaviorTreeInitialization()

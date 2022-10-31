@@ -20,4 +20,5 @@ public class AIUnit : ScriptableObject
 
     public AIUnitType AIUnitEntity;
     public int multiple = 1;
+    public int scoreValue = 1000;
 }

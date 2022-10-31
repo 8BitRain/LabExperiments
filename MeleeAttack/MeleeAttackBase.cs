@@ -30,6 +30,8 @@ public class MeleeAttackBase : MonoBehaviour
 
     public bool hidePlayerForDuration = false;
 
+    public bool faceCoreTowardsMainCamera = false;
+
     [Header("Player Settings")]
     [Range(0f, 3.0f)]
     public float animationCompleteWaitTime;
@@ -137,13 +139,13 @@ public class MeleeAttackBase : MonoBehaviour
         //Aim with reticle, or default to standard aim if not AI unit
         if(!GetAIAgentStatus() && isRanged)
         {
-            if(GetPlayerReference().GetComponent<MeleeAttackController>().reticle != null)
+            if(GetPlayerReference().GetComponent<MeleeAttackController>().useReticle == true)
             {
                 Debug.Log("Look at reticle");
                 //FPSReticle reticle = GetPlayerReference().GetComponent<MeleeAttackController>().reticle;
                 //meleeAttackInstance.transform.LookAt(Camera.main.ScreenToWorldPoint(reticle.GetWorldPosition()));
                 //GetMeleeSpawnPosition().transform.LookAt(Camera.main.transform.forward);
-                //meleeAttackInstance.transform.LookAt(Camera.main.transform.forward);
+                meleeAttackInstance.transform.LookAt(Camera.main.transform.forward);
             }
             else
             {
@@ -304,7 +306,20 @@ public class MeleeAttackBase : MonoBehaviour
         }
 
         if(meleeAttackComponent.stickToPlayer)
-            modularAbilityInstance.transform.SetParent(GetPlayerReference().transform);
+        {
+            //This use case exists when we have a melee attack that we want to follow along the camera. Assumes MeleeSpawnPosition is 
+            //attached to camera. This helped spawn newdeadhands in seperate controller layout
+            if(!GetAIAgentStatus() && GetPlayerReference().GetComponent<MeleeAttackController>().useReticle)
+            {
+                modularAbilityInstance.transform.SetParent(GetMeleeSpawnPosition().transform);
+                modularAbilityInstance.transform.rotation = modularAbilityInstance.transform.parent.rotation;
+            }
+            else
+            {
+                //modularAbilityInstance.transform.SetParent(GetPlayerReference().transform);
+            }
+        }
+            
         
         if(meleeAttackComponent.stickToPlayerTime != 0)
             StartCoroutine(MeleeAttackComponentStickToPlayerCoroutine(meleeAttackComponent.stickToPlayerTime,modularAbilityInstance.transform));
@@ -434,7 +449,7 @@ public class MeleeAttackBase : MonoBehaviour
                 modularProjectile.gameObject.SetActive(false);
                 DOVirtual.DelayedCall(modularProjectile.projectileComponent.startDelay, () =>{
                     modularProjectile.gameObject.SetActive(true);
-                    if(!GetAIAgentStatus() && GetPlayerReference().GetComponent<MeleeAttackController>().reticle != null && isRanged)
+                    if(!GetAIAgentStatus() && GetPlayerReference().GetComponent<MeleeAttackController>().useReticle == true && isRanged)
                     {
                         //Vector3 lookAtPos = GetPlayerMovementController().GetComponent<MeleeAttackController>().reticle.GetWorldPosition();
                         //modularProjectile.transform.LookAt(new Vector3(lookAtPos.z, (lookAtPos.y/2), -1 * lookAtPos.x/2));

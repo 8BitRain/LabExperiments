@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Title : MonoBehaviour
+public class EndTutorial : MonoBehaviour
 {
-    public GameObject SFX;
-    public GameData gameData;
     // Start is called before the first frame update
     void Start()
     {
-        gameData.currentScene = "Title";
+        
     }
 
     // Update is called once per frame
@@ -19,15 +17,13 @@ public class Title : MonoBehaviour
         
     }
 
-    public void LoadFirstLevel()
+    public void EndTutorialLogic()
     {
-        DontDestroyOnLoad(SFX);
+        GameObject BGM = GameObject.FindGameObjectWithTag("BGM");
+        if(BGM != null)
+        {
+            Destroy(BGM);
+        }
         SceneManager.LoadScene("Level1");
-    }
-
-    public void LoadTutorial()
-    {
-        DontDestroyOnLoad(SFX);
-        SceneManager.LoadScene("Tutorial");
     }
 }

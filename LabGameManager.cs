@@ -48,4 +48,9 @@ public class LabGameManager : MonoBehaviour
         }
     }
 
+    public void displayWarning()
+    {
+        
+    }
+
 }

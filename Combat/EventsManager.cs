@@ -9,6 +9,7 @@ using UnityEngine.Events;
 
 public class EventsManager : MonoBehaviour
 {
+    
     public static EventsManager instance;
     [Header("Parry Settings")]
     public UnityEvent onParry;
@@ -18,6 +19,12 @@ public class EventsManager : MonoBehaviour
     //AI
     [Header("AI Settings")]
     public AIDirector AIDirector;
+    public UnityEvent onLoadWarning;
+    public UnityEvent onLoadBoss;
+
+    public UnityEvent onBossDefeated;
+
+    public UnityEvent loadSphereEvent;
 
     [Header("UI Settings")]
     public Canvas ContinueGameScreen;
@@ -26,6 +33,10 @@ public class EventsManager : MonoBehaviour
     public GameData gameData;
     //VFX
     private Transform vfxTransform;
+
+    [Header("Skybox Settings")]
+    public Material greenSkybox;
+    public Material purpleSkybox;
 
     //SFX
     private AudioClip parrySFX;
@@ -148,10 +159,32 @@ public class EventsManager : MonoBehaviour
         StartCoroutine(LoadDelay());
     }
 
+    public void LoadVictoryScreen()
+    {
+        StartCoroutine(LoadDelayVictoryScreen());
+    }
+
     public IEnumerator LoadDelay()
     {
         yield return new WaitForSecondsRealtime(2);
         SceneManager.LoadScene("Continue");
+    }
+
+    public IEnumerator LoadDelayVictoryScreen()
+    {
+        yield return new WaitForSecondsRealtime(2);
+        SceneManager.LoadScene("Victory");
+    }
+
+    public void LoadPurpleSkyBox()
+    {
+        loadSphereEvent.Invoke();
+        RenderSettings.skybox = purpleSkybox;
+    }
+
+    public void LoadGreenSkyBox()
+    {
+        RenderSettings.skybox = greenSkybox;
     }
 
     public void UpdateGameData()
@@ -164,5 +197,17 @@ public class EventsManager : MonoBehaviour
         {
             Debug.LogError("There was an issue updating game data >_<. Here's why....\n" + e);
         }
+    }
+
+    public void OnLoadWarning()
+    {
+        StartCoroutine(LoadWarning());
+    }
+
+    public IEnumerator LoadWarning()
+    {
+        onLoadWarning.Invoke();
+        yield return new WaitForSecondsRealtime(5);
+        onLoadBoss.Invoke();
     }
 }

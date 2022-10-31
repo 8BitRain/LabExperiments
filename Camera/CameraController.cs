@@ -67,6 +67,18 @@ public class CameraController : MonoBehaviour
         cameraInstance = Instantiate(Camera);
         cameraInstance.tag = "MainCamera";
 
+        //Patch for a camera instance that has an overlay camera
+        /*if(cameraInstance.GetComponentInChildren<Camera>() != null)
+        {
+            Debug.Log("UNPARENTING CAMERA");
+            GameObject overlayCam = cameraInstance.transform.GetChild(0).gameObject;
+            cameraInstance.GetComponent<CinemachineBrain>().
+            overlayCam.transform.SetParent(null);
+            overlayCam.gameObject.transform.position = cameraInstance.gameObject.transform.position;
+            overlayCam.gameObject.transform.rotation = cameraInstance.transform.rotation;
+            //overlayCam.gameObject.SetActive(false);
+        }*/
+
         Debug.Log(cameraInstance);
         //Turn this off when using an AI Director
         onCameraLoaded?.Invoke(cameraInstance);

@@ -13,7 +13,8 @@ public class MeleeAttackController : MonoBehaviour
     public Transform meleeSpawn;
     public bool isAIAgent = false;
     [Header("Reticle Settings")]
-    public FPSReticle reticle;
+    //public FPSReticle reticle;
+    public bool useReticle = false;
 
     [Header("Melee Settings")]
     public MeleeAttackBase lightAttack;
@@ -55,6 +56,16 @@ public class MeleeAttackController : MonoBehaviour
     /// <summary>Vector2 action for pressing a face button </summary>
     [Tooltip("Vector2 action for heavy attack Button ")]
     public InputActionReference heavyAttackButtonPressed;
+
+    private void OnEnable()
+    {
+        DetachFromParent.onUpdateMeleeSpawnPoint += UpdateMeleeSpawnPointParent;
+    }
+
+    private void OnDisable()
+    {
+        DetachFromParent.onUpdateMeleeSpawnPoint -= UpdateMeleeSpawnPointParent;
+    }
 
     void Start()
     {
@@ -239,12 +250,26 @@ public class MeleeAttackController : MonoBehaviour
         Debug.Log("Light Attack State" + lightAttackState);
     }
 
+    //Useful function for setting parenting meleespawnpoint to a camera for fps thangs
+    public void UpdateMeleeSpawnPointParent(string tag, GameObject parent)
+    {
+        if(this.tag.ToString() != tag)
+        {
+            return;
+        }
+
+        meleeSpawn.SetParent(parent.transform);
+        meleeSpawn.transform.localPosition = new Vector3(0,0,0);
+        meleeSpawn.transform.localRotation = Quaternion.identity;
+    }
+
     public void InitializeAbility(MeleeAttackBase meleeAttackBase)
     {
         meleeAttackBase.SetPlayerAnimationController(this.gameObject.GetComponent<AnimationController>());
         meleeAttackBase.SetPlayerReference(this.gameObject);
         meleeAttackBase.SetMeleeSpawnPoint(this.meleeSpawn);
         meleeAttackBase.SetAIAgentStatus(GetIsAIAgent());
+       // meleeAttackBase.transform.LookAt(Camera.main.transform.forward);
     }
 
     public bool GetPlayerInputCanInterruptCombo()

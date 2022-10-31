@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
+using UnityEngine.Events;
 public class AIDirector : MonoBehaviour
 {
     [Header("Wave Generator")]
@@ -26,6 +27,8 @@ public class AIDirector : MonoBehaviour
     public  List<GameObject> spawnedWave = new List<GameObject>();
     public GameObject Player;
 
+    public UnityEvent onBossSpawn;
+
 
     private Dictionary<AIUnit.AIUnitType, Enemy> AIEnemyDictionary = new Dictionary<AIUnit.AIUnitType, Enemy>();
     private Dictionary<AIUnit.AIUnitType, Enemy> BossAIEnemyDictionary = new Dictionary<AIUnit.AIUnitType, Enemy>();
@@ -47,7 +50,10 @@ public class AIDirector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(bossWaveSpawned && spawnedWave.Count == 0)
+        {
+            EventsManager.instance.onBossDefeated.Invoke();
+        }
     }
 
     public List<GameObject> SpawnAIUnits(Wave wave){
@@ -95,6 +101,7 @@ public class AIDirector : MonoBehaviour
         }
         standardWaveIndex++;
         bossWaveSpawned = true;
+        onBossSpawn.Invoke();
         return spawnedWave;
     }
 

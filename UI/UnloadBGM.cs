@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class EndTutorial : MonoBehaviour
+public class UnloadBGM : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -17,7 +17,7 @@ public class EndTutorial : MonoBehaviour
         
     }
 
-    public void EndTutorialLogic()
+    public void UnloadLiveBGM()
     {
         GameObject BGM = GameObject.FindGameObjectWithTag("BGM");
         if(BGM != null)
